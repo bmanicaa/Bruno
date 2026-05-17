@@ -2,16 +2,16 @@
 # FORMAT: FOLDER PATH | FILE COUNT | TOTAL SIZE
 
 / | 2 files | 3.09 KB
-/Acadêmico | 3 files | 308.49 MB
-/Acadêmico/Curriculo | 1 files | 175.41 KB
-/Acadêmico/Curriculo/Congressos  Simposios | 4 files | 1.28 MB
-/Acadêmico/Curriculo/Estagios | 4 files | 1.00 MB
-/Acadêmico/Curriculo/Palestrante | 2 files | 520.46 KB
-/Acadêmico/Curriculo/Premios | 2 files | 782.75 KB
-/Acadêmico/Curriculo/Residencia  Faculdade/Faculdade | 14 files | 5.10 MB
-/Acadêmico/Curriculo/Residencia  Faculdade/Residencia | 4 files | 1.88 MB
-/Acadêmico/Curriculo/Trabalhos | 14 files | 6.66 MB
-/Acadêmico/Curriculo/Trabalhos/Simis | 7 files | 10.11 MB
+/Acadêmico | 1 files | 524.21 KB
+/Acadêmico/Curriculo/01_Formacao_Academica | 5 files | 2.12 MB
+/Acadêmico/Curriculo/02_Formacao_Complementar | 4 files | 1.33 MB
+/Acadêmico/Curriculo/03_Atuacao_Profissional | 8 files | 2.24 MB
+/Acadêmico/Curriculo/04_Producao_Bibliografica/04.1_Artigos_Publicados | 4 files | 1.88 MB
+/Acadêmico/Curriculo/04_Producao_Bibliografica/04.2_Trabalhos_em_Anais | 21 files | 16.77 MB
+/Acadêmico/Curriculo/05_Eventos/05.1_Participacao | 4 files | 1.28 MB
+/Acadêmico/Curriculo/06_Palestra_e_Premios | 4 files | 1.27 MB
+/Acadêmico/Curriculo/07_Documentos_Gerais | 2 files | 600.52 KB
+/Acadêmico/Livros | 2 files | 307.98 MB
 /Acadêmico/Livros/日本語 | 6 files | 222.46 MB
 /Acadêmico/Livros/日本語/ひらがなとカタカナ | 6 files | 1.14 MB
 /Gemini Gems | 1 files | 2.45 KB

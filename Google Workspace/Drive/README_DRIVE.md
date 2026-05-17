@@ -14,17 +14,19 @@ Para evitar chamadas lentas de API e estourar o limite de contexto consultando m
 
 ## 🛠️ Como Atualizar o Mapa
 
-Sempre que a IA realizar uma alteração no Drive (mover, deletar, renomear), ou se o usuário relatar que deletou algo pela interface web, **atualize o mapa** rodando o script:
+Sempre que a IA realizar uma alteração no Drive (mover, deletar, renomear), ou se o usuário relatar que deletou algo pela interface web, **atualize o mapa** rodando o script a partir da raiz do projeto:
 
 ```bash
-node scripts/refresh_drive.js
+node Drive/scripts/refresh_drive.js
 ```
 
-Este script vai bater na API do Google Drive usando as credenciais em `Info/Keys/`, mapear a árvore de diretórios, calcular os tamanhos das pastas e reconstruir os 3 arquivos de texto na raiz do repositório.
+*(Ou navegue até a pasta `Drive` e execute `node scripts/refresh_drive.js`).*
+
+Este script vai bater na API do Google Drive usando as credenciais em `Keys/`, mapear a árvore de diretórios, calcular os tamanhos das pastas e reconstruir os 3 arquivos de texto na pasta `Drive/`.
 
 ## 🔐 Credenciais
 
-* As credenciais estão na pasta `Info/Keys/`.
+* As credenciais estão na pasta `Keys/`.
 * `token.json` contém o token de acesso (OAuth2) do usuário.
 * Para executar os scripts, basta importar as credenciais, obter um novo `access_token` usando o `refresh_token`, e enviar a requisição via `fetch` para `https://www.googleapis.com/drive/v3/`.
 

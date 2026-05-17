@@ -2,11 +2,11 @@ const fs = require('fs');
 const path = require('path');
 
 async function getAccessToken() {
-    const keysPath = path.join(process.cwd(), 'Info/Keys/Google keys.json');
-    const tokenPath = path.join(process.cwd(), 'Info/Keys/token.json');
+    const keysPath = path.join(__dirname, '../../Keys/Google keys.json');
+    const tokenPath = path.join(__dirname, '../../Keys/token.json');
     
     if (!fs.existsSync(keysPath) || !fs.existsSync(tokenPath)) {
-        throw new Error('Chaves de API não encontradas em Info/Keys/');
+        throw new Error('Chaves de API não encontradas em Keys/');
     }
 
     const keys = JSON.parse(fs.readFileSync(keysPath, 'utf8'));
@@ -116,7 +116,7 @@ async function main() {
             }
         });
 
-        fs.writeFileSync('drive_index.txt', indexLines.join('\n'));
+        fs.writeFileSync(path.join(__dirname, '../drive_index.txt'), indexLines.join('\n'));
         console.log('✓ drive_index.txt atualizado.');
 
         // 2. Gerar folders_summary.txt
@@ -130,7 +130,7 @@ async function main() {
             folderLines.push(`${folder} | ${stats.count} files | ${formatSize(stats.size)}`);
         });
         
-        fs.writeFileSync('folders_summary.txt', folderLines.join('\n'));
+        fs.writeFileSync(path.join(__dirname, '../folders_summary.txt'), folderLines.join('\n'));
         console.log('✓ folders_summary.txt atualizado.');
 
         // 3. Gerar duplicates_report.txt
@@ -151,7 +151,7 @@ async function main() {
         });
 
         if (!dupFound) dupLines.push('Nenhuma duplicata óbvia encontrada.');
-        fs.writeFileSync('duplicates_report.txt', dupLines.join('\n'));
+        fs.writeFileSync(path.join(__dirname, '../duplicates_report.txt'), dupLines.join('\n'));
         console.log('✓ duplicates_report.txt atualizado.');
         
         console.log('--- Sincronização Concluída ---');

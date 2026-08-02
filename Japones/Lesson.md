@@ -21,7 +21,13 @@ The lesson MUST eliminate 100% of ambiguity. The student's capacity to absorb ma
 1. **NO SKIPPING**: Every single vocabulary item, Kanji, and grammar point defined for the lesson in `GEMINI.md` MUST be fully taught, analyzed, and used in examples.
 2. **ZERO AMBIGUITY**: Never use vague explanations like "used in certain contexts". State EXACTLY which contexts (formal/informal, spoken/written, male/female, region, emotional nuance).
 3. **CONTROLLED COGNITIVE LOAD**: Sentence examples MUST ONLY use vocabulary from the current lesson or from previous lessons (cumulative principle defined in `GEMINI.md`). Do NOT introduce words that haven't been taught yet.
-4. **FURIGANA (RUBY) ON FIRST OCCURRENCE**: Use HTML Ruby tags (`<ruby>漢字<rt>かんじ</rt></ruby>`) to display small hiragana reading above Kanji. Include ruby tags ONLY on the FIRST occurrence of each Kanji/compound in the lesson. On subsequent occurrences of the same Kanji/word in the lesson, write plain Kanji without ruby tags to stimulate active memory retrieval.
+4. **FURIGANA (RUBY) — TWO-TIER KANJI POLICY**: Applies to ALL Japanese text in the lesson (vocab tables, examples, dialogues, exercises, answer keys). Authority: the 80 formal kanji in `N5_Kanji.md` and its `Aula (intro)` column.
+   - **Tier 1 — Formal Kanji (the 80):** from its own intro lesson onward (`Aula (intro)` ≤ current lesson), the kanji is the student's responsibility (write + read) and gets ruby ONLY on the first occurrence per lesson; later occurrences are plain kanji (active recall).
+   - **Tier 2 — Recognition Kanji (all others):** (a) kanji outside the 80, or (b) 80-kanji whose intro lesson hasn't come yet. Never tested for writing — reading only — and MUST always carry ruby (every occurrence, no exceptions), including in words from previous lessons.
+   **Per-word rule (never per-character):**
+   - If ALL kanji in a word are Tier 1 and already introduced → ruby on the first occurrence of that word only.
+   - If the word contains ANY Tier 2 kanji → the whole word carries ruby on EVERY occurrence.
+   - The ruby is the word's full reading placed over the whole word (for vocabulary, copy the `Leitura (Kana)` column from `N5_Vocabulary.md`). NEVER split ruby kanji-by-kanji — this breaks irregular readings such as 今日 = きょう, 大人 = おとな, 時々 = ときどき.
 5. **MANDATORY 4-LAYER SENTENCE BREAKDOWN**: Every Japanese phrase/example MUST include all 4 layers detailed below.
 6. **CUMULATIVE RULE**: Follow the cumulative principle strictly — lesson N may use all content from lessons 1..N, but NEVER content from lessons N+1 or beyond. This applies to grammar, vocabulary, and kanji.
 7. **VOCAB FOCO vs ANKI**: "Vocabulário Foco" items receive full 4-layer examples and in-depth teaching. "Vocabulário Anki" items appear in a reference table — the student drills them via spaced repetition (Anki) during the week.
@@ -53,6 +59,7 @@ Generate the output following this EXACT section sequence:
 > **Registro**: [Polido (Desu/Masu) / Casual / Keigo / Escrito / Falado]
 > **Objetivo Prático**: [O que o estudante será capaz de comunicar/entender exatamente ao fim desta aula]
 > **Tempo estimado**: ~60 minutos
+> **Kanji da Aula (escrever):** [X], [Y], [Z] — os ÚNICOS kanji cobrados para escrita nesta semana. Todos os demais kanji que aparecerem nesta aula são de reconhecimento (leitura) e SEMPRE trazem furigana.
 
 ---
 
@@ -81,6 +88,7 @@ Formato sugerido:
 ## 2. 📖 VOCABULÁRIO FOCO DA AULA
 *(Estas são as ~15 palavras centrais da aula. Cada uma DEVE ter exemplos completos com as 4 camadas.)*
 *(Agrupar por TEMA SEMÂNTICO — ex: família, números, corpo, lugares, comida — e NÃO por classe gramatical.)*
+*(A coluna Leitura (Kana) é COPIADA da coluna `Leitura (Kana)` de `N5_Vocabulary.md` — nunca invente ou derive leituras.)*
 
 | Palavra (Kanji/Kana) | Leitura (Kana) | Tradução PT-BR | Classe / Nuance | Combinação Comum (Collocation) |
 | :--- | :--- | :--- | :--- | :--- |
@@ -96,6 +104,7 @@ Formato sugerido:
 
 ## 2.5 📋 VOCABULÁRIO ANKI — REVISÃO SEMANAL
 *(Estas palavras complementares devem ser adicionadas ao Anki pelo estudante. São apresentadas em tabela de referência, sem exemplos completos com 4 camadas. O estudante as revisa ao longo da semana via repetição espaçada.)*
+*(A coluna Leitura é COPIADA da coluna `Leitura (Kana)` de `N5_Vocabulary.md` — nunca invente ou derive leituras.)*
 
 | Palavra | Leitura | Tradução PT-BR | Classe |
 | :--- | :--- | :--- | :--- |
@@ -176,6 +185,7 @@ Formato sugerido:
 ## 5. 🎯 FIXAÇÃO & AUTOAVALIAÇÃO
 
 ### Exercícios da Aula Atual
+*(Regra: os exercícios NUNCA exigem ESCREVER kanji de Nível 2 (reconhecimento) nem kanji formais ainda não introduzidos. A cobrança de escrita limita-se aos kanji formais já ensinados; kanji de reconhecimento só podem ser cobrados em leitura.)*
 1. **[Reconhecimento]**: Identifique a função de [elemento] na frase X.
 2. **[Construção]**: Complete a lacuna usando a regra Y.
 3. **[Tradução Guiada]**: Traduza a ideia Z aplicando o vocabulário e gramática desta aula.

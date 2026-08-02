@@ -33,8 +33,8 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
    - **📘 Content lessons** teach new grammar, kanji, and vocabulary following Template A in `Lesson.md`.
    - **🔄 Consolidation lessons** review and reinforce the previous 3-4 content lessons following Template B in `Lesson.md`. They introduce NO new content.
 6. **Vocabulary classification:**
-   - **Focus (~15 words):** Fully taught in the lesson body with 4-layer examples, collocations, and nuances.
-   - **Anki (~12 words):** Listed in a reference table. The student adds them to Anki and reviews throughout the week.
+   - **Focus (12-15 words):** Fully taught in the lesson body with 4-layer examples, collocations, and nuances.
+   - **Anki (6-16 words):** Listed in a reference table. The student adds them to Anki and reviews throughout the week.
 7. **Lesson teaching format (content lessons):**
    - **Review (5 min):** Quick recap of the previous lesson's most important points. Show 3-5 review questions. *(Skip for Lesson 1.)*
    - **Grammar (core):** Teach each grammar point — pattern, meaning, usage, contrast, 2-3 example sentences using ONLY cumulative vocabulary.
@@ -63,39 +63,39 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
 | Aula | Tipo | Fase | Tema | Gram | Kanji | Foco | Anki | Cum.G | Cum.K | Cum.V |
 |:---:|:---:|:---:|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | 1 | 📘 | 1 | Eu Sou — Copula & Perguntas | 3 | 3 | 15 | 10 | 3 | 3 | 25 |
-| 2 | 📘 | 1 | Não Sou — Negação & Posse | 4 | 3 | 15 | 12 | 7 | 6 | 52 |
-| 3 | 📘 | 1 | Minha Família & Números | 3 | 3 | 15 | 13 | 10 | 9 | 80 |
-| 4 | 📘 | 1 | Meu Mundo — Conexões & Contexto | 4 | 3 | 15 | 12 | 14 | 12 | 107 |
-| 5 | 🔄 | 1 | Consolidação — Aulas 1-4 | — | — | — | — | 14 | 12 | 107 |
-| 6 | 📘 | 2 | Partículas de Lugar & Movimento | 4 | 4 | 15 | 12 | 18 | 16 | 134 |
-| 7 | 📘 | 2 | Existe Aqui — ある・いる | 4 | 3 | 15 | 12 | 22 | 19 | 161 |
-| 8 | 📘 | 2 | Pela Cidade — Locais & Transporte | 3 | 3 | 15 | 13 | 25 | 22 | 189 |
-| 9 | 🔄 | 2 | Consolidação — Aulas 6-8 | — | — | — | — | 25 | 22 | 189 |
-| 10 | 📘 | 3 | Adjetivos-い — Descrevendo o Mundo | 3 | 3 | 15 | 12 | 28 | 25 | 216 |
-| 11 | 📘 | 3 | Adjetivos-な & Cores | 3 | 4 | 15 | 13 | 31 | 29 | 244 |
-| 12 | 📘 | 3 | Mais Descrições & Advérbios | 3 | 3 | 15 | 12 | 34 | 32 | 271 |
-| 13 | 🔄 | 3 | Consolidação — Aulas 10-12 | — | — | — | — | 34 | 32 | 271 |
-| 14 | 📘 | 4 | Calendário & Datas | 3 | 4 | 15 | 12 | 37 | 36 | 298 |
-| 15 | 📘 | 4 | Frequência & Sequência | 4 | 3 | 15 | 11 | 41 | 39 | 324 |
-| 16 | 📘 | 4 | Gostos, Desejos & Comida | 4 | 3 | 15 | 12 | 45 | 42 | 351 |
-| 17 | 📘 | 4 | Habilidades & Natureza | 3 | 3 | 15 | 12 | 48 | 45 | 378 |
-| 18 | 🔄 | 4 | Consolidação — Aulas 14-17 | — | — | — | — | 48 | 45 | 378 |
-| 19 | 📘 | 5 | Verbos & て-form: Fundamentos | 4 | 3 | 15 | 12 | 52 | 48 | 405 |
-| 20 | 📘 | 5 | て-form: Pedidos & Progresso | 3 | 4 | 15 | 12 | 55 | 52 | 432 |
-| 21 | 📘 | 5 | て-form: Permissão & Estado | 3 | 3 | 15 | 12 | 58 | 55 | 459 |
-| 22 | 🔄 | 5 | Consolidação — Aulas 19-21 | — | — | — | — | 58 | 55 | 459 |
-| 23 | 📘 | 5 | Verbos do Cotidiano (Parte 1) | 3 | 3 | 15 | 12 | 61 | 58 | 486 |
-| 24 | 📘 | 5 | Verbos do Cotidiano (Parte 2) | 4 | 3 | 15 | 12 | 65 | 61 | 513 |
-| 25 | 📘 | 5 | Mais Verbos & Atividades | 3 | 3 | 15 | 12 | 68 | 64 | 540 |
-| 26 | 🔄 | 5 | Consolidação — Aulas 23-25 | — | — | — | — | 68 | 64 | 540 |
-| 27 | 📘 | 6 | Obrigação & Proibição | 4 | 3 | 15 | 10 | 72 | 67 | 565 |
-| 28 | 📘 | 6 | Convites & Sugestões | 4 | 3 | 15 | 10 | 76 | 70 | 590 |
-| 29 | 📘 | 6 | Comparações & Contrastes | 4 | 3 | 15 | 10 | 80 | 73 | 615 |
-| 30 | 🔄 | 6 | Consolidação — Aulas 27-29 | — | — | — | — | 80 | 73 | 615 |
-| 31 | 📘 | 6 | Conectando Ideias & Explicações | 4 | 4 | 15 | 14 | 84 | 77 | 644 |
-| 32 | 🔄 | — | Revisão Final & Simulado N5 | — | — | — | — | 84 | 77 | 644 |
+| 2 | 📘 | 1 | Não Sou — Negação & Posse | 4 | 4 | 15 | 12 | 7 | 7 | 52 |
+| 3 | 📘 | 1 | Minha Família & Números | 3 | 3 | 15 | 14 | 10 | 10 | 81 |
+| 4 | 📘 | 1 | Meu Mundo — Conexões & Contexto | 4 | 3 | 15 | 10 | 14 | 13 | 106 |
+| 5 | 🔄 | 1 | Consolidação — Aulas 1-4 | — | — | — | — | 14 | 13 | 106 |
+| 6 | 📘 | 2 | Partículas de Lugar & Movimento | 3 | 4 | 15 | 16 | 17 | 17 | 137 |
+| 7 | 📘 | 2 | Existe Aqui — ある・いる & Demonstrativos | 3 | 3 | 15 | 12 | 20 | 20 | 164 |
+| 8 | 📘 | 2 | Pela Cidade — Locais & Transporte | 4 | 4 | 15 | 16 | 24 | 24 | 195 |
+| 9 | 🔄 | 2 | Consolidação — Aulas 6-8 | — | — | — | — | 24 | 24 | 195 |
+| 10 | 📘 | 3 | Adjetivos-い — Descrevendo o Mundo | 3 | 3 | 15 | 12 | 27 | 27 | 222 |
+| 11 | 📘 | 3 | Adjetivos-な & Cores | 3 | 4 | 15 | 13 | 30 | 31 | 250 |
+| 12 | 📘 | 3 | Mais Descrições & Advérbios | 3 | 3 | 15 | 13 | 33 | 34 | 278 |
+| 13 | 🔄 | 3 | Consolidação — Aulas 10-12 | — | — | — | — | 33 | 34 | 278 |
+| 14 | 📘 | 4 | Calendário & Datas | 3 | 4 | 15 | 12 | 36 | 38 | 305 |
+| 15 | 📘 | 4 | Frequência & Sequência | 3 | 4 | 15 | 11 | 39 | 42 | 331 |
+| 16 | 📘 | 4 | Gostos, Desejos & Comida | 4 | 3 | 15 | 15 | 43 | 45 | 361 |
+| 17 | 📘 | 4 | Habilidades & Natureza | 3 | 3 | 15 | 15 | 46 | 48 | 391 |
+| 18 | 🔄 | 4 | Consolidação — Aulas 14-17 | — | — | — | — | 46 | 48 | 391 |
+| 19 | 📘 | 5 | Verbos & Conjugação: Fundamentos | 4 | 3 | 12 | 6 | 50 | 51 | 409 |
+| 20 | 📘 | 5 | て-form: Progresso & Experiência | 4 | 4 | 15 | 12 | 54 | 55 | 436 |
+| 21 | 📘 | 5 | て-form: Permissão & Estado | 3 | 3 | 15 | 12 | 57 | 58 | 463 |
+| 22 | 🔄 | 5 | Consolidação — Aulas 19-21 | — | — | — | — | 57 | 58 | 463 |
+| 23 | 📘 | 5 | Verbos do Cotidiano (Parte 1) | 4 | 3 | 15 | 12 | 61 | 61 | 490 |
+| 24 | 📘 | 5 | Verbos do Cotidiano (Parte 2) | 4 | 3 | 15 | 12 | 65 | 64 | 517 |
+| 25 | 📘 | 5 | Mais Verbos & Objetos do Dia-a-dia | 3 | 3 | 15 | 12 | 68 | 67 | 544 |
+| 26 | 🔄 | 5 | Consolidação — Aulas 23-25 | — | — | — | — | 68 | 67 | 544 |
+| 27 | 📘 | 6 | Obrigação & Proibição | 4 | 3 | 15 | 10 | 72 | 70 | 569 |
+| 28 | 📘 | 6 | Convites & Sugestões | 4 | 3 | 15 | 10 | 76 | 73 | 594 |
+| 29 | 📘 | 6 | Comparações & Contrastes | 4 | 3 | 15 | 9 | 80 | 76 | 618 |
+| 30 | 🔄 | 6 | Consolidação — Aulas 27-29 | — | — | — | — | 80 | 76 | 618 |
+| 31 | 📘 | 6 | Conectando Ideias & Explicações | 4 | 4 | 15 | 11 | 84 | 80 | 644 |
+| 32 | 🔄 | — | Revisão Final & Simulado N5 | — | — | — | — | 84 | 80 | 644 |
 
-Total: 84 grammar points, 77 kanji (direct instruction) + 3 kanji (reviewed via compounds), 644 vocabulary items.
+Total: 84 grammar points, 80 kanji, 644 vocabulary items (todas as linhas do arquivo-fonte atribuídas exatamente uma vez a uma única aula).
 
 ---
 
@@ -132,7 +132,7 @@ Refs: #2 (一), #8 (二), #13 (三)
 Refs: #20 (janai/dewa nai), #52 (no), #34 (mo), #59 (o/go)
 
 ### Kanji (N5_Kanji.md)
-Refs: #4 (人), #9 (本), #6 (大)
+Refs: #4 (人), #9 (本), #6 (大), #76 (友)
 
 ### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
 - **Família (própria):** #57 父, #132 母, #17 兄, #16 姉, #445 弟, #194 妹
@@ -158,8 +158,8 @@ Refs: #26 (四), #22 (五), #37 (六)
 - **Números cardinais:** #183 一, #388 二, #479 三, #498 四, #122 五, #466 六, #499 七, #130 八, #322 九, #222 十
 - **Números grandes:** #182 百, #490 千, #334 万, #460 零, #643 ゼロ
 
-### Vocabulário Anki (N5_Vocabulary.md) — 13 palavras
-#174 一つ, #108 二つ, #356 三つ, #630 四つ, #209 五つ, #368 六つ, #376 七つ, #622 八つ, #284 九つ, #173 一人, #107 二人, #191 いくつ, #190 いくら
+### Vocabulário Anki (N5_Vocabulary.md) — 14 palavras
+#174 一つ, #108 二つ, #356 三つ, #630 四つ, #209 五つ, #368 六つ, #376 七つ, #622 八つ, #284 九つ, #173 一人, #107 二人, #191 いくつ, #190 いくら, #42 番号
 
 ---
 
@@ -177,8 +177,8 @@ Refs: #42 (七), #36 (八), #29 (九)
 - **Corpo:** #33 頭, #340 目, #349 耳, #142 鼻, #303 口, #129 歯, #557 手, #29 足, #484 背, #422 お腹, #239 体
 - **Perguntas:** #71 誰, #72 誰か, #84 どこ, #85 どなた
 
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#7 十, #184 一番, #421 同じ, #640 有名, #178 本当, #258 結構, #530 少し, #548 沢山, #554 縦, #642 全部, #207 いつ, #377 何
+### Vocabulário Anki (N5_Vocabulary.md) — 10 palavras
+#184 一番, #421 同じ, #640 有名, #178 本当, #258 結構, #530 少し, #548 沢山, #642 全部, #207 いつ, #377 何
 
 ---
 
@@ -189,7 +189,7 @@ Seguir Template B de `Lesson.md`.
 
 **Conteúdo coberto:**
 - Gramática: です/だ, じゃない, は, か, の, も, お/ご, が, とても, か〜か, と, や, だけ, どんな (14 pontos)
-- Kanji: 一, 二, 三, 四, 五, 六, 七, 八, 九, 人, 本, 大 (12 kanji)
+- Kanji: 一, 二, 三, 四, 五, 六, 七, 八, 九, 人, 本, 大, 友 (13 kanji)
 - Vocabulário: 107 palavras
 
 ---
@@ -200,30 +200,32 @@ Seguir Template B de `Lesson.md`.
 
 ## Aula 6: 📘 Partículas de Lugar & Movimento
 
-**Objetivo:** Dominar に (destino/tempo/existência), で (local da ação/meio), を (objeto direto), e に/へ (direção).
+**Objetivo:** Dominar に (destino/tempo), で (meio/local de ação) e に/へ (direção), com o primeiro núcleo de verbos de movimento (Verbo-Core).
 
 ### Gramática (N5_Grammar.md)
-Refs: #48 (ni), #5 (de), #60 (wo), #51 (ni/e)
+Refs: #48 (ni), #5 (de), #51 (ni/e)
 
 ### Kanji (N5_Kanji.md)
 Refs: #3 (国), #24 (上), #38 (下), #35 (外)
 
 ### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Locais básicos:** #186 家, #161 部屋, #66 台所, #117 玄関, #395 庭
-- **Posições:** #596 上, #510 下, #372 中, #524 外, #326 前, #601 後ろ
-- **Direções:** #346 右, #162 左, #574 隣, #516 そば
+- **Verbo-Core (dicionário / ます / ました / ません):** #189 行く, #313 来る, #226 帰る, #25 歩く, #153 走る
+- **Locais básicos:** #186 家, #161 部屋
+- **Posições:** #596 上, #510 下, #372 中, #524 外
+- **Direções:** #346 右, #162 左
+- **Transporte:** #43 バス, #77 電車
 
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#626 横, #366 向こう, #159 辺, #225 角, #343 道, #302 交差点, #152 橋, #324 町, #367 村, #555 建物, #197 入口, #74 出口
+### Vocabulário Anki (N5_Vocabulary.md) — 16 palavras
+#117 玄関, #66 台所, #395 庭, #326 前, #601 後ろ, #574 隣, #516 そば, #626 横, #554 縦, #366 向こう, #225 角, #343 道, #302 交差点, #152 橋, #197 入口, #74 出口
 
 ---
 
 ## Aula 7: 📘 Existe Aqui — ある・いる & Demonstrativos
 
-**Objetivo:** Expressar existência de coisas (がある) e seres vivos (がいる), usar demonstrativos (これ/それ/あれ), e perguntar "por quê" e "como".
+**Objetivo:** Expressar existência de coisas (がある) e seres vivos (がいる), usar demonstrativos (これ/それ/あれ), e perguntar "por quê" (どうして).
 
 ### Gramática (N5_Grammar.md)
-Refs: #12 (ga arimasu), #14 (ga imasu), #9 (doushite), #10 (douyatte)
+Refs: #12 (ga arimasu), #14 (ga imasu), #9 (doushite)
 
 ### Kanji (N5_Kanji.md)
 Refs: #10 (中), #43 (山), #62 (木)
@@ -241,20 +243,20 @@ Refs: #10 (中), #43 (山), #62 (木)
 
 ## Aula 8: 📘 Pela Cidade — Locais & Transporte
 
-**Objetivo:** Nomear locais urbanos, meios de transporte, e itens da casa. Usar ね para confirmação, をください para pedir, はどうですか para opiniões.
+**Objetivo:** Nomear locais urbanos, meios de transporte, e itens da casa. Usar ね para confirmação, をください para pedir, はどうですか para opiniões e どうやって para perguntar o meio.
 
 ### Gramática (N5_Grammar.md)
-Refs: #47 (ne), #61 (o kudasai), #81 (wa dou desu ka)
+Refs: #47 (ne), #61 (o kudasai), #81 (wa dou desu ka), #10 (douyatte)
 
 ### Kanji (N5_Kanji.md)
-Refs: #25 (東), #52 (川), #41 (小)
+Refs: #25 (東), #52 (川), #41 (小), #57 (西)
 
 ### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Locais:** #115 学校, #67 大学, #53 病院, #98 駅, #582 図書館, #301 公園, #464 レストラン, #354 店, #120 銀行
-- **Transporte:** #314 車, #77 電車, #43 バス, #549 タクシー, #164 飛行機, #62 地下鉄
+- **Locais:** #115 学校, #67 大学, #53 病院, #98 駅, #582 図書館, #301 公園, #464 レストラン, #354 店, #120 銀行, #79 デパート, #274 喫茶店
+- **Transporte:** #314 車, #549 タクシー, #164 飛行機, #62 地下鉄
 
-### Vocabulário Anki (N5_Vocabulary.md) — 13 palavras
-#79 デパート, #274 喫茶店, #513 食堂, #637 郵便局, #299 交番, #321 教室, #455 プール, #21 アパート, #205 椅子, #590 机, #558 テーブル, #325 窓, #81 ドア
+### Vocabulário Anki (N5_Vocabulary.md) — 16 palavras
+#513 食堂, #637 郵便局, #299 交番, #321 教室, #455 プール, #21 アパート, #205 椅子, #590 机, #558 テーブル, #325 窓, #81 ドア, #324 町, #367 村, #555 建物, #159 辺, #45 ベッド
 
 ---
 
@@ -321,8 +323,8 @@ Refs: #21 (生), #34 (子), #31 (学)
 - **Sensações térmicas:** #37 暑い, #478 寒い, #35 暖かい, #539 涼しい, #39 熱い, #593 冷たい, #402 温い
 - **Advérbios:** #64 ちょっと, #65 丁度, #70 だんだん, #88 どう, #137 初めて, #384 何故, #526 直ぐに, #635 ゆっくり
 
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#2 危ない, #8 明るい, #309 暗い, #12 甘い, #339 不味い, #203 忙しい, #206 痛い, #251 可愛い, #276 汚い, #336 丸い, #607 若い, #38 厚い
+### Vocabulário Anki (N5_Vocabulary.md) — 13 palavras
+#2 危ない, #8 明るい, #309 暗い, #12 甘い, #339 不味い, #203 忙しい, #206 痛い, #251 可愛い, #276 汚い, #336 丸い, #607 若い, #38 厚い, #553 楽しい
 
 ---
 
@@ -339,7 +341,7 @@ Seguir Template B de `Lesson.md`.
 
 ## Aula 14: 📘 Calendário & Datas
 
-**Objetivo:** Expressar dias da semana, meses, datas, e usar から (de/porque), まで (até), いつも (sempre).
+**Objetivo:** Expressar dias da semana e datas, e usar から (de/porque), まで (até), いつも (sempre).
 
 ### Gramática (N5_Grammar.md)
 Refs: #23 (kara), #29 (made), #19 (itsumo)
@@ -362,12 +364,12 @@ Refs: #1 (日), #14 (時), #17 (月), #18 (分)
 **Objetivo:** Falar sobre frequência (まだ/もう), hábitos, e marcar tempo com とき. Vocabulário de períodos relativos.
 
 ### Gramática (N5_Grammar.md)
-Refs: #27 (mada), #28 (mada~te imasen), #35 (mou), #76 (toki)
+Refs: #27 (mada), #35 (mou), #76 (toki)
 
 ### Kanji (N5_Kanji.md)
-Refs: #23 (間), #5 (年), #7 (十)
+Refs: #23 (間), #5 (年), #7 (十), #55 (半)
 
-### Vocabulário Foco (N5_Vocabulary.md) — 14 palavras
+### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
 - **Frequência:** #330 毎日, #328 毎朝, #329 毎晩, #331 毎週, #333 毎月, #332 毎年, #570 時々
 - **Relativo:** #265 昨日, #30 明日, #28 明後日, #318 去年, #298 今年, #457 来年
 - **Extras:** #568 時計, #140 半
@@ -389,16 +391,17 @@ Refs: #64 (食), #54 (水), #44 (話)
 
 ### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
 - **Sentimentos:** #529 好き, #69 大好き, #268 嫌い, #211 嫌, #179 欲しい
-- **Comida:** #124 ご飯, #27 朝ご飯, #171 昼ご飯, #41 晩ご飯, #639 夕飯, #449 パン, #550 卵, #392 肉, #474 魚, #617 野菜
+- **Comida:** #124 ご飯, #27 朝ご飯, #171 昼ご飯, #41 晩ご飯, #639 夕飯, #392 肉, #474 魚, #617 野菜
+- **Comer e Beber:** #542 食べる, #398 飲む
 
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#304 果物, #52 豚肉, #127 牛肉, #578 鶏肉, #483 砂糖, #506 塩, #514 醬油, #44 バター, #241 カレー, #541 食べ物, #397 飲み物, #469 料理
+### Vocabulário Anki (N5_Vocabulary.md) — 15 palavras
+#304 果物, #52 豚肉, #127 牛肉, #578 鶏肉, #483 砂糖, #506 塩, #514 醤油, #44 バター, #241 カレー, #541 食べ物, #397 飲み物, #469 料理, #449 パン, #550 卵, #357 水
 
 ---
 
 ## Aula 17: 📘 Habilidades, Natureza & Estações
 
-**Objetivo:** Falar sobre habilidades (上手/下手), ações conjuntas (一緒に), e planos (つもり). Vocabulário de natureza e estações.
+**Objetivo:** Falar sobre habilidades (上手/下手) e ações conjuntas (一緒に). Vocabulário de natureza e estações.
 
 ### Gramática (N5_Grammar.md)
 Refs: #55 (no ga jouzu), #54 (no ga heta), #18 (issho ni)
@@ -407,12 +410,13 @@ Refs: #55 (no ga jouzu), #54 (no ga heta), #18 (issho ni)
 Refs: #56 (男), #45 (女), #50 (先)
 
 ### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Bebidas:** #291 コーヒー, #300 紅茶, #408 お茶, #128 牛乳, #433 お酒, #357 水
-- **Natureza:** #141 花, #261 木, #250 川, #598 海, #614 山, #521 空
+- **Bebidas:** #291 コーヒー, #408 お茶, #128 牛乳, #433 お酒
+- **Natureza:** #141 花, #250 川, #598 海, #614 山, #521 空
 - **Estações:** #149 春, #382 夏, #10 秋, #112 冬
+- **Habilidades:** #144 話す, #234 書く
 
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#204 一緒, #195 犬, #385 猫, #577 鳥, #89 動物, #452 ペット, #383 夏休み, #93 絵, #95 映画, #96 映画館, #424 音楽, #533 スポーツ
+### Vocabulário Anki (N5_Vocabulary.md) — 15 palavras
+#300 紅茶, #261 木, #188 池, #204 一緒, #195 犬, #385 猫, #577 鳥, #89 動物, #452 ペット, #383 夏休み, #93 絵, #95 映画, #96 映画館, #424 音楽, #533 スポーツ
 
 ---
 
@@ -427,31 +431,31 @@ Seguir Template B de `Lesson.md`.
 
 ---
 
-## Aula 19: 📘 Verbos & て-form: Fundamentos
+## Aula 19: 📘 Verbos & Conjugação: Fundamentos
 
-**Objetivo:** Aprender os primeiros verbos essenciais, formar o て-form dos 3 grupos, e usar てください (pedido), なる (tornar-se), e 前に (antes de).
+**Objetivo:** Sistematizar a conjugação dos 3 grupos de verbos (ます/て/ない/た), marcar o objeto com を, e usar てください (pedido), まえに (antes de) e のです (explicação formal). Esta aula inclui o **MÓDULO DE CONJUGAÇÃO** (seção 3E do Template A).
 
 ### Gramática (N5_Grammar.md)
-Refs: #72 (te kudasai), #45 (naru), #30 (mae ni), #53 (no desu)
+Refs: #72 (te kudasai), #60 (wo), #53 (no desu), #30 (mae ni)
 
 ### Kanji (N5_Kanji.md)
 Refs: #15 (行), #39 (来), #30 (入)
 
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Movimento:** #189 行く, #313 来る, #226 帰る, #80 出る, #134 入る, #25 歩く, #153 走る
-- **Cotidiano básico:** #542 食べる, #398 飲む, #353 見る, #264 聞く, #234 書く, #628 読む, #387 寝る, #415 起きる
+### Vocabulário Foco (N5_Vocabulary.md) — 12 palavras
+- **Cotidiano básico:** #80 出る, #134 入る, #353 見る, #264 聞く, #628 読む, #387 寝る, #415 起きる
+- **Verbos essenciais:** #210 言う, #608 分かる, #407 覚える, #586 使う, #155 働く
 
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#144 話す, #210 言う, #608 分かる, #509 知る, #407 覚える, #610 忘れる, #586 使う, #200 要る, #296 答える, #381 習う, #435 教える, #155 働く
+### Vocabulário Anki (N5_Vocabulary.md) — 6 palavras
+#509 知る, #610 忘れる, #200 要る, #296 答える, #381 習う, #435 教える
 
 ---
 
-## Aula 20: 📘 て-form: Pedidos & Progresso
+## Aula 20: 📘 て-form: Progresso & Experiência
 
-**Objetivo:** Usar ている (ação em progresso/estado), てから (depois de fazer), e たことがある (experiência passada). Mais verbos de ação.
+**Objetivo:** Usar ている (ação em progresso/estado), てから (depois de fazer), たことがある (experiência passada) e まだ〜ていません (ainda não). Mais verbos de ação.
 
 ### Gramática (N5_Grammar.md)
-Refs: #70 (te iru), #71 (te kara), #66 (ta koto ga aru)
+Refs: #70 (te iru), #71 (te kara), #66 (ta koto ga aru), #28 (mada~te imasen)
 
 ### Kanji (N5_Kanji.md)
 Refs: #16 (見), #63 (聞), #49 (書), #75 (読)
@@ -466,9 +470,9 @@ Refs: #16 (見), #63 (聞), #49 (書), #75 (読)
 
 ---
 
-## Aula 21: 📘 て-form: Permissão, Proibição & Estado
+## Aula 21: 📘 て-form: Permissão & Proibição
 
-**Objetivo:** Pedir e dar permissão (てもいい), proibir (てはいけない/ちゃいけない), e descrever estado resultante (てある).
+**Objetivo:** Pedir e dar permissão (てもいい) e proibir (てはいけない/ちゃいけない).
 
 ### Gramática (N5_Grammar.md)
 Refs: #74 (temo ii), #73 (te wa ikenai), #1 (cha ikenai)
@@ -495,10 +499,10 @@ Seguir Template B de `Lesson.md`.
 
 ## Aula 23: 📘 Verbos do Cotidiano (Parte 1)
 
-**Objetivo:** Usar に行く (ir para fazer), にする (decidir), e んです (explicação). Verbos de rotina e casa.
+**Objetivo:** Usar に行く (ir para fazer), にする (decidir), つもり (intenção) e なる (tornar-se). Verbos de rotina e casa.
 
 ### Gramática (N5_Grammar.md)
-Refs: #49 (ni iku), #50 (ni suru), #78 (tsumori)
+Refs: #49 (ni iku), #50 (ni suru), #78 (tsumori), #45 (naru)
 
 ### Kanji (N5_Kanji.md)
 Refs: #59 (校), #60 (語), #12 (出)
@@ -546,7 +550,7 @@ Refs: #19 (後), #20 (前), #46 (北)
 - **Vestuário:** #316 靴, #317 靴下, #50 帽子, #386 ネクタイ, #528 スカート, #292 コート
 
 ### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#496 シャツ, #605 上着, #631 洋服, #644 ズボン, #486 セーター, #488 石鹼, #497 シャワー, #461 冷蔵庫, #536 ストーブ, #454 ポスト, #567 トイレ, #438 お手洗い
+#496 シャツ, #605 上着, #631 洋服, #644 ズボン, #486 セーター, #488 石鹸, #497 シャワー, #461 冷蔵庫, #536 ストーブ, #454 ポスト, #567 トイレ, #438 お手洗い
 
 ---
 
@@ -642,8 +646,8 @@ Refs: #72 (母), #79 (父), #74 (右), #77 (左)
 - **Medidas:** #341 メートル, #271 キロメートル, #126 グラム
 - **Mídia:** #559 テープ, #560 テープレコーダー, #462 レコード
 
-### Vocabulário Anki (N5_Vocabulary.md) — 13 palavras
-#101 フィルム, #535 スリッパ, #606 ワイシャツ, #485 背広, #540 たばこ, #403 ニュース, #175 ほか, #583 次, #49 ボタン, #150 貼る, #482 差す, #55 半
+### Vocabulário Anki (N5_Vocabulary.md) — 11 palavras
+#101 フィルム, #535 スリッパ, #606 ワイシャツ, #485 背広, #540 たばこ, #403 ニュース, #175 ほか, #583 次, #49 ボタン, #150 貼る, #482 差す
 
 ---
 
@@ -653,7 +657,7 @@ Refs: #72 (母), #79 (父), #74 (右), #77 (左)
 Seguir Template B de `Lesson.md`, com as seguintes adições:
 
 **Formato especial desta aula:**
-1. **Recall completo** de todos os 77 kanji
+1. **Recall completo** de todos os 80 kanji
 2. **Exercício de gramática** cobrindo todas as 84 estruturas em formato de simulado
 3. **Diálogo longo** (10+ turnos) integrando vocabulário e gramática de todas as fases
 4. **Autodiagnóstico final** com plano de revisão para itens fracos
@@ -666,37 +670,37 @@ Seguir Template B de `Lesson.md`, com as seguintes adições:
 | After Lesson | Grammar | Kanji | Vocab |
 |:---:|:---:|:---:|:---:|
 | 1 | 3 | 3 | 25 |
-| 2 | 7 | 6 | 52 |
-| 3 | 10 | 9 | 80 |
-| 4 | 14 | 12 | 107 |
-| 5 (consol) | 14 | 12 | 107 |
-| 6 | 18 | 16 | 134 |
-| 7 | 22 | 19 | 161 |
-| 8 | 25 | 22 | 189 |
-| 9 (consol) | 25 | 22 | 189 |
-| 10 | 28 | 25 | 216 |
-| 11 | 31 | 29 | 244 |
-| 12 | 34 | 32 | 271 |
-| 13 (consol) | 34 | 32 | 271 |
-| 14 | 37 | 36 | 298 |
-| 15 | 41 | 39 | 324 |
-| 16 | 45 | 42 | 351 |
-| 17 | 48 | 45 | 378 |
-| 18 (consol) | 48 | 45 | 378 |
-| 19 | 52 | 48 | 405 |
-| 20 | 55 | 52 | 432 |
-| 21 | 58 | 55 | 459 |
-| 22 (consol) | 58 | 55 | 459 |
-| 23 | 61 | 58 | 486 |
-| 24 | 65 | 61 | 513 |
-| 25 | 68 | 64 | 540 |
-| 26 (consol) | 68 | 64 | 540 |
-| 27 | 72 | 67 | 565 |
-| 28 | 76 | 70 | 590 |
-| 29 | 80 | 73 | 615 |
-| 30 (consol) | 80 | 73 | 615 |
-| 31 | 84 | 77 | 644 |
-| 32 (consol) | 84 | 77 | 644 |
+| 2 | 7 | 7 | 52 |
+| 3 | 10 | 10 | 81 |
+| 4 | 14 | 13 | 106 |
+| 5 (consol) | 14 | 13 | 106 |
+| 6 | 17 | 17 | 137 |
+| 7 | 20 | 20 | 164 |
+| 8 | 24 | 24 | 195 |
+| 9 (consol) | 24 | 24 | 195 |
+| 10 | 27 | 27 | 222 |
+| 11 | 30 | 31 | 250 |
+| 12 | 33 | 34 | 278 |
+| 13 (consol) | 33 | 34 | 278 |
+| 14 | 36 | 38 | 305 |
+| 15 | 39 | 42 | 331 |
+| 16 | 43 | 45 | 361 |
+| 17 | 46 | 48 | 391 |
+| 18 (consol) | 46 | 48 | 391 |
+| 19 | 50 | 51 | 409 |
+| 20 | 54 | 55 | 436 |
+| 21 | 57 | 58 | 463 |
+| 22 (consol) | 57 | 58 | 463 |
+| 23 | 61 | 61 | 490 |
+| 24 | 65 | 64 | 517 |
+| 25 | 68 | 67 | 544 |
+| 26 (consol) | 68 | 67 | 544 |
+| 27 | 72 | 70 | 569 |
+| 28 | 76 | 73 | 594 |
+| 29 | 80 | 76 | 618 |
+| 30 (consol) | 80 | 76 | 618 |
+| 31 | 84 | 80 | 644 |
+| 32 (consol) | 84 | 80 | 644 |
 
 **Session commands:**
 - "Lesson N" → teach lesson N (cumulative scope).

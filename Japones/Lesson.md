@@ -25,6 +25,7 @@ The lesson MUST eliminate 100% of ambiguity. The student's capacity to absorb ma
 5. **MANDATORY 4-LAYER SENTENCE BREAKDOWN**: Every Japanese phrase/example MUST include all 4 layers detailed below.
 6. **CUMULATIVE RULE**: Follow the cumulative principle strictly — lesson N may use all content from lessons 1..N, but NEVER content from lessons N+1 or beyond. This applies to grammar, vocabulary, and kanji.
 7. **VOCAB FOCO vs ANKI**: "Vocabulário Foco" items receive full 4-layer examples and in-depth teaching. "Vocabulário Anki" items appear in a reference table — the student drills them via spaced repetition (Anki) during the week.
+8. **VERBO-CORE & MÓDULO DE CONJUGAÇÃO**: The Aula 6 introduces the Verbo-Core — verbs presented in the 4 lexical forms (dictionary / ます / ました / ません) as fixed pairs, WITHOUT group-systematization. The systematization (Grupos 1-3, て-form, ない-form, た-form) belongs EXCLUSIVELY to the MÓDULO DE CONJUGAÇÃO da Aula 19 (seção 3E do Template A). Every verb taught before Aula 19 (Aula 7: ある/いる; Aulas 16-17: 食べる, 飲む, 話す, 書く) is also presented as a dictionary/ます pair (with ました/ません when useful).
 
 ---
 
@@ -87,6 +88,9 @@ Formato sugerido:
 > [!NOTE] Nuances de Uso do Vocabulário
 > - Explicar restrições de uso (ex: usado apenas para seres vivos, apenas para coisas inanimadas, tom positivo/negativo).
 
+> [!NOTE] Verbo-Core (Aula 6)
+> Verbos do Verbo-Core são apresentados com as 4 formas léxicas (dicionário / ます / ました / ません) com exemplos de 4 camadas — SEM sistema de grupos (que é exclusivo da Aula 19). Ex.: 行く (dicionário) → 行きます / 行きました / 行きません.
+
 ---
 
 ## 2.5 📋 VOCABULÁRIO ANKI — REVISÃO SEMANAL
@@ -127,6 +131,18 @@ Formato sugerido:
 | Grupo 1 (五段) | [ex] | [ex] | [ex] | [ex] | [ex] |
 | Grupo 2 (一段) | [ex] | [ex] | [ex] | [ex] | [ex] |
 | Grupo 3 (不規則) | [ex] | [ex] | [ex] | [ex] | [ex] |
+
+> [!NOTE] Conjugação e Passado
+> - A coluna **た-form** É a forma de passado (coloquial); no registro polido, o passado é **ました** (ます-form no passado).
+> - A Aula 19 inclui o **MÓDULO DE CONJUGAÇÃO** (seção 3E) que sistematiza os Grupos 1-3 e as regras de formação do て-form.
+
+#### 3E. MÓDULO DE CONJUGAÇÃO *(obrigatório na Aula 19)*
+
+- Tabela completa dos 3 grupos — Grupo 1 (五段), Grupo 2 (一段), Grupo 3 (不規則: する, 来る) — com ます-form, て-form, ない-form e た-form, incluindo todos os verbos aprendidos nas Aulas 6-18.
+- Regras de formação do **て-form** por terminação: か/き → いて, ぎ → いで, し → して, ち/り/い → って, み/び/に → んで, す → して; Grupo 2: る → て; 来る → きて, する → して.
+- **Atenção aos falsos Grupo 2**: 帰る, 入る, 走る, 要る, 知る, 分かる são Grupo 1 (五段).
+- する: します / した / しない / して — base dos verbos-suru e do たり〜たり (Aula 24).
+- **た-form = passado** (coloquial); **ました** = passado polido.
 
 ---
 

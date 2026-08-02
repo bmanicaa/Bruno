@@ -493,7 +493,7 @@ Source: https://jlptsensei.com/jlpt-n5-vocabulary-list/
 | 485 | 背広 | sebiro | Noun | business suit |
 | 486 | セーター | seetaa | Noun, Katakana | sweater; jumper |
 | 487 | 生徒 | seito | Noun | pupil; student |
-| 488 | 石鹼 | sekken | Noun | soap |
+| 488 | 石鹸 | sekken | Noun | soap |
 | 489 | 狭い | semai | い-adjective | narrow |
 | 490 | 千 | sen | Noun, Numeric | 1,000; thousand |
 | 491 | 先月 | sengetsu | Noun | last month |
@@ -519,7 +519,7 @@ Source: https://jlptsensei.com/jlpt-n5-vocabulary-list/
 | 511 | 質問 | shitsumon | Noun, Verb, Suru verb | question; inquiry |
 | 512 | 静か | shizuka | Adjective, な-adjective | quiet |
 | 513 | 食堂 | shokudou | Noun | cafeteria; dining room |
-| 514 | 醬油 | shouyu | Noun | soy sauce |
+| 514 | 醤油 | shouyu | Noun | soy sauce |
 | 515 | 宿題 | shukudai | Noun | homework; assignment; pending issue |
 | 516 | そば | soba | Noun | near; beside |
 | 517 | そっち | socchi | Pronoun | that way; over there |

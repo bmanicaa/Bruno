@@ -21,11 +21,12 @@ The lesson MUST eliminate 100% of ambiguity. The student's capacity to absorb ma
 1. **NO SKIPPING**: Every single vocabulary item, Kanji, and grammar point defined for the lesson in `GEMINI.md` MUST be fully taught, analyzed, and used in examples.
 2. **ZERO AMBIGUITY**: Never use vague explanations like "used in certain contexts". State EXACTLY which contexts (formal/informal, spoken/written, male/female, region, emotional nuance).
 3. **CONTROLLED COGNITIVE LOAD**: Sentence examples MUST ONLY use vocabulary from the current lesson or from previous lessons (cumulative principle defined in `GEMINI.md`). Do NOT introduce words that haven't been taught yet.
-4. **NO UNEXPLAINED KANJI**: Every Kanji must have Furigana/Kana reading right next to it or in the reading line.
+4. **FURIGANA (RUBY) ON FIRST OCCURRENCE**: Use HTML Ruby tags (`<ruby>漢字<rt>かんじ</rt></ruby>`) to display small hiragana reading above Kanji. Include ruby tags ONLY on the FIRST occurrence of each Kanji/compound in the lesson. On subsequent occurrences of the same Kanji/word in the lesson, write plain Kanji without ruby tags to stimulate active memory retrieval.
 5. **MANDATORY 4-LAYER SENTENCE BREAKDOWN**: Every Japanese phrase/example MUST include all 4 layers detailed below.
 6. **CUMULATIVE RULE**: Follow the cumulative principle strictly — lesson N may use all content from lessons 1..N, but NEVER content from lessons N+1 or beyond. This applies to grammar, vocabulary, and kanji.
 7. **VOCAB FOCO vs ANKI**: "Vocabulário Foco" items receive full 4-layer examples and in-depth teaching. "Vocabulário Anki" items appear in a reference table — the student drills them via spaced repetition (Anki) during the week.
 8. **VERBO-CORE & MÓDULO DE CONJUGAÇÃO**: The Aula 6 introduces the Verbo-Core — verbs presented in the 4 lexical forms (dictionary / ます / ました / ません) as fixed pairs, WITHOUT group-systematization. The systematization (Grupos 1-3, て-form, ない-form, た-form) belongs EXCLUSIVELY to the MÓDULO DE CONJUGAÇÃO da Aula 19 (seção 3E do Template A). Every verb taught before Aula 19 (Aula 7: ある/いる; Aulas 16-17: 食べる, 飲む, 話す, 書く) is also presented as a dictionary/ます pair (with ました/ません when useful).
+9. **OUTPUT & DRIVE EXPORT**: Never dump the raw lesson text directly into the chat response. Write the complete Markdown lesson to `/Users/bmanica/Documents/GitHub/Bruno/Japones/Aulas/N5_LX.md` and execute the Node.js script `/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js` to upload a copy to Google Drive (`Meu Drive > Aulas > Japones`). Output only a short confirmation message in chat.
 
 ---
 

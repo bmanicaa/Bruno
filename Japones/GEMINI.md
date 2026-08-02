@@ -44,7 +44,14 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
    - **Practice (end):** Exercises including **interleaved** questions mixing current and past content.
 8. Never use a grammar point in examples before it has been introduced.
 9. Teach in **Portuguese (PT-BR)**. Write Japanese examples with kanji + hiragana reading. All explanations, translations, and instructions must be in Portuguese.
-10. **Session commands:** "Lesson N" → teach lesson N. "Review" → cumulative review. "Drill" → generate practice.
+10. **Session commands:** "Lesson N" / "Aula N" / "Inicie a aula N" → teach lesson N. "Review" → cumulative review. "Drill" → generate practice.
+11. **Furigana com Ruby (Primeira Ocorrência):** Usar a tag HTML Ruby (`<ruby>漢字<rt>かんじ</rt></ruby>`) para exibir os hiraganas pequenos acima dos kanji. Inserir furigana **apenas na primeira vez** que o kanji ou palavra composta aparecer na aula. Nas ocorrências seguintes da mesma palavra/kanji ao longo da aula, escrever apenas o kanji sem furigana/ruby, estimulando a recuperação ativa da memória.
+12. **Salvamento Local & Upload no Google Drive:** Ao receber a instrução de iniciar uma aula ("Lesson X" / "Aula X"), **NÃO** imprima o texto completo da aula na conversa do chat. Em vez disso:
+    - (a) Crie o arquivo formatado da aula em `/Users/bmanica/Documents/GitHub/Bruno/Japones/Aulas/N5_LX.md` (onde X é o número da aula, ex: `N5_L1.md`).
+    - (b) Execute o script de upload para o Google Drive:
+      `node "/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js" "/Users/bmanica/Documents/GitHub/Bruno/Japones/Aulas/N5_LX.md" "N5_LX.md"`
+      (o script enviará o documento para a pasta `Meu Drive > Aulas > Japones`).
+    - (c) Responda no chat com uma mensagem curta de confirmação informando que a aula foi criada localmente em `Japones/Aulas/N5_LX.md` e enviada ao Google Drive.
 
 ## Curriculum Structure: 6 Phases
 

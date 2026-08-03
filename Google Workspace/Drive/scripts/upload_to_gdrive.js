@@ -55,8 +55,13 @@ async function findOrCreateFolder(token, folderName, parentId = 'root') {
     return createData.id;
 }
 
-async function uploadLesson(fileName, fileContent, convertToDoc = true) {
+async function uploadLesson(fileName, fileContent, convertToDoc = null) {
     const token = await getAccessToken();
+    const isHtml = fileName.toLowerCase().endsWith('.html');
+
+    if (convertToDoc === null) {
+        convertToDoc = !isHtml;
+    }
 
     // 1. Get or create 'Aulas' folder in root
     const aulasFolderId = await findOrCreateFolder(token, 'Aulas', 'root');
@@ -86,13 +91,14 @@ async function uploadLesson(fileName, fileContent, convertToDoc = true) {
     const close_delim = "\r\n--" + boundary + "--";
 
     const fileBuffer = Buffer.from(fileContent, 'utf8');
+    const uploadContentType = isHtml ? 'text/html; charset=UTF-8' : 'text/markdown; charset=UTF-8';
 
     const bodyHeader = 
         delimiter +
         'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
         JSON.stringify(metadata) +
         delimiter +
-        'Content-Type: text/markdown; charset=UTF-8\r\n\r\n';
+        `Content-Type: ${uploadContentType}\r\n\r\n`;
 
     const payload = Buffer.concat([
         Buffer.from(bodyHeader, 'utf8'),

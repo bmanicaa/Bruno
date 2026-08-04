@@ -22,9 +22,7 @@ Ele estabelece as regras para que a Inteligência Artificial geradora produza ca
 2. **Escopo Cumulativo Estrito (`JLPTN5.md`):** Consultar as colunas `Cum.G`, `Cum.K`, `Cum.V` da aula correspondente no ementário `JLPTN5.md`. É **estritamente proibido** utilizar gramática, kanji ou vocabulário de aulas futuras.
 3. **Formatação de Resposta em Branco:** Todas as perguntas DEVEM ter o bloco de resposta em branco `> ` logo abaixo do enunciado, sem prefixos de texto (ex: NUNCA escrever `✍️ **Sua Resposta:**`).
 4. **Sem Romaji:** Todo texto em japonês utiliza Kanji + Kana. Não utilizar Romaji.
-5. **Aplicação da Política de Furigana em 2 Níveis:** Os exercícios testam a leitura e escrita conforme a autoridade de `Content/N5_Kanji.md`:
-   - Kanji Nível 1 (já introduzidos até a aula atual): sem furigana nas questões para testar memória ativa (Active Recall).
-   - Kanji Nível 2 (reconhecimento/futuros): trazem furigana `<ruby>` obrigatório.
+5. **Aplicação da Política de Furigana (Sempre Furigana):** Todo kanji em toda questão do caderno traz `<ruby>` com a leitura completa da palavra, sem exceção. Nenhuma questão apresenta kanji sem furigana — o recall ativo de leitura acontece no Anki (frente = kanji sem furigana / verso = leitura + tradução). As questões testam significado, uso e contexto.
 
 ---
 
@@ -42,15 +40,15 @@ O arquivo gerado em `Practice/N5_PX.md` DEVE seguir rigorosamente esta estrutura
 
 ---
 
-## 1. 🔤 PARTE A: KANJI & LEITURA (ACTIVE RECALL)
+## 1. 🔤 PARTE A: VOCABULÁRIO EM CONTEXTO
 
-### 1.1 Leitura de Kanji ➔ Kana
-Escreva a leitura em hiragana/katakana para os kanjis destacados nas frases abaixo:
+### 1.1 Significado & Uso (palavras sempre com furigana)
+Escolha/escreva o significado correto da palavra destacada (sempre com furigana) em cada frase:
 
-1. **[Frase em japonês com Kanji da aula atual em negrito]**
+1. **[Frase em japonês com palavra da aula atual em negrito, com furigana]**
    > 
 
-2. **[Frase em japonês com Kanji da aula atual em negrito]**
+2. **[Frase em japonês com palavra da aula atual em negrito, com furigana]**
    > 
 
 ---
@@ -107,9 +105,9 @@ Exercícios integrando conteúdos de aulas anteriores com a aula atual:
 
 ### Respostas Oficiais:
 
-#### Parte A: Kanji & Leitura
-1. **Resposta:** [Leitura em Kana] — *Explicação didática*.
-2. **Resposta:** [Leitura em Kana] — *Explicação didática*.
+#### Parte A: Vocabulário em Contexto
+1. **Resposta:** [Significado em PT-BR] — *Explicação didática*.
+2. **Resposta:** [Significado em PT-BR] — *Explicação didática*.
 
 #### Parte B: Gramática & Estruturas
 1. **Resposta:** [Item correto] — *Explicação do motivo gramatical*.

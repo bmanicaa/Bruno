@@ -21,13 +21,10 @@ The lesson MUST eliminate 100% of ambiguity. The student's capacity to absorb ma
 1. **NO SKIPPING**: Every single vocabulary item, Kanji, and grammar point defined for the lesson in `JLPTN5.md` MUST be fully taught, analyzed, and used in examples.
 2. **ZERO AMBIGUITY**: Never use vague explanations like "used in certain contexts". State EXACTLY which contexts (formal/informal, spoken/written, male/female, region, emotional nuance).
 3. **CONTROLLED COGNITIVE LOAD**: Sentence examples MUST ONLY use vocabulary from the current lesson or from previous lessons (cumulative principle defined in `JLPTN5.md`). Do NOT introduce words that haven't been taught yet.
-4. **FURIGANA (RUBY) — TWO-TIER KANJI POLICY**: Applies to ALL Japanese text in the lesson (vocab tables, examples, dialogues, exercises, answer keys). Authority: the 80 formal kanji in `Content/N5_Kanji.md` and its `Aula (intro)` column.
-   - **Tier 1 — Formal Kanji (the 80):** from its own intro lesson onward (`Aula (intro)` ≤ current lesson), the kanji is the student's responsibility (write + read) and gets ruby ONLY on the first occurrence per lesson; later occurrences are plain kanji (active recall).
-   - **Tier 2 — Recognition Kanji (all others):** (a) kanji outside the 80, or (b) 80-kanji whose intro lesson hasn't come yet. Never tested for writing — reading only — and MUST always carry ruby (every occurrence, no exceptions), including in words from previous lessons.
-   **Per-word rule (never per-character):**
-   - If ALL kanji in a word are Tier 1 and already introduced → ruby on the first occurrence of that word only.
-   - If the word contains ANY Tier 2 kanji → the whole word carries ruby on EVERY occurrence.
-   - The ruby is the word's full reading placed over the whole word (for vocabulary, copy the `Leitura (Kana)` column from `Content/N5_Vocabulary.md`). NEVER split ruby kanji-by-kanji — this breaks irregular readings such as 今日 = きょう, 大人 = おとな, 時々 = ときどき.
+4. **FURIGANA (RUBY) — SEMPRE FURIGANA**: Applies to ALL Japanese text in the lesson (vocab tables, examples, dialogues, exercises, answer keys). **EVERY kanji in EVERY occurrence carries `<ruby>`** with the word's full reading. The 80 kanji in `Content/N5_Kanji.md` are the Anki priority list (column `Aula (intro)`), NOT a furigana rule.
+   - **Sempre furigana:** every word containing kanji gets `<ruby>` on every occurrence — no "first occurrence only" and no bare kanji. The reading is the word's full reading placed over the whole word (for vocabulary, copy the `Leitura (Kana)` column from `Content/N5_Vocabulary.md`). NEVER split ruby kanji-by-kanji — this breaks irregular readings such as 今日 = きょう, 大人 = おとな, 時々 = ときどき.
+   - **Kana puro nunca ruby:** words with no kanji (あなた, はい, particles...) are written clean without `<ruby>`.
+   - **Auto-teste é opcional:** the lesson's "👁️ Furigana" toggle hides `<rt>` for self-testing; the daily active recall is the student's Anki cards (front = kanji without furigana / back = reading + translation).
 5. **MANDATORY 4-LAYER SENTENCE BREAKDOWN**: Every Japanese phrase/example MUST include all 4 layers detailed below.
 6. **CUMULATIVE RULE**: Follow the cumulative principle strictly — lesson N may use all content from lessons 1..N, but NEVER content from lessons N+1 or beyond. This applies to grammar, vocabulary, and kanji.
 7. **VOCAB FOCO vs ANKI**: "Vocabulário Foco" items receive full 4-layer examples and in-depth teaching. "Vocabulário Anki" items appear in a reference table — the student drills them via spaced repetition (Anki) during the week.
@@ -40,8 +37,8 @@ The lesson MUST eliminate 100% of ambiguity. The student's capacity to absorb ma
 
 For EVERY single example sentence in the lesson, you MUST use this exact layout:
 
-* **Japanese**: [Kanji + Kana original]
-* **Reading**: [Leitura completa em Kana — sem Romaji]
+* **Japanese**: [Kanji + Kana original — todo kanji com furigana, regra 4]
+* **Reading**: [Leitura completa em Kana — sem Romaji] *(linha de planejamento apenas; no HTML final a camada kana (layer-2) é SEMPRE omitida — regra 4/HTML.md §4.3, pois o furigana já dá a leitura)*
 * **Natural PT-BR**: "[Tradução natural e idiomática em Português]"
 * **Structural Breakdown**:
   `[Word/Kanji 1]` ([Significado]) + `[Particle/Element]` ([Função Gramatical]) + `[Word/Kanji 2]` ([Significado]) + `[Verb/Ending]` ([Conjugação/Função])
@@ -59,7 +56,7 @@ Generate the output following this EXACT section sequence:
 > **Registro**: [Polido (Desu/Masu) / Casual / Keigo / Escrito / Falado]
 > **Objetivo Prático**: [O que o estudante será capaz de comunicar/entender exatamente ao fim desta aula]
 > **Tempo estimado**: ~60 minutos
-> **Kanji da Aula (escrever):** [X], [Y], [Z] — os ÚNICOS kanji cobrados para escrita nesta semana. Todos os demais kanji que aparecerem nesta aula são de reconhecimento (leitura) e SEMPRE trazem furigana.
+> **Kanji da Aula (prioridade de leitura — Anki):** [X], [Y], [Z] — os kanji prioritários da semana para os cards do Anki (frente = kanji sem furigana / verso = leitura + tradução). Todos os kanjis desta aula SEMPRE trazem furigana; não há cobrança de escrita.
 
 ---
 
@@ -73,7 +70,7 @@ Formato sugerido:
 
 ---
 
-## 1. 🔤 ESCRITA & KANJI DA AULA
+## 1. 🔤 KANJI DA AULA (LEITURA)
 
 ### [Kanji Character] — [Significado Principal]
 - **Leituras**:
@@ -110,7 +107,8 @@ Formato sugerido:
 | <ruby>[Word]<rt>[Reading]</rt></ruby> | [Meaning] | [Type] |
 
 > [!TIP] Dica de Estudo Anki
-> - Crie um card para cada palavra com: frente = palavra em japonês, verso = leitura + tradução.
+> - Card padrão para palavra com kanji: **frente = palavra em kanji SEM furigana** / **verso = leitura em kana + tradução PT-BR**. Este é o único ponto do sistema onde o kanji aparece sem furigana (recall de leitura).
+> - Palavra 100% kana: card simples (frente = kana / verso = tradução).
 > - Revise ~10 minutos/dia. Não tente memorizar todas de uma vez.
 
 ---
@@ -184,7 +182,7 @@ Formato sugerido:
 ## 5. 🎯 FIXAÇÃO & AUTOAVALIAÇÃO
 
 ### Exercícios da Aula Atual
-*(Regra: os exercícios NUNCA exigem ESCREVER kanji de Nível 2 (reconhecimento) nem kanji formais ainda não introduzidos. A cobrança de escrita limita-se aos kanji formais já ensinados; kanji de reconhecimento só podem ser cobrados em leitura.)*
+*(Regra: os exercícios NUNCA exigem ESCREVER kanji de memória — o exame N5 não testa produção de escrita. Todos os kanjis sempre aparecem com furigana; a ênfase é leitura, vocabulário e gramática.)*
 1. **[Reconhecimento]**: Identifique a função de [elemento] na frase X.
 2. **[Construção]**: Complete a lacuna usando a regra Y.
 3. **[Tradução Guiada]**: Traduza a ideia Z aplicando o vocabulário e gramática desta aula.
@@ -232,9 +230,10 @@ Consolidation lessons do NOT teach new content. They review and reinforce everyt
 *(Perguntas diretas para testar memória ativa — o estudante deve tentar responder ANTES de olhar a resposta.)*
 
 ### Kanji → Significado
-| Kanji | Sua resposta | Resposta correta |
+*(Kanji sempre com furigana — o recall de leitura fica no Anki; aqui testa-se o significado.)*
+| Kanji &amp; Leitura | Sua resposta | Resposta correta |
 | :---: | :---: | :--- |
-| [Kanji 1] | _________ | [Significado + leituras] |
+| <ruby>[Kanji]<rt>[Leitura]</rt></ruby> | _________ | [Significado] |
 
 ### Vocabulário → Tradução
 | Palavra | Sua resposta | Resposta correta |

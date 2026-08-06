@@ -28,7 +28,7 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
 1. Never leave any temporary file or script in this repository.
 2. The data reference files live in `Content/N5_Grammar.md`, `Content/N5_Kanji.md`, `Content/N5_Vocabulary.md`. They are read-only reference data — do not modify them during a study session.
 3. **Cumulative principle:** Lessons build on each other. Lesson N assumes ALL content from lessons 1 to N-1 is mastered. Example sentences and practice questions for lesson N may freely use grammar, kanji, and vocabulary from lessons 1..N, but must NOT use content from lessons N+1 or beyond.
-4. **Row references:** Each lesson references rows in the data files in `Content/` by row number. Before teaching, open the referenced rows and read them.
+4. **Row references:** Each lesson is defined in the `## Curriculum Data (YAML)` section at the end of this file. The YAML block uses row numbers referencing `Content/N5_Grammar.md`, `Content/N5_Kanji.md`, and `Content/N5_Vocabulary.md`. Before teaching, locate the lesson entry in the YAML block, then open the referenced rows in the data files and read them. For consolidation lessons, use the `scope` field to identify which previous content lessons are being reviewed.
 5. **Two lesson types:**
    - **📘 Content lessons** teach new grammar, kanji, and vocabulary following Template A in `Filters/HTML.md`.
    - **🔄 Consolidation lessons** review and reinforce the previous 3-4 content lessons following Template B in `Filters/HTML.md`. They introduce NO new content.
@@ -41,6 +41,7 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
    - **Kanji:** Present new kanji as **recognition anchors** (âncoras de reconhecimento): glyph + meaning + radical as a mnemonic hook + 2-3 words/compounds using cumulative vocabulary. The reading is learned exclusively through the words — NEVER drill memorized onyomi/kunyomi or stroke counts (JLPT N5 does not test writing). Stroke count appears only as an optional note for handwriting.
    - **Focus Vocabulary:** Present focus words grouped by **semantic theme** with full examples.
    - **Anki Vocabulary:** Present Anki words in a reference table.
+   - **Anki card (reading recall engine):** for each kanji word — **front = word in kanji WITHOUT furigana** / **back = kana reading + PT-BR translation**. This is the ONLY place in the system where kanji appears without furigana. Pure-kana words use a simple card (front = kana / back = translation).
    - **Practice (end):** Exercises including **interleaved** questions mixing current and past content.
 8. Never use a grammar point in examples before it has been introduced.
 9. Teach in **Portuguese (PT-BR)**. Write Japanese examples with kanji + hiragana reading. All explanations, translations, and instructions must be in Portuguese.
@@ -61,7 +62,7 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
     - (a) Gerar a aula completa em formato HTML5 puro com CSS3 embutido, seguindo rigorosamente a arquitetura e especificações de `Filters/HTML.md`.
     - (b) Salvar temporariamente o código HTML gerado e executar o script de upload para o Google Drive:
       `node "/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js" "<caminho_do_arquivo_html_temp>" "N5_LX.html"`
-      (o script enviará o documento limpo diretamente para a pasta `Meu Drive > Aulas > Japones` como `N5_LX.html`, sem converter para Google Doc).
+      (o script executará a **validação automática de ruby** — regra 11, conforme `Filters/HTML.md` §4.6 — **ANTES** do upload e **BLOQUEARÁ** o envio se o arquivo reprovar em qualquer checagem. Somente arquivos aprovados são enviados para a pasta `Meu Drive > Aulas > Japones` como `N5_LX.html`, sem converter para Google Doc. Se a validação falhar, corrija o HTML conforme `Filters/HTML.md` §4.6 e tente novamente).
     - (c) Após a confirmação do upload, apagar o arquivo temporário local (respeitando a Regra 1 de não deixar arquivos temporários no repositório).
     - (d) Responda no chat com uma mensagem curta de confirmação informando que a aula foi gerada em formato HTML e enviada ao Google Drive com sucesso.
 14. **Geração e Correção Interativa de Exercícios (`Practice/`):** Ao receber o comando de exercícios (`"Exercícios Aula X"` / `"Drill Aula X"`), a IA deve gerar o caderno em Markdown no caminho `/Users/bmanica/Documents/GitHub/Bruno/Japones/Practice/N5_PX.md` seguindo rigorosamente a especificação em `Filters/Exercises.md`. O arquivo contém campos de resposta em branco digitáveis (`> `). Quando o estudante solicitar a correção (`"Corrigir Aula X"` / `"Avalie o Practice/N5_PX.md"`), a IA lê o arquivo local, analisa as respostas digitadas pelo aluno após o caractere `>`, fornece nota e feedback didático detalhado no chat e atualiza o status do arquivo.
@@ -119,611 +120,394 @@ Total: 84 grammar points, 80 kanji, 644 vocabulary items (todas as linhas do arq
 
 ---
 
-# FASE 1: FUNDAÇÕES — "Quem sou eu"
-
----
-
-## Aula 1: 📘 Eu Sou — Copula, は & Perguntas
-
-**Objetivo:** Apresentar-se, afirmar identidade com です/だ, marcar o tópico com は, e formar perguntas com か.
-
-### Gramática (N5_Grammar.md)
-Refs: #2 (da/desu), #79 (wa), #21 (ka)
-
-### Kanji (N5_Kanji.md)
-Refs: #2 (一), #8 (二), #13 (三)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Pronomes:** #612 私, #15 あなた
-- **Identidade:** #375 名前, #172 人, #116 学生, #492 先生
-- **Básico:** #176 本, #97 英語, #308 国, #319 今日, #192 今
-- **Expressões:** #133 はい, #94 ええ, #90 どうも, #91 どうぞ
-
-### Vocabulário Anki (N5_Vocabulary.md) — 10 palavras
-#113 外国, #114 外国人, #237 漢字, #297 言葉, #471 留学生, #487 生徒, #231 会社, #202 医者, #212 じゃあ, #472 さあ
-
----
-
-## Aula 2: 📘 Não Sou — Negação, Posse & Inclusão
-
-**Objetivo:** Negar identidade com じゃない, expressar posse com の, e adicionar com も. Aprender prefixos de polidez お/ご.
-
-### Gramática (N5_Grammar.md)
-Refs: #20 (janai/dewa nai), #52 (no), #34 (mo), #59 (o/go)
-
-### Kanji (N5_Kanji.md)
-Refs: #4 (人), #9 (本), #6 (大), #76 (友)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Família (própria):** #57 父, #132 母, #17 兄, #16 姉, #445 弟, #194 妹
-- **Família (alheia):** #444 お父さん, #412 お母さん, #425 お兄さん, #423 お姉さん
-- **Relações:** #255 家族, #470 両親, #320 兄弟, #280 子供, #573 友達
-
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#404 おばあさん, #405 伯母さん, #411 伯父さん, #417 奥さん, #418 お巡りさん, #256 警官, #248 家庭, #439 男, #426 女, #440 男の子, #427 女の子, #441 大人
-
----
-
-## Aula 3: 📘 Minha Família & Números
-
-**Objetivo:** Contar de 1 a 10.000, usar が como marcador de sujeito, intensificar com とても, e apresentar alternativas com か〜か.
-
-### Gramática (N5_Grammar.md)
-Refs: #11 (ga), #77 (totemo), #22 (ka~ka)
-
-### Kanji (N5_Kanji.md)
-Refs: #26 (四), #22 (五), #37 (六)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Números cardinais:** #183 一, #388 二, #479 三, #498 四, #122 五, #466 六, #499 七, #130 八, #322 九, #222 十
-- **Números grandes:** #182 百, #490 千, #334 万, #460 零, #643 ゼロ
-
-### Vocabulário Anki (N5_Vocabulary.md) — 14 palavras
-#174 一つ, #108 二つ, #356 三つ, #630 四つ, #209 五つ, #368 六つ, #376 七つ, #622 八つ, #284 九つ, #173 一人, #107 二人, #191 いくつ, #190 いくら, #42 番号
-
----
-
-## Aula 4: 📘 Meu Mundo — Conexões & Contexto
-
-**Objetivo:** Listar com と (completo) e や (exemplos), limitar com だけ, e perguntar tipo com どんな. Vocabulário de corpo e identidade.
-
-### Gramática (N5_Grammar.md)
-Refs: #75 (to), #82 (ya), #3 (dake), #8 (donna)
-
-### Kanji (N5_Kanji.md)
-Refs: #42 (七), #36 (八), #29 (九)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Corpo:** #33 頭, #340 目, #349 耳, #142 鼻, #303 口, #129 歯, #557 手, #29 足, #484 背, #422 お腹, #239 体
-- **Perguntas:** #71 誰, #72 誰か, #84 どこ, #85 どなた
-
-### Vocabulário Anki (N5_Vocabulary.md) — 10 palavras
-#184 一番, #421 同じ, #640 有名, #178 本当, #258 結構, #530 少し, #548 沢山, #642 全部, #207 いつ, #377 何
-
----
-
-## Aula 5: 🔄 Consolidação — Aulas 1 a 4
-
-**Escopo:** Revisão ativa de todo conteúdo das Aulas 1 a 4 (cumulativo).
-Seguir Template B de `Filters/HTML.md`.
-
-**Conteúdo coberto:**
-- Gramática: です/だ, じゃない, は, か, の, も, お/ご, が, とても, か〜か, と, や, だけ, どんな (14 pontos)
-- Kanji: 一, 二, 三, 四, 五, 六, 七, 八, 九, 人, 本, 大, 友 (13 kanji)
-- Vocabulário: 107 palavras
-
----
-
-# FASE 2: ESPAÇO — "Onde estou"
-
----
-
-## Aula 6: 📘 Partículas de Lugar & Movimento
-
-**Objetivo:** Dominar に (destino/tempo), で (meio/local de ação) e に/へ (direção), com o primeiro núcleo de verbos de movimento (Verbo-Core).
-
-### Gramática (N5_Grammar.md)
-Refs: #48 (ni), #5 (de), #51 (ni/e)
-
-### Kanji (N5_Kanji.md)
-Refs: #3 (国), #24 (上), #38 (下), #35 (外)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Verbo-Core (dicionário / ます / ました / ません):** #189 行く, #313 来る, #226 帰る, #25 歩く, #153 走る
-- **Locais básicos:** #186 家, #161 部屋
-- **Posições:** #596 上, #510 下, #372 中, #524 外
-- **Direções:** #346 右, #162 左
-- **Transporte:** #43 バス, #77 電車
-
-### Vocabulário Anki (N5_Vocabulary.md) — 16 palavras
-#117 玄関, #66 台所, #395 庭, #326 前, #601 後ろ, #574 隣, #516 そば, #626 横, #554 縦, #366 向こう, #225 角, #343 道, #302 交差点, #152 橋, #197 入口, #74 出口
-
----
-
-## Aula 7: 📘 Existe Aqui — ある・いる & Demonstrativos
-
-**Objetivo:** Expressar existência de coisas (がある) e seres vivos (がいる), usar demonstrativos (これ/それ/あれ), e perguntar "por quê" (どうして).
-
-### Gramática (N5_Grammar.md)
-Refs: #12 (ga arimasu), #14 (ga imasu), #9 (doushite)
-
-### Kanji (N5_Kanji.md)
-Refs: #10 (中), #43 (山), #62 (木)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Demonstrativos (isso):** #295 これ, #522 それ, #23 あれ, #282 ここ, #519 そこ, #32 あそこ
-- **Demonstrativos (qual):** #87 どれ, #82 どっち, #83 どちら
-- **Pré-nominais:** #289 この, #520 その, #18 あの, #86 どの
-- **Verbos:** #24 ある, #201 居る
-
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#3 あっち, #4 あちら, #517 そっち, #518 そちら, #278 こっち, #279 こちら, #288 こんな, #163 東, #394 西, #275 北, #350 南, #565 戸
-
----
-
-## Aula 8: 📘 Pela Cidade — Locais & Transporte
-
-**Objetivo:** Nomear locais urbanos, meios de transporte, e itens da casa. Usar ね para confirmação, をください para pedir, はどうですか para opiniões e どうやって para perguntar o meio.
-
-### Gramática (N5_Grammar.md)
-Refs: #47 (ne), #61 (o kudasai), #81 (wa dou desu ka), #10 (douyatte)
-
-### Kanji (N5_Kanji.md)
-Refs: #25 (東), #52 (川), #41 (小), #57 (西)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Locais:** #115 学校, #67 大学, #53 病院, #98 駅, #582 図書館, #301 公園, #464 レストラン, #354 店, #120 銀行, #79 デパート, #274 喫茶店
-- **Transporte:** #314 車, #549 タクシー, #164 飛行機, #62 地下鉄
-
-### Vocabulário Anki (N5_Vocabulary.md) — 16 palavras
-#513 食堂, #637 郵便局, #299 交番, #321 教室, #455 プール, #21 アパート, #205 椅子, #590 机, #558 テーブル, #325 窓, #81 ドア, #324 町, #367 村, #555 建物, #159 辺, #45 ベッド
-
----
-
-## Aula 9: 🔄 Consolidação — Aulas 6 a 8
-
-**Escopo:** Revisão ativa de todo conteúdo das Aulas 6 a 8 (cumulativo desde Aula 1).
-Seguir Template B de `Filters/HTML.md`.
-
----
-
-# FASE 3: DESCRIÇÃO — "Como é"
-
----
-
-## Aula 10: 📘 Adjetivos-い — Descrevendo o Mundo
-
-**Objetivo:** Dominar adjetivos-い: forma afirmativa, negativa (〜くない), passada (〜かった), e modificação de substantivos.
-
-### Gramática (N5_Grammar.md)
-Refs: #16 (i-adjectives), #65 (sugiru), #37 (naa)
-
-### Kanji (N5_Kanji.md)
-Refs: #11 (長), #32 (高), #33 (円)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Tamanho/Forma:** #429 大きい, #59 小さい, #370 長い, #347 短い, #547 高い, #167 低い, #109 太い, #180 細い
-- **Qualidade:** #34 新しい, #106 古い, #624 良い, #609 悪い, #369 難しい, #618 易しい, #420 面白い
-
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#619 安い, #244 軽い, #419 重い, #169 広い, #489 狭い, #595 強い, #633 弱い, #157 速い, #158 早い, #436 遅い, #602 薄い, #592 詰まらない
-
----
-
-## Aula 11: 📘 Adjetivos-な, Cores & Contrastes
-
-**Objetivo:** Dominar adjetivos-な (な+N, じゃない), cores, e conectores de contraste でも e しかし.
-
-### Gramática (N5_Grammar.md)
-Refs: #36 (na-adjectives), #6 (demo), #62 (shikashi)
-
-### Kanji (N5_Kanji.md)
-Refs: #27 (今), #28 (金), #40 (気), #70 (白)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **な-adjectives:** #269 綺麗, #512 静か, #390 賑やか, #118 元気, #68 大丈夫, #219 丈夫, #465 立派, #47 便利, #168 暇
-- **Cores:** #6 赤, #7 赤い, #19 青, #20 青い, #311 黒, #312 黒い
-
-### Vocabulário Anki (N5_Vocabulary.md) — 13 palavras
-#507 白, #508 白い, #263 黄色い, #344 緑, #55 茶色, #198 色, #199 色々, #430 大きな, #60 小さな, #160 下手, #220 上手, #545 大切, #544 大変
-
----
-
-## Aula 12: 📘 Mais Descrições, Advérbios & Ênfase
-
-**Objetivo:** Aprender advérbios de grau e modo, usar よ para ênfase, e conectores そして/それから para sequenciar ideias.
-
-### Gramática (N5_Grammar.md)
-Refs: #83 (yo), #64 (soshite), #63 (sore kara)
-
-### Kanji (N5_Kanji.md)
-Refs: #21 (生), #34 (子), #31 (学)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Sensações térmicas:** #37 暑い, #478 寒い, #35 暖かい, #539 涼しい, #39 熱い, #593 冷たい, #402 温い
-- **Advérbios:** #64 ちょっと, #65 丁度, #70 だんだん, #88 どう, #137 初めて, #384 何故, #526 直ぐに, #635 ゆっくり
-
-### Vocabulário Anki (N5_Vocabulary.md) — 13 palavras
-#2 危ない, #8 明るい, #309 暗い, #12 甘い, #339 不味い, #203 忙しい, #206 痛い, #251 可愛い, #276 汚い, #336 丸い, #607 若い, #38 厚い, #553 楽しい
-
----
-
-## Aula 13: 🔄 Consolidação — Aulas 10 a 12
-
-**Escopo:** Revisão ativa de todo conteúdo das Aulas 10 a 12 (cumulativo desde Aula 1).
-Seguir Template B de `Filters/HTML.md`.
-
----
-
-# FASE 4: TEMPO & DESEJOS — "Quando" e "O que quero"
-
----
-
-## Aula 14: 📘 Calendário & Datas
-
-**Objetivo:** Expressar dias da semana e datas, e usar から (de/porque), まで (até), いつも (sempre).
-
-### Gramática (N5_Grammar.md)
-Refs: #23 (kara), #29 (made), #19 (itsumo)
-
-### Kanji (N5_Kanji.md)
-Refs: #1 (日), #14 (時), #17 (月), #18 (分)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Dias da semana:** #389 日曜日, #119 月曜日, #252 火曜日, #527 水曜日, #358 木曜日, #266 金曜日, #92 土曜日
-- **Períodos:** #26 朝, #170 昼, #629 夜, #638 夕方, #123 午後, #125 午前
-- **Tempo:** #216 時間, #569 時
-
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#185 一日, #110 二日, #348 三日, #625 四日, #208 五日, #365 六日, #378 七日, #632 八日, #283 九日, #576 十日, #156 二十日, #584 一日(tsuitachi)
-
----
-
-## Aula 15: 📘 Frequência & Sequência Temporal
-
-**Objetivo:** Falar sobre frequência (まだ/もう), hábitos, e marcar tempo com とき. Vocabulário de períodos relativos.
-
-### Gramática (N5_Grammar.md)
-Refs: #27 (mada), #35 (mou), #76 (toki)
-
-### Kanji (N5_Kanji.md)
-Refs: #23 (間), #5 (年), #7 (十), #55 (半)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Frequência:** #330 毎日, #328 毎朝, #329 毎晩, #331 毎週, #333 毎月, #332 毎年, #570 時々
-- **Relativo:** #265 昨日, #30 明日, #28 明後日, #318 去年, #298 今年, #457 来年
-- **Extras:** #568 時計, #140 半
-
-### Vocabulário Anki (N5_Vocabulary.md) — 11 palavras
-#259 今朝, #286 今晩, #287 今月, #290 今週, #491 先月, #493 先週, #456 来月, #458 来週, #442 一昨日, #443 一昨年, #481 再来年
-
----
-
-## Aula 16: 📘 Gostos, Desejos & Comida
-
-**Objetivo:** Expressar gostos (のが好き), desejos por coisas (がほしい) e ações (〜たい), e explicar com んです. Vocabulário de comida.
-
-### Gramática (N5_Grammar.md)
-Refs: #56 (no ga suki), #13 (ga hoshii), #67 (tai), #46 (ndesu)
-
-### Kanji (N5_Kanji.md)
-Refs: #64 (食), #54 (水), #44 (話)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Sentimentos:** #529 好き, #69 大好き, #268 嫌い, #211 嫌, #179 欲しい
-- **Comida:** #124 ご飯, #27 朝ご飯, #171 昼ご飯, #41 晩ご飯, #639 夕飯, #392 肉, #474 魚, #617 野菜
-- **Comer e Beber:** #542 食べる, #398 飲む
-
-### Vocabulário Anki (N5_Vocabulary.md) — 15 palavras
-#304 果物, #52 豚肉, #127 牛肉, #578 鶏肉, #483 砂糖, #506 塩, #514 醤油, #44 バター, #241 カレー, #541 食べ物, #397 飲み物, #469 料理, #449 パン, #550 卵, #357 水
-
----
-
-## Aula 17: 📘 Habilidades, Natureza & Estações
-
-**Objetivo:** Falar sobre habilidades (上手/下手) e ações conjuntas (一緒に). Vocabulário de natureza e estações.
-
-### Gramática (N5_Grammar.md)
-Refs: #55 (no ga jouzu), #54 (no ga heta), #18 (issho ni)
-
-### Kanji (N5_Kanji.md)
-Refs: #56 (男), #45 (女), #50 (先)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Bebidas:** #291 コーヒー, #408 お茶, #128 牛乳, #433 お酒
-- **Natureza:** #141 花, #250 川, #598 海, #614 山, #521 空
-- **Estações:** #149 春, #382 夏, #10 秋, #112 冬
-- **Habilidades:** #144 話す, #234 書く
-
-### Vocabulário Anki (N5_Vocabulary.md) — 15 palavras
-#300 紅茶, #261 木, #188 池, #204 一緒, #195 犬, #385 猫, #577 鳥, #89 動物, #452 ペット, #383 夏休み, #93 絵, #95 映画, #96 映画館, #424 音楽, #533 スポーツ
-
----
-
-## Aula 18: 🔄 Consolidação — Aulas 14 a 17
-
-**Escopo:** Revisão ativa de todo conteúdo das Aulas 14 a 17 (cumulativo desde Aula 1).
-Seguir Template B de `Filters/HTML.md`.
-
----
-
-# FASE 5: AÇÕES — "O que faço"
-
----
-
-## Aula 19: 📘 Verbos & Conjugação: Fundamentos
-
-**Objetivo:** Sistematizar a conjugação dos 3 grupos de verbos (ます/て/ない/た), marcar o objeto com を, e usar てください (pedido), まえに (antes de) e のです (explicação formal). Esta aula inclui o **MÓDULO DE CONJUGAÇÃO** (seção 3E do Template A).
-
-### Gramática (N5_Grammar.md)
-Refs: #72 (te kudasai), #60 (wo), #53 (no desu), #30 (mae ni)
-
-### Kanji (N5_Kanji.md)
-Refs: #15 (行), #39 (来), #30 (入)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 12 palavras
-- **Cotidiano básico:** #80 出る, #134 入る, #353 見る, #264 聞く, #628 読む, #387 寝る, #415 起きる
-- **Verbos essenciais:** #210 言う, #608 分かる, #407 覚える, #586 使う, #155 働く
-
-### Vocabulário Anki (N5_Vocabulary.md) — 6 palavras
-#509 知る, #610 忘れる, #200 要る, #296 答える, #381 習う, #435 教える
-
----
-
-## Aula 20: 📘 て-form: Progresso & Experiência
-
-**Objetivo:** Usar ている (ação em progresso/estado), てから (depois de fazer), たことがある (experiência passada) e まだ〜ていません (ainda não). Mais verbos de ação.
-
-### Gramática (N5_Grammar.md)
-Refs: #70 (te iru), #71 (te kara), #66 (ta koto ga aru), #28 (mada~te imasen)
-
-### Kanji (N5_Kanji.md)
-Refs: #16 (見), #63 (聞), #49 (書), #75 (読)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Ações domésticas:** #22 洗う, #525 掃除, #494 洗濯, #591 作る, #249 買う, #599 売る
-- **Ações com objetos:** #9 開ける, #11 開く, #502 閉める, #501 閉まる, #260 消す, #262 消える
-- **Interação:** #40 会う, #338 待つ, #623 呼ぶ
-
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#230 買い物, #463 練習, #515 宿題, #511 質問, #480 散歩, #143 話, #620 休み, #500 仕事, #221 授業, #46 勉強, #475 先, #36 後
-
----
-
-## Aula 21: 📘 て-form: Permissão & Proibição
-
-**Objetivo:** Pedir e dar permissão (てもいい) e proibir (てはいけない/ちゃいけない).
-
-### Gramática (N5_Grammar.md)
-Refs: #74 (temo ii), #73 (te wa ikenai), #1 (cha ikenai)
-
-### Kanji (N5_Kanji.md)
-Refs: #65 (車), #58 (電), #51 (名)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Transporte (ações):** #400 乗る, #432 降りる, #572 止まる, #566 飛ぶ, #327 曲がる, #611 渡る
-- **Vestir/Corpo:** #273 着る, #139 履く, #401 脱ぐ, #503 締める, #1 浴びる
-- **Dar/Receber:** #5 上げる, #246 貸す, #243 借りる, #613 渡す
-
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#215 自動車, #218 自転車, #100 エレベーター, #229 階段, #467 廊下, #409 お風呂, #413 お金, #473 財布, #228 鍵, #245 傘, #236 紙, #103 服
-
----
-
-## Aula 22: 🔄 Consolidação — Aulas 19 a 21
-
-**Escopo:** Revisão ativa de todo conteúdo das Aulas 19 a 21 (cumulativo desde Aula 1).
-Seguir Template B de `Filters/HTML.md`.
-
----
-
-## Aula 23: 📘 Verbos do Cotidiano (Parte 1)
-
-**Objetivo:** Usar に行く (ir para fazer), にする (decidir), つもり (intenção) e なる (tornar-se). Verbos de rotina e casa.
-
-### Gramática (N5_Grammar.md)
-Refs: #49 (ni iku), #50 (ni suru), #78 (tsumori), #45 (naru)
-
-### Kanji (N5_Kanji.md)
-Refs: #59 (校), #60 (語), #12 (出)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Ações domésticas:** #416 置く, #362 持つ, #579 取る, #556 立つ, #538 座る, #437 押す, #165 引く
-- **Cozinha/Refeição:** #151 箸, #534 スプーン, #371 ナイフ, #102 フォーク, #294 コップ, #238 カップ, #56 茶碗, #434 お皿
-
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#232 掛かる, #233 掛ける, #379 並べる, #380 並ぶ, #73 出す, #196 入れる, #587 つける, #588 付ける, #75 出かける, #589 着く, #594 勤める, #532 住む
-
----
-
-## Aula 24: 📘 Verbos do Cotidiano (Parte 2)
-
-**Objetivo:** Listar ações representativas com たり〜たり, dar conselhos com ほうがいい, usar ないで (sem fazer), e けど (mas).
-
-### Gramática (N5_Grammar.md)
-Refs: #68 (tari~tari), #15 (hou ga ii), #38 (naide), #25 (kedo)
-
-### Kanji (N5_Kanji.md)
-Refs: #78 (休), #66 (何), #69 (毎)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Atividades:** #31 遊ぶ, #447 泳ぐ, #396 登る, #604 歌う, #166 弾く, #345 磨く, #621 休む
-- **Ações diversas:** #552 頼む, #285 困る, #374 無くす, #505 死ぬ, #373 鳴く, #476 咲く, #585 疲れる, #597 生まれる
-
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#459 ラジオ, #563 テレビ, #121 ギター, #603 歌, #406 お弁当, #414 お菓子, #14 飴, #240 辛い, #410 美味しい, #428 多い, #531 少ない, #600 煩い
-
----
-
-## Aula 25: 📘 Mais Verbos & Objetos do Dia-a-dia
-
-**Objetivo:** Pedir para NÃO fazer com ないでください, contrastar formalmente com けれども. Vocabulário de objetos e vestuário.
-
-### Gramática (N5_Grammar.md)
-Refs: #39 (naide kudasai), #26 (keredo mo), #69 (te aru)
-
-### Kanji (N5_Kanji.md)
-Refs: #19 (後), #20 (前), #46 (北)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Verbos restantes:** #58 違う, #227 返す, #355 見せる, #580 撮る, #272 切る, #537 吸う, #136 始まる, #446 終わる, #616 やる
-- **Vestuário:** #316 靴, #317 靴下, #50 帽子, #386 ネクタイ, #528 スカート, #292 コート
-
-### Vocabulário Anki (N5_Vocabulary.md) — 12 palavras
-#496 シャツ, #605 上着, #631 洋服, #644 ズボン, #486 セーター, #488 石鹸, #497 シャワー, #461 冷蔵庫, #536 ストーブ, #454 ポスト, #567 トイレ, #438 お手洗い
-
----
-
-## Aula 26: 🔄 Consolidação — Aulas 23 a 25
-
-**Escopo:** Revisão ativa de todo conteúdo das Aulas 23 a 25 (cumulativo desde Aula 1).
-Seguir Template B de `Filters/HTML.md`.
-
----
-
-# FASE 6: COMUNICAÇÃO — "Como me expresso"
-
----
-
-## Aula 27: 📘 Obrigação & Proibição
-
-**Objetivo:** Expressar obrigação (ないといけない, なくてはいけない, なくてはならない, なくちゃ) em diferentes níveis de formalidade. Vocabulário de clima e obrigações.
-
-### Gramática (N5_Grammar.md)
-Refs: #40 (naito ikenai), #43 (nakute wa ikenai), #44 (nakute wa naranai), #42 (nakucha)
-
-### Kanji (N5_Kanji.md)
-Refs: #71 (天), #80 (雨), #67 (南)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Clima:** #562 天気, #13 雨, #634 雪, #253 風, #147 晴れ, #306 曇り
-- **Verbos de clima:** #148 晴れる, #307 曇る, #104 吹く, #105 降る
-- **Obrigações:** #359 門, #315 薬, #254 風邪, #54 病気, #305 下さい
-
-### Vocabulário Anki (N5_Vocabulary.md) — 10 palavras
-#543 多分, #337 真っ直ぐ, #364 もう一度, #627 よく, #247 方, #571 所, #281 声, #361 物, #360 問題, #193 意味
-
----
-
-## Aula 28: 📘 Convites & Sugestões
-
-**Objetivo:** Fazer convites (ませんか), propor ações conjuntas (ましょう), oferecer ajuda (ましょうか), e dispensar obrigação (なくてもいい).
-
-### Gramática (N5_Grammar.md)
-Refs: #31 (masen ka), #32 (mashou), #33 (mashouka), #41 (naku temo ii)
-
-### Kanji (N5_Kanji.md)
-Refs: #47 (午), #48 (百), #53 (千)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Viagem:** #468 旅行, #181 ホテル, #267 切符, #546 大使館, #393 荷物
-- **Comunicação:** #78 電話, #76 電気, #495 写真, #561 手紙, #277 切手, #131 葉書
-- **Expressões:** #187 いかが, #523 それでは, #448 パーティー, #214 自分
-
-### Vocabulário Anki (N5_Vocabulary.md) — 10 palavras
-#581 年, #145 半分, #154 二十歳, #636 昨夜, #391 日記, #551 誕生日, #257 結婚, #431 大勢, #351 皆さん, #352 みんな
-
----
-
-## Aula 29: 📘 Comparações & Contrastes
-
-**Objetivo:** Comparar (は〜より, より〜ほうが), superlativar (一番, の中で一番), e vocabulário escolar.
-
-### Gramática (N5_Grammar.md)
-Refs: #17 (ichiban), #57 (no naka de ichiban), #80 (wa~yori), #84 (yori~hou ga)
-
-### Kanji (N5_Kanji.md)
-Refs: #68 (万), #61 (土), #73 (火)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Escrita/Escola:** #99 鉛筆, #48 ボールペン, #335 万年筆, #451 ペン, #399 ノート, #63 地図, #217 辞書, #213 字引, #504 新聞, #641 雑誌
-- **Objetos:** #235 カメラ, #242 カレンダー, #342 眼鏡, #293 コピー, #564 テスト
-
-### Vocabulário Anki (N5_Vocabulary.md) — 9 palavras
-#310 クラス, #477 作文, #450 ページ, #51 文章, #615 八百屋, #575 遠い, #61 近い, #363 もっと, #270 キログラム
-
----
-
-## Aula 30: 🔄 Consolidação — Aulas 27 a 29
-
-**Escopo:** Revisão ativa de todo conteúdo das Aulas 27 a 29 (cumulativo desde Aula 1).
-Seguir Template B de `Filters/HTML.md`.
-
----
-
-## Aula 31: 📘 Conectando Ideias & Explicações
-
-**Objetivo:** Dar razões com ので, conjecturar com だろう/でしょう, e descrever métodos com 方. Vocabulário restante do N5.
-
-### Gramática (N5_Grammar.md)
-Refs: #58 (node), #4 (darou), #7 (deshou), #24 (kata)
-
-### Kanji (N5_Kanji.md)
-Refs: #72 (母), #79 (父), #74 (右), #77 (左)
-
-### Vocabulário Foco (N5_Vocabulary.md) — 15 palavras
-- **Objetos restantes:** #138 箱, #177 本棚, #224 花瓶, #135 灰皿, #453 ポケット, #223 かばん, #111 封筒, #146 ハンカチ, #323 マッチ
-- **Medidas:** #341 メートル, #271 キロメートル, #126 グラム
-- **Mídia:** #559 テープ, #560 テープレコーダー, #462 レコード
-
-### Vocabulário Anki (N5_Vocabulary.md) — 11 palavras
-#101 フィルム, #535 スリッパ, #606 ワイシャツ, #485 背広, #540 たばこ, #403 ニュース, #175 ほか, #583 次, #49 ボタン, #150 貼る, #482 差す
-
----
-
-## Aula 32: 🔄 Revisão Final & Simulado N5
-
-**Escopo:** Revisão geral de TODO o conteúdo do currículo (Aulas 1 a 31).
-Seguir Template B de `Filters/HTML.md`, com as seguintes adições:
-
-**Formato especial desta aula:**
-1. **Recall completo** de todos os 80 kanji
-2. **Exercício de gramática** cobrindo todas as 84 estruturas em formato de simulado
-3. **Diálogo longo** (10+ turnos) integrando vocabulário e gramática de todas as fases
-4. **Autodiagnóstico final** com plano de revisão para itens fracos
-5. **Mini-simulado N5** com questões no formato oficial do JLPT
-
----
-
-## Cumulative Mastery Tracker
-
-| After Lesson | Grammar | Kanji | Vocab |
-|:---:|:---:|:---:|:---:|
-| 1 | 3 | 3 | 25 |
-| 2 | 7 | 7 | 52 |
-| 3 | 10 | 10 | 81 |
-| 4 | 14 | 13 | 106 |
-| 5 (consol) | 14 | 13 | 106 |
-| 6 | 17 | 17 | 137 |
-| 7 | 20 | 20 | 164 |
-| 8 | 24 | 24 | 195 |
-| 9 (consol) | 24 | 24 | 195 |
-| 10 | 27 | 27 | 222 |
-| 11 | 30 | 31 | 250 |
-| 12 | 33 | 34 | 278 |
-| 13 (consol) | 33 | 34 | 278 |
-| 14 | 36 | 38 | 305 |
-| 15 | 39 | 42 | 331 |
-| 16 | 43 | 45 | 361 |
-| 17 | 46 | 48 | 391 |
-| 18 (consol) | 46 | 48 | 391 |
-| 19 | 50 | 51 | 409 |
-| 20 | 54 | 55 | 436 |
-| 21 | 57 | 58 | 463 |
-| 22 (consol) | 57 | 58 | 463 |
-| 23 | 61 | 61 | 490 |
-| 24 | 65 | 64 | 517 |
-| 25 | 68 | 67 | 544 |
-| 26 (consol) | 68 | 67 | 544 |
-| 27 | 72 | 70 | 569 |
-| 28 | 76 | 73 | 594 |
-| 29 | 80 | 76 | 618 |
-| 30 (consol) | 80 | 76 | 618 |
-| 31 | 84 | 80 | 644 |
-| 32 (consol) | 84 | 80 | 644 |
-
-**Session commands:**
-- "Lesson N" → teach lesson N (cumulative scope).
-- "Review" → cumulative review of everything covered so far.
-- "Drill" → generate practice material from cumulative content.
-- "Continue" → resume the last lesson practice section.
+## Curriculum Data (YAML)
+
+O bloco abaixo define as 32 aulas do currículo em formato estruturado. Os números em `grammar`, `kanji`, `focus_vocab` e `anki_vocab` são referências de linha (row #) aos arquivos em `Content/`. Para aulas de consolidação, `scope` lista as aulas de conteúdo cobertas na revisão.
+
+```yaml
+lessons:
+
+  # ═══════════════════════════════════════════
+  # FASE 1: FUNDAÇÕES — "Quem sou eu"
+  # ═══════════════════════════════════════════
+
+  1:
+    type: content
+    phase: 1
+    title: "Eu Sou — Copula, は & Perguntas"
+    objective: "Apresentar-se, afirmar identidade com です/だ, marcar o tópico com は, e formar perguntas com か."
+    grammar: [2, 79, 21]
+    kanji: [2, 8, 13]
+    focus_vocab:
+      "Pronomes": [612, 15]
+      "Identidade": [375, 172, 116, 492]
+      "Básico": [176, 97, 308, 319, 192]
+      "Expressões": [133, 94, 90, 91]
+    anki_vocab: [113, 114, 237, 297, 471, 487, 231, 202, 212, 472]
+
+  2:
+    type: content
+    phase: 1
+    title: "Não Sou — Negação, Posse & Inclusão"
+    objective: "Negar identidade com じゃない, expressar posse com の, e adicionar com も. Aprender prefixos de polidez お/ご."
+    grammar: [20, 52, 34, 59]
+    kanji: [4, 9, 6, 76]
+    focus_vocab:
+      "Família (própria)": [57, 132, 17, 16, 445, 194]
+      "Família (alheia)": [444, 412, 425, 423]
+      "Relações": [255, 470, 320, 280, 573]
+    anki_vocab: [404, 405, 411, 417, 418, 256, 248, 439, 426, 440, 427, 441]
+
+  3:
+    type: content
+    phase: 1
+    title: "Minha Família & Números"
+    objective: "Contar de 1 a 10.000, usar が como marcador de sujeito, intensificar com とても, e apresentar alternativas com か〜か."
+    grammar: [11, 77, 22]
+    kanji: [26, 22, 37]
+    focus_vocab:
+      "Números cardinais": [183, 388, 479, 498, 122, 466, 499, 130, 322, 222]
+      "Números grandes": [182, 490, 334, 460, 643]
+    anki_vocab: [174, 108, 356, 630, 209, 368, 376, 622, 284, 173, 107, 191, 190, 42]
+
+  4:
+    type: content
+    phase: 1
+    title: "Meu Mundo — Conexões & Contexto"
+    objective: "Listar com と (completo) e や (exemplos), limitar com だけ, e perguntar tipo com どんな. Vocabulário de corpo e identidade."
+    grammar: [75, 82, 3, 8]
+    kanji: [42, 36, 29]
+    focus_vocab:
+      "Corpo": [33, 340, 349, 142, 303, 129, 557, 29, 484, 422, 239]
+      "Perguntas": [71, 72, 84, 85]
+    anki_vocab: [184, 421, 640, 178, 258, 530, 548, 642, 207, 377]
+
+  5:
+    type: consolidation
+    phase: 1
+    title: "Consolidação — Aulas 1 a 4"
+    scope: [1, 2, 3, 4]
+
+  # ═══════════════════════════════════════════
+  # FASE 2: ESPAÇO — "Onde estou"
+  # ═══════════════════════════════════════════
+
+  6:
+    type: content
+    phase: 2
+    title: "Partículas de Lugar & Movimento"
+    objective: "Dominar に (destino/tempo), で (meio/local de ação) e に/へ (direção), com o primeiro núcleo de verbos de movimento (Verbo-Core)."
+    grammar: [48, 5, 51]
+    kanji: [3, 24, 38, 35]
+    focus_vocab:
+      "Verbo-Core": [189, 313, 226, 25, 153]
+      "Locais básicos": [186, 161]
+      "Posições": [596, 510, 372, 524]
+      "Direções": [346, 162]
+      "Transporte": [43, 77]
+    anki_vocab: [117, 66, 395, 326, 601, 574, 516, 626, 554, 366, 225, 343, 302, 152, 197, 74]
+
+  7:
+    type: content
+    phase: 2
+    title: "Existe Aqui — ある・いる & Demonstrativos"
+    objective: "Expressar existência de coisas (がある) e seres vivos (がいる), usar demonstrativos (これ/それ/あれ), e perguntar "por quê" (どうして)."
+    grammar: [12, 14, 9]
+    kanji: [10, 43, 62]
+    focus_vocab:
+      "Demonstrativos (isso)": [295, 522, 23, 282, 519, 32]
+      "Demonstrativos (qual)": [87, 82, 83]
+      "Pré-nominais": [289, 520, 18, 86]
+      "Verbos": [24, 201]
+    anki_vocab: [3, 4, 517, 518, 278, 279, 288, 163, 394, 275, 350, 565]
+
+  8:
+    type: content
+    phase: 2
+    title: "Pela Cidade — Locais & Transporte"
+    objective: "Nomear locais urbanos, meios de transporte, e itens da casa. Usar ね para confirmação, をください para pedir, はどうですか para opiniões e どうやって para perguntar o meio."
+    grammar: [47, 61, 81, 10]
+    kanji: [25, 52, 41, 57]
+    focus_vocab:
+      "Locais": [115, 67, 53, 98, 582, 301, 464, 354, 120, 79, 274]
+      "Transporte": [314, 549, 164, 62]
+    anki_vocab: [513, 637, 299, 321, 455, 21, 205, 590, 558, 325, 81, 324, 367, 555, 159, 45]
+
+  9:
+    type: consolidation
+    phase: 2
+    title: "Consolidação — Aulas 6 a 8"
+    scope: [6, 7, 8]
+
+  # ═══════════════════════════════════════════
+  # FASE 3: DESCRIÇÃO — "Como é"
+  # ═══════════════════════════════════════════
+
+  10:
+    type: content
+    phase: 3
+    title: "Adjetivos-い — Descrevendo o Mundo"
+    objective: "Dominar adjetivos-い: forma afirmativa, negativa (〜くない), passada (〜かった), e modificação de substantivos."
+    grammar: [16, 65, 37]
+    kanji: [11, 32, 33]
+    focus_vocab:
+      "Tamanho/Forma": [429, 59, 370, 347, 547, 167, 109, 180]
+      "Qualidade": [34, 106, 624, 609, 369, 618, 420]
+    anki_vocab: [619, 244, 419, 169, 489, 595, 633, 157, 158, 436, 602, 592]
+
+  11:
+    type: content
+    phase: 3
+    title: "Adjetivos-な, Cores & Contrastes"
+    objective: "Dominar adjetivos-な (な+N, じゃない), cores, e conectores de contraste でも e しかし."
+    grammar: [36, 6, 62]
+    kanji: [27, 28, 40, 70]
+    focus_vocab:
+      "な-adjectives": [269, 512, 390, 118, 68, 219, 465, 47, 168]
+      "Cores": [6, 7, 19, 20, 311, 312]
+    anki_vocab: [507, 508, 263, 344, 55, 198, 199, 430, 60, 160, 220, 545, 544]
+
+  12:
+    type: content
+    phase: 3
+    title: "Mais Descrições, Advérbios & Ênfase"
+    objective: "Aprender advérbios de grau e modo, usar よ para ênfase, e conectores そして/それから para sequenciar ideias."
+    grammar: [83, 64, 63]
+    kanji: [21, 34, 31]
+    focus_vocab:
+      "Sensações térmicas": [37, 478, 35, 539, 39, 593, 402]
+      "Advérbios": [64, 65, 70, 88, 137, 384, 526, 635]
+    anki_vocab: [2, 8, 309, 12, 339, 203, 206, 251, 276, 336, 607, 38, 553]
+
+  13:
+    type: consolidation
+    phase: 3
+    title: "Consolidação — Aulas 10 a 12"
+    scope: [10, 11, 12]
+
+  # ═══════════════════════════════════════════
+  # FASE 4: TEMPO & DESEJOS — "Quando / O que quero"
+  # ═══════════════════════════════════════════
+
+  14:
+    type: content
+    phase: 4
+    title: "Calendário & Datas"
+    objective: "Expressar dias da semana e datas, e usar から (de/porque), まで (até), いつも (sempre)."
+    grammar: [23, 29, 19]
+    kanji: [1, 14, 17, 18]
+    focus_vocab:
+      "Dias da semana": [389, 119, 252, 527, 358, 266, 92]
+      "Períodos": [26, 170, 629, 638, 123, 125]
+      "Tempo": [216, 569]
+    anki_vocab: [185, 110, 348, 625, 208, 365, 378, 632, 283, 576, 156, 584]
+
+  15:
+    type: content
+    phase: 4
+    title: "Frequência & Sequência Temporal"
+    objective: "Falar sobre frequência (まだ/もう), hábitos, e marcar tempo com とき. Vocabulário de períodos relativos."
+    grammar: [27, 35, 76]
+    kanji: [23, 5, 7, 55]
+    focus_vocab:
+      "Frequência": [330, 328, 329, 331, 333, 332, 570]
+      "Relativo": [265, 30, 28, 318, 298, 457]
+      "Extras": [568, 140]
+    anki_vocab: [259, 286, 287, 290, 491, 493, 456, 458, 442, 443, 481]
+
+  16:
+    type: content
+    phase: 4
+    title: "Gostos, Desejos & Comida"
+    objective: "Expressar gostos (のが好き), desejos por coisas (がほしい) e ações (〜たい), e explicar com んです. Vocabulário de comida."
+    grammar: [56, 13, 67, 46]
+    kanji: [64, 54, 44]
+    focus_vocab:
+      "Sentimentos": [529, 69, 268, 211, 179]
+      "Comida": [124, 27, 171, 41, 639, 392, 474, 617]
+      "Comer e Beber": [542, 398]
+    anki_vocab: [304, 52, 127, 578, 483, 506, 514, 44, 241, 541, 397, 469, 449, 550, 357]
+
+  17:
+    type: content
+    phase: 4
+    title: "Habilidades, Natureza & Estações"
+    objective: "Falar sobre habilidades (上手/下手) e ações conjuntas (一緒に). Vocabulário de natureza e estações."
+    grammar: [55, 54, 18]
+    kanji: [56, 45, 50]
+    focus_vocab:
+      "Bebidas": [291, 408, 128, 433]
+      "Natureza": [141, 250, 598, 614, 521]
+      "Estações": [149, 382, 10, 112]
+      "Habilidades": [144, 234]
+    anki_vocab: [300, 261, 188, 204, 195, 385, 577, 89, 452, 383, 93, 95, 96, 424, 533]
+
+  18:
+    type: consolidation
+    phase: 4
+    title: "Consolidação — Aulas 14 a 17"
+    scope: [14, 15, 16, 17]
+
+  # ═══════════════════════════════════════════
+  # FASE 5: AÇÕES — "O que faço"
+  # ═══════════════════════════════════════════
+
+  19:
+    type: content
+    phase: 5
+    title: "Verbos & Conjugação: Fundamentos"
+    objective: "Sistematizar a conjugação dos 3 grupos de verbos (ます/て/ない/た), marcar o objeto com を, e usar てください (pedido), まえに (antes de) e のです (explicação formal). Esta aula inclui o MÓDULO DE CONJUGAÇÃO (seção 3E do Template A)."
+    grammar: [72, 60, 53, 30]
+    kanji: [15, 39, 30]
+    focus_vocab:
+      "Cotidiano básico": [80, 134, 353, 264, 628, 387, 415]
+      "Verbos essenciais": [210, 608, 407, 586, 155]
+    anki_vocab: [509, 610, 200, 296, 381, 435]
+
+  20:
+    type: content
+    phase: 5
+    title: "て-form: Progresso & Experiência"
+    objective: "Usar ている (ação em progresso/estado), てから (depois de fazer), たことがある (experiência passada) e まだ〜ていません (ainda não). Mais verbos de ação."
+    grammar: [70, 71, 66, 28]
+    kanji: [16, 63, 49, 75]
+    focus_vocab:
+      "Ações domésticas": [22, 525, 494, 591, 249, 599]
+      "Ações com objetos": [9, 11, 502, 501, 260, 262]
+      "Interação": [40, 338, 623]
+    anki_vocab: [230, 463, 515, 511, 480, 143, 620, 500, 221, 46, 475, 36]
+
+  21:
+    type: content
+    phase: 5
+    title: "て-form: Permissão & Proibição"
+    objective: "Pedir e dar permissão (てもいい) e proibir (てはいけない/ちゃいけない)."
+    grammar: [74, 73, 1]
+    kanji: [65, 58, 51]
+    focus_vocab:
+      "Transporte (ações)": [400, 432, 572, 566, 327, 611]
+      "Vestir/Corpo": [273, 139, 401, 503, 1]
+      "Dar/Receber": [5, 246, 243, 613]
+    anki_vocab: [215, 218, 100, 229, 467, 409, 413, 473, 228, 245, 236, 103]
+
+  22:
+    type: consolidation
+    phase: 5
+    title: "Consolidação — Aulas 19 a 21"
+    scope: [19, 20, 21]
+
+  23:
+    type: content
+    phase: 5
+    title: "Verbos do Cotidiano (Parte 1)"
+    objective: "Usar に行く (ir para fazer), にする (decidir), つもり (intenção) e なる (tornar-se). Verbos de rotina e casa."
+    grammar: [49, 50, 78, 45]
+    kanji: [59, 60, 12]
+    focus_vocab:
+      "Ações domésticas": [416, 362, 579, 556, 538, 437, 165]
+      "Cozinha/Refeição": [151, 534, 371, 102, 294, 238, 56, 434]
+    anki_vocab: [232, 233, 379, 380, 73, 196, 587, 588, 75, 589, 594, 532]
+
+  24:
+    type: content
+    phase: 5
+    title: "Verbos do Cotidiano (Parte 2)"
+    objective: "Listar ações representativas com たり〜たり, dar conselhos com ほうがいい, usar ないで (sem fazer), e けど (mas)."
+    grammar: [68, 15, 38, 25]
+    kanji: [78, 66, 69]
+    focus_vocab:
+      "Atividades": [31, 447, 396, 604, 166, 345, 621]
+      "Ações diversas": [552, 285, 374, 505, 373, 476, 585, 597]
+    anki_vocab: [459, 563, 121, 603, 406, 414, 14, 240, 410, 428, 531, 600]
+
+  25:
+    type: content
+    phase: 5
+    title: "Mais Verbos & Objetos do Dia-a-dia"
+    objective: "Pedir para NÃO fazer com ないでください, contrastar formalmente com けれども. Vocabulário de objetos e vestuário."
+    grammar: [39, 26, 69]
+    kanji: [19, 20, 46]
+    focus_vocab:
+      "Verbos restantes": [58, 227, 355, 580, 272, 537, 136, 446, 616]
+      "Vestuário": [316, 317, 50, 386, 528, 292]
+    anki_vocab: [496, 605, 631, 644, 486, 488, 497, 461, 536, 454, 567, 438]
+
+  26:
+    type: consolidation
+    phase: 5
+    title: "Consolidação — Aulas 23 a 25"
+    scope: [23, 24, 25]
+
+  # ═══════════════════════════════════════════
+  # FASE 6: COMUNICAÇÃO — "Como me expresso"
+  # ═══════════════════════════════════════════
+
+  27:
+    type: content
+    phase: 6
+    title: "Obrigação & Proibição"
+    objective: "Expressar obrigação (ないといけない, なくてはいけない, なくてはならない, なくちゃ) em diferentes níveis de formalidade. Vocabulário de clima e obrigações."
+    grammar: [40, 43, 44, 42]
+    kanji: [71, 80, 67]
+    focus_vocab:
+      "Clima": [562, 13, 634, 253, 147, 306]
+      "Verbos de clima": [148, 307, 104, 105]
+      "Obrigações": [359, 315, 254, 54, 305]
+    anki_vocab: [543, 337, 364, 627, 247, 571, 281, 361, 360, 193]
+
+  28:
+    type: content
+    phase: 6
+    title: "Convites & Sugestões"
+    objective: "Fazer convites (ませんか), propor ações conjuntas (ましょう), oferecer ajuda (ましょうか), e dispensar obrigação (なくてもいい)."
+    grammar: [31, 32, 33, 41]
+    kanji: [47, 48, 53]
+    focus_vocab:
+      "Viagem": [468, 181, 267, 546, 393]
+      "Comunicação": [78, 76, 495, 561, 277, 131]
+      "Expressões": [187, 523, 448, 214]
+    anki_vocab: [581, 145, 154, 636, 391, 551, 257, 431, 351, 352]
+
+  29:
+    type: content
+    phase: 6
+    title: "Comparações & Contrastes"
+    objective: "Comparar (は〜より, より〜ほうが), superlativar (一番, の中で一番), e vocabulário escolar."
+    grammar: [17, 57, 80, 84]
+    kanji: [68, 61, 73]
+    focus_vocab:
+      "Escrita/Escola": [99, 48, 335, 451, 399, 63, 217, 213, 504, 641]
+      "Objetos": [235, 242, 342, 293, 564]
+    anki_vocab: [310, 477, 450, 51, 615, 575, 61, 363, 270]
+
+  30:
+    type: consolidation
+    phase: 6
+    title: "Consolidação — Aulas 27 a 29"
+    scope: [27, 28, 29]
+
+  31:
+    type: content
+    phase: 6
+    title: "Conectando Ideias & Explicações"
+    objective: "Dar razões com ので, conjecturar com だろう/でしょう, e descrever métodos com 方. Vocabulário restante do N5."
+    grammar: [58, 4, 7, 24]
+    kanji: [72, 79, 74, 77]
+    focus_vocab:
+      "Objetos restantes": [138, 177, 224, 135, 453, 223, 111, 146, 323]
+      "Medidas": [341, 271, 126]
+      "Mídia": [559, 560, 462]
+    anki_vocab: [101, 535, 606, 485, 540, 403, 175, 583, 49, 150, 482]
+
+  32:
+    type: consolidation
+    phase: null
+    title: "Revisão Final & Simulado N5"
+    scope: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+    special_format:
+      - "Recall completo de todos os 80 kanji"
+      - "Exercício de gramática cobrindo todas as 84 estruturas em formato de simulado"
+      - "Diálogo longo (10+ turnos) integrando vocabulário e gramática de todas as fases"
+      - "Autodiagnóstico final com plano de revisão para itens fracos"
+      - "Mini-simulado N5 com questões no formato oficial do JLPT"
+```

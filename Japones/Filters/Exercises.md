@@ -31,7 +31,7 @@ O arquivo gerado em `Practice/N5_PX.md` DEVE seguir rigorosamente esta estrutura
 
 ---
 
-## 1. 🔤 PARTE A: KANJI & LEITURA (ACTIVE RECALL)
+## 1. 🔤 PARTE A: VOCABULÁRIO EM CONTEXTO
 
 Escreva a leitura em hiragana/katakana para os kanjis ou palavras em negrito nas frases abaixo (Kanji introduzidos aparecem sem furigana):
 

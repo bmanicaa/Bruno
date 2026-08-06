@@ -411,13 +411,6 @@ tr:nth-child(even) td {
   margin-bottom: 0.4rem;
 }
 
-.layer-2-kana {
-  font-size: 0.85rem;
-  color: var(--accent-blue);
-  margin-bottom: 0.3rem;
-  font-family: 'Noto Sans JP', sans-serif;
-}
-
 .layer-3-pt {
   font-size: 0.95rem;
   color: var(--accent-green);
@@ -763,6 +756,12 @@ details.gabarito-box summary:hover {
             <td>Eu <span style="color: var(--text-muted); font-size: 0.85em;">(Substantivo / Neutro)</span></td>
             <td class="ja-text"><ruby>私<rt>わたし</rt></ruby>は [Nome] です</td>
           </tr>
+          <tr>
+            <!-- Palavra 100% kana: SEM <ruby> (regra 4.2 item 0) -->
+            <td class="ja-text">あなた</td>
+            <td>Você <span style="color: var(--text-muted); font-size: 0.85em;">(Pronome)</span></td>
+            <td class="ja-text">あなたは [Nome] ですか</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -806,12 +805,21 @@ details.gabarito-box summary:hover {
         [Explicação intuitiva da perspectiva do falante nativo].
       </div>
 
+      <!-- Exemplo 100% anotado (TODO kanji com ruby — política "sempre furigana"): layer-2-kana SEMPRE omitida (regra 4.3) -->
       <div class="example-card">
         <div class="layer-1-ja ja-text"><ruby>私<rt>わたし</rt></ruby>は<ruby>学生<rt>がくせい</rt></ruby>です。</div>
-        <div class="layer-2-kana">わたし は がくせい です。</div>
         <div class="layer-3-pt">"Eu sou estudante."</div>
         <div class="layer-4-breakdown">
           [私] (Eu) + [は] (Topico) + [学生] (Estudante) + [です] (Copula ser/estar)
+        </div>
+      </div>
+
+      <!-- Todo exemplo segue o mesmo padrão: kanji sempre com ruby, sem layer-2-kana -->
+      <div class="example-card">
+        <div class="layer-1-ja ja-text"><ruby>一つ<rt>ひとつ</rt></ruby>です。</div>
+        <div class="layer-3-pt">"É um só."</div>
+        <div class="layer-4-breakdown">
+          [一つ] (Um item) + [です] (Cópula ser/estar)
         </div>
       </div>
     </div>
@@ -824,8 +832,7 @@ details.gabarito-box summary:hover {
       <div class="dialogue-container">
         <div class="chat-bubble chat-left">
           <div class="chat-speaker speaker-a">Pessoa A</div>
-          <div class="layer-1-ja ja-text"><ruby>初<rt>はじめ</rt></ruby>めまして。</div>
-          <div class="layer-2-kana">はじめまして。</div>
+          <div class="layer-1-ja ja-text"><ruby>初めまして<rt>はじめまして</rt></ruby>。</div>
           <div class="layer-3-pt">"Prazer em conhecê-lo."</div>
           <div class="layer-4-breakdown">[初めまして] (Prazer)</div>
         </div>
@@ -939,11 +946,11 @@ As Aulas de Consolidação **não ensinam conteúdo novo**. Elas exercitam ativa
       <div class="table-wrapper">
         <table>
           <thead>
-            <tr><th>Kanji</th><th>Sua Resposta</th><th>Resposta Correta</th></tr>
+            <tr><th>Kanji &amp; Leitura</th><th>Sua Resposta</th><th>Resposta Correta</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td class="ja-text" style="font-size: 1.5rem;">一</td>
+              <td class="ja-text" style="font-size: 1.5rem;"><ruby>一<rt>いち</rt></ruby></td>
               <td>_________</td>
               <td><details><summary>Revelar</summary>Um (いち / ひと)</details></td>
             </tr>
@@ -1027,27 +1034,22 @@ Toda IA responsável pela geração dos arquivos das aulas **DEVE** obedecer rig
 - É **estritamente proibido** omitir itens da ementa (`JLPTN5.md`), resumir tabelas com reticências `...` ou pular exercícios.
 - Se a ementa atribui 15 palavras de vocabulário Foco e 10 palavras de vocabulário Anki para a Aula X, **todas as 25 palavras DEVEM ser explicitamente apresentadas em código HTML completo**.
 
-### 4.2 Política de Furigana/Ruby em Dois Níveis
-A autoridade determinística é a lista de 80 kanji formais em `Content/N5_Kanji.md`, cruzada com a coluna `Aula (intro)`.
+### 4.2 Política de Furigana/Ruby (Sempre Furigana)
 
-1. **Nível 1 — Kanji Formal (os 80 do N5):**
-   - A partir da sua aula de introdução (`Aula (intro)` ≤ aula atual), o kanji passa a ser de responsabilidade de escrita do aluno.
-   - Recebe tag `<ruby>` **apenas na PRIMEIRA ocorrência** da palavra dentro do arquivo da aula.
-   - Nas ocorrências seguintes da mesma palavra na mesma aula, escreve-se em Kanji puro sem `<ruby>`, estimulando a recuperação ativa da memória.
-2. **Nível 2 — Kanji de Reconhecimento (todos os demais kanjis):**
-   - Inclui kanji fora dos 80 ou kanji dos 80 cuja aula de introdução ainda não chegou.
-   - **DEVEM receber `<ruby>` em TODA E QUALQUER ocorrência**, sem exceções.
-3. **Ruby sobre a Palavra Inteira (Jamais Kanji a Kanji):**
+Todo kanji em TODA ocorrência recebe `<ruby>` com a leitura completa da palavra. Não há níveis de renderização: a lista de 80 kanji de `Content/N5_Kanji.md` deixa de definir furigana e passa a ser apenas a **prioridade de foco no Anki** (a coluna `Aula (intro)` indica quando cada kanji entra na rotação de cards).
+
+0. **Kana Puro — NUNCA `<ruby>`:** Se a palavra **não contém NENHUM kanji** (hiragana/katakana puro: `あなた`, `はい`, `ええ`, `どうも`, `どうぞ`, `じゃあ`, `さあ`, partículas `は`/`です`/`か`/`を`/`に`...), escrever em **texto limpo, SEM `<ruby>`**. Ruby existe apenas para anotar a leitura de kanji. `<ruby>じゃあ<rt>じゃあ</rt></ruby>` é PROIBIDO.
+1. **Todo kanji, sempre com `<ruby>`:** qualquer palavra que contenha kanji recebe `<ruby>` em **TODA ocorrência**, sem exceção por nível ou por repetição na aula. O furigana fica visível por padrão; o auto-teste é opcional, feito pelo botão "👁️ Furigana" (CSS `hide-furigana`) quando o aluno quiser. O recall ativo de leitura acontece no Anki (frente = kanji sem furigana / verso = leitura + tradução), não no HTML.
+2. **Ruby sobre a Palavra Inteira (Jamais Kanji a Kanji):**
    - A anotação deve cobrir a palavra inteira: ex: `<ruby>今日<rt>きょう</rt></ruby>`, `<ruby>大人<rt>おとな</rt></ruby>`.
    - **Proibido** dividir kanji por kanji (`<ruby>今<rt>きょ</rt>日<rt>う</rt></ruby>`), pois isso destrói leituras irregulares (jukujikun).
 4. **Proibido ensinar leituras isoladas:** Onyomi/kunyomi e contagem de traços **NUNCA** são apresentados como conteúdo de estudo nem cobrados em exercícios. A leitura do kanji é aprendida exclusivamente pelas palavras (`Leitura (Kana)` de `Content/N5_Vocabulary.md`). O radical aparece apenas como **gancho mnemônico** forma→significado. As colunas `Onyomi`/`Kunyomi` de `Content/N5_Kanji.md` são apenas dados de referência para o gerador, **nunca** conteúdo para o aluno. *(Única exceção de exibição: o card da Seção 1 do Template A pode mostrar a leitura do glifo no contexto da palavra-chave — é âncora de apresentação, não conteúdo de estudo; não quebra a regra do ruby por palavra inteira da Seção 4.2 item 3.)*
 
-### 4.3 Padrão Obrigatório de 4 Camadas para Exemplos
-Todo e qualquer exemplo de frase em japonês no documento deve apresentar exatamente as 4 camadas especificadas no CSS:
-1. `layer-1-ja`: Texto original em Japonês com Furigana `<ruby>` aplicável.
-2. `layer-2-kana`: Leitura integral em Kana (sem Romaji).
-3. `layer-3-pt`: Tradução idiomática e natural em Português (PT-BR).
-4. `layer-4-breakdown`: Decomposição sintática elemento por elemento entre colchetes.
+### 4.3 Padrão de Camadas para Exemplos (3 Camadas com Layer-2 Sempre Omitida)
+Todo exemplo de frase em japonês no documento deve apresentar as camadas especificadas no CSS. Como a `layer-1-ja` é sempre 100% anotada por `<ruby>` (§4.2), a antiga camada `layer-2-kana` (leitura integral) é **sempre redundante e DEVE ser omitida** em exemplos e diálogos:
+1. `layer-1-ja`: Texto original em Japonês com Furigana `<ruby>` conforme a §4.2 (todo kanji anotado).
+2. `layer-3-pt`: Tradução idiomática e natural em Português (PT-BR).
+3. `layer-4-breakdown`: Decomposição sintática elemento por elemento entre colchetes (isenta de ruby).
 
 ### 4.4 Salvação Local e Upload para o Google Drive
 Em conformidade com a Regra 13 de `JLPTN5.md`:
@@ -1065,3 +1067,13 @@ Em conformidade com a Regra 13 de `JLPTN5.md`:
   2. `Significado & Classe (PT-BR)`
   3. `Combinação Comum (Collocation)`
 - Essa estrutura, somada ao CSS de `@media print` (`table-layout: fixed`, `white-space: normal`, `word-break: break-word`), garante fluidez perfeita no celular e evita cortes na impressão em papel A4.
+
+### 4.6 Checklist de Validação Automática (Antes do Upload)
+
+O script `upload_to_gdrive.js` executa esta validação mecanicamente e **BLOQUEIA** o upload se qualquer checagem de 1 a 4 falhar (a 5 é aviso não bloqueante). O gerador DEVE conferir o mesmo antes de salvar o arquivo:
+
+1. **Sem ruby sobre kana puro** (bloqueante): todo `<ruby>` deve ter base contendo ≥1 kanji. `あなた`, `はい`, `ええ`, `どうも`, `どうぞ`, `じゃあ`, `さあ` e partículas ficam **sem** `<ruby>`.
+2. **Todo kanji com ruby** (política "sempre furigana"): não deve existir kanji solto fora das exceções (layer-4 breakdown, exemplo kunyomi do card com leitura em parênteses, listas meta). O script bloqueia kanji "Nível 2" sem ruby e apenas **avisa** sobre kanji dos 80 sem ruby — o gerador aplica ruby em **TODO** kanji, sem depender de o script bloquear.
+3. **Nenhuma `layer-2-kana`** (bloqueante): como a `layer-1-ja` é sempre 100% anotada por ruby, a camada `layer-2-kana` **não deve existir** em exemplos ou diálogos.
+4. **Ruby sobre a palavra inteira** (bloqueante): nenhum `<ruby>` dividido kanji a kanji; leituras irregulares (`今日` = きょう, `大人` = おとな) preservadas.
+5. **Aviso não bloqueante esperado:** o script pode emitir avisos de "ruby repetido" para kanji dos 80 já introduzidos (CHECK 4 do script) — **ignorar**; a política atual é ruby em toda ocorrência.

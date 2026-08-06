@@ -38,7 +38,7 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
 7. **Lesson teaching format (content lessons):**
    - **Review (5 min):** Quick recap of the previous lesson's most important points. Show 3-5 review questions. *(Skip for Lesson 1.)*
    - **Grammar (core):** Teach each grammar point — pattern, meaning, usage, contrast, 2-3 example sentences using ONLY cumulative vocabulary.
-   - **Kanji:** Present new kanji with onyomi/kunyomi, stroke hints, 2-3 compounds using cumulative vocabulary.
+   - **Kanji:** Present new kanji as **recognition anchors** (âncoras de reconhecimento): glyph + meaning + radical as a mnemonic hook + 2-3 words/compounds using cumulative vocabulary. The reading is learned exclusively through the words — NEVER drill memorized onyomi/kunyomi or stroke counts (JLPT N5 does not test writing). Stroke count appears only as an optional note for handwriting.
    - **Focus Vocabulary:** Present focus words grouped by **semantic theme** with full examples.
    - **Anki Vocabulary:** Present Anki words in a reference table.
    - **Practice (end):** Exercises including **interleaved** questions mixing current and past content.
@@ -56,7 +56,7 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
     - Se a palavra contém **qualquer** kanji de Nível 2 → a palavra inteira leva ruby em **toda** ocorrência.
     - O ruby usa a leitura completa da palavra sobre a palavra inteira (para vocabulário, copiar da coluna `Leitura (Kana)` de `Content/N5_Vocabulary.md`). **Nunca** dividir o ruby kanji por kanji — isso quebra leituras irregulares como `今日` = きょう, `大人` = おとな, `時々` = ときどき.
     - A regra cumulativa (regra 3) continua valendo para palavras e gramática; este tratamento de ruby é o que resolve a exposição de kanji.
-12. **CONTRATO DE EXPECTATIVA DA AULA (promessa honesta):** Cada aula de conteúdo declara no cabeçalho exatamente quais kanji formais ela ensina (3-4 por aula, conforme `Aula (intro)` em `Content/N5_Kanji.md`). Todos os demais kanji que aparecerem na aula são exclusivamente de reconhecimento (leitura) e sempre carregam furigana. **Proibido** criar exercícios que exijam ESCREVER kanji de Nível 2 ou kanji formais ainda não introduzidos; eles só podem ser cobrados em leitura (reconhecimento).
+12. **CONTRATO DE EXPECTATIVA DA AULA (promessa honesta):** Cada aula de conteúdo declara no cabeçalho exatamente quais kanji formais ela ensina (3-4 por aula, conforme `Aula (intro)` em `Content/N5_Kanji.md`). Os kanji formais da aula são ensinados como **âncoras de reconhecimento** (forma → significado, com o radical como gancho mnemônico; a leitura é aprendida nas palavras) — **nunca** cobrar onyomi/kunyomi memorizados nem contagem de traços. Todos os demais kanji que aparecerem na aula são exclusivamente de reconhecimento (leitura) e sempre carregam furigana. **Proibido** criar exercícios que exijam ESCREVER kanji de Nível 2 ou kanji formais ainda não introduzidos; eles só podem ser cobrados em leitura (reconhecimento).
 13. **Geração HTML & Upload Direto no Google Drive:** Ao receber a instrução de iniciar uma aula ("Lesson X" / "Aula X"), **NÃO** imprima o texto completo da aula na conversa do chat nem salve arquivos locais permanentes. Em vez disso:
     - (a) Gerar a aula completa em formato HTML5 puro com CSS3 embutido, seguindo rigorosamente a arquitetura e especificações de `Filters/HTML.md`.
     - (b) Salvar temporariamente o código HTML gerado e executar o script de upload para o Google Drive:

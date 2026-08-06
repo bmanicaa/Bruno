@@ -2,88 +2,79 @@
 
 ---
 
-## 🎯 1. OBJETIVO E VISÃO GERAL DO DOCUMENTO
+## ⛔ 1. REGRAS INVIOLÁVEIS DE GERAÇÃO
 
-Este documento é a **Especificação Oficial de Engenharia Pedagógica e Padrão de Exercícios Interativos em Markdown** para o programa de autoestudo JLPT N5.
-
-Ele estabelece as regras para que a Inteligência Artificial geradora produza cadernos de treino interativos na pasta `Practice/N5_PX.md` (onde `X` é o número da aula). 
-
-### Principais Recursos & Filosofia Didática:
-1. ✍️ **Espaços em Branco Digitáveis:** Cada questão possui um campo limpo em citação `> ` logo abaixo do enunciado, permitindo que o estudante posicione o cursor e comece a digitar a resposta imediatamente sem ter que apagar texto existente.
-2. 🔄 **Fluxo de Avaliação em Par (IA-Pair Review):** Após resolver o exercício no arquivo, o estudante solicita a correção no chat (`"Corrigir Aula X"` / `"Avalie Practice/N5_PX.md"`), e a IA analisa as respostas digitadas após o caractere `>`, atribui nota e fornece feedback detalhado.
-3. 🧠 **Recuperação Ativa & Interleaved Practice:** Questões focadas em Active Recall e mistura progressiva (conteúdo da aula atual + revisão cumulativa das aulas anteriores).
-4. 🔒 **Gabarito Colapsável Oculto:** O gabarito com explicação detalhada fica no final do arquivo em uma tag `<details>`, permitindo autoavaliação ou conferência pós-feedback.
-
----
-
-## ⛔ 2. REGRAS INVIOLÁVEIS DE GERAÇÃO
-
-1. **Local e Nomenclatura:** Salvar o arquivo gerado exclusivamente no caminho `/Users/bmanica/Documents/GitHub/Bruno/Japones/Practice/N5_PX.md` (substituindo `X` pelo número da aula).
+1. **Local e Nomenclatura:** Salvar o caderno de treino gerado exclusivamente no caminho relativo `Practice/N5_PX.md` (substituindo `X` pelo número da aula).
 2. **Escopo Cumulativo Estrito (`JLPTN5.md`):** Consultar as colunas `Cum.G`, `Cum.K`, `Cum.V` da aula correspondente no ementário `JLPTN5.md`. É **estritamente proibido** utilizar gramática, kanji ou vocabulário de aulas futuras.
-3. **Formatação de Resposta em Branco:** Todas as perguntas DEVEM ter o bloco de resposta em branco `> ` logo abaixo do enunciado, sem prefixos de texto (ex: NUNCA escrever `✍️ **Sua Resposta:**`).
-4. **Sem Romaji:** Todo texto em japonês utiliza Kanji + Kana. Não utilizar Romaji.
-5. **Aplicação da Política de Furigana em 2 Níveis:** Os exercícios testam a leitura e escrita conforme a autoridade de `Content/N5_Kanji.md`:
-   - Kanji Nível 1 (já introduzidos até a aula atual): sem furigana nas questões para testar memória ativa (Active Recall).
-   - Kanji Nível 2 (reconhecimento/futuros): trazem furigana `<ruby>` obrigatório.
+3. **Tratamento de Aulas de Consolidação (🔄):** Em aulas de consolidação (aulas 5, 9, 13, 18, 25, 26, 31, 32, que não possuem tópicos inéditos), ignore menções a "conteúdo da aula atual". Sorteie e integre as questões de forma equilibrada entre todos os tópicos revisados até aquela aula.
+4. **Formatação de Resposta Digitável:** Todas as perguntas DEVEM conter o bloco de resposta em branco com citação `> ` logo abaixo do enunciado, sem prefixos de texto (NUNCA escrever `✍️ **Sua Resposta:**`).
+5. **Sem Romaji:** Todo texto em japonês utiliza exclusivamente Kana + Kanji. Não utilizar Romaji sob nenhuma hipótese.
+6. **Política de Furigana em 2 Níveis (Active Recall & Leitura):** Os exercícios testam exclusivamente a **leitura e interpretação**, nunca a escrita de Kanji à mão.
+   - **Kanji Nível 1 (já introduzidos até a aula atual):** Aparecem **sem furigana** nas perguntas das questões para testar a memória ativa (Active Recall) de leitura.
+   - **Kanji Nível 2 (reconhecimento / futuros):** Trazem furigana `<ruby>` obrigatório em todas as ocorrências.
+   - **No Gabarito Oculto:** TODA resposta contendo Kanji (Nível 1 ou 2) DEVE obrigatoriamente trazer a leitura correta em Kana ao lado ou entre parênteses para confirmação imediata do estudante.
+7. **Regra de Registro Linguístico:** Exercícios de tradução e sintaxe devem priorizar a linguagem polida (です/ます), a menos que o ponto gramatical especificamente testado exija a forma casual/plana (ex: forma dicionário, forma ナイ, forma タ).
 
 ---
 
-## 🏗️ 3. TEMPLATE CANÔNICO DE EXERCÍCIOS (`Practice/N5_PX.md`)
+## 🏗️ 2. TEMPLATE CANÔNICO DE EXERCÍCIOS (`Practice/N5_PX.md`)
 
-O arquivo gerado em `Practice/N5_PX.md` DEVE seguir rigorosamente esta estrutura em Markdown:
+O arquivo gerado em `Practice/N5_PX.md` DEVE seguir rigorosamente esta estrutura em Markdown, adaptando os enunciados e frases ao escopo da aula:
 
 ```markdown
-# ✍️ EXERCÍCIOS DE FIXAÇÃO: AULA [X] — [TÍTULO DA AULA EM PORTUGUÊS]
+# ✍️ EXERCÍCIOS DE FIXAÇÃO: AULA [X] — [TÍTULO DA AULA]
 
 > **Nível:** JLPT N5
 > **Escopo de Conteúdo:** Aula [X] + Revisão Cumulativa (Aulas 1 a [X-1])
 > **Tempo Estimado:** ~20 minutos
-> **Status:** ⏳ Pendente de Resolução
+> **Status:** ⏳ Pendente
 
 ---
 
 ## 1. 🔤 PARTE A: KANJI & LEITURA (ACTIVE RECALL)
 
-### 1.1 Leitura de Kanji ➔ Kana
-Escreva a leitura em hiragana/katakana para os kanjis destacados nas frases abaixo:
+Escreva a leitura em hiragana/katakana para os kanjis ou palavras em negrito nas frases abaixo (Kanji introduzidos aparecem sem furigana):
 
-1. **[Frase em japonês com Kanji da aula atual em negrito]**
+1. **私 は 毎 日 本 を 読 み ま す。**
    > 
 
-2. **[Frase em japonês com Kanji da aula atual em negrito]**
+2. **今 日 は と て も 暑 い で す ね。**
    > 
 
 ---
 
 ## 2. 🧩 PARTE B: GRAMÁTICA & ESTRUTURAS (PREENCHIMENTO)
 
-Complete as lacunas das orações abaixo com a partícula, cópula ou forma correta:
+Complete as lacunas das orações abaixo com a partícula, cópula ou forma verbal correta:
 
-1. **[Frase com lacuna [ &nbsp;&nbsp; ] para partícula/cópula]**
+1. **私 [ &nbsp;&nbsp; ] ブラジル 人 で す。**
    > 
 
-2. **[Frase com lacuna [ &nbsp;&nbsp; ] para partícula/cópula]**
+2. **明日 デパート [ &nbsp;&nbsp; ] 行 き ま す。**
    > 
 
 ---
 
 ## 3. 💬 PARTE C: TRADUÇÃO GUIADA & SINTAXE
 
-Traduza as orações abaixo mantendo o registro polido (です/ます):
+Traduza as orações abaixo mantendo o registro de polidez adequado à gramática testada:
 
-1. **[Frase em Português para traduzir em Japonês]**
+1. **Eu bebo água todos os dias.**
    > 
 
-2. **[Frase em Japonês para traduzir em Português]**
+2. **図 書 館 で 勉 強 し ま し た。**
    > 
 
 ---
 
 ## 4. ⚠️ PARTE D: CAÇA-ERROS (COMMON PITFALLS)
 
-Identifique o erro gramatical ou de contexto nas frases abaixo e reescreva-as corretamente:
+Identifique o erro gramatical ou de contexto na frase abaixo e reescreva-a corretamente:
 
-1. ❌ **[Frase propositalmente incorreta baseada nas armadilhas da aula]**
+1. ❌ **私 は 日本語 が 話 す こと が で き ま す。**
+   > 
+
+2. ❌ **昨日 映画 を 見 ま す。**
    > 
 
 ---
@@ -92,10 +83,10 @@ Identifique o erro gramatical ou de contexto nas frases abaixo e reescreva-as co
 
 Exercícios integrando conteúdos de aulas anteriores com a aula atual:
 
-1. **[Exercício combinando gramática da Aula anterior + vocabulário da Aula atual]**
+1. **[Questão combinando gramática de aula anterior com vocabulário/kanji atual]**
    > 
 
-2. **[Exercício de síntese ou mini-diálogo para completar]**
+2. **[Mini-diálogo de contexto cotidiano para completar com lacunas]**
    > 
 
 ---
@@ -105,42 +96,47 @@ Exercícios integrando conteúdos de aulas anteriores com a aula atual:
 <details>
 <summary><b>👉 Clique aqui para abrir o Gabarito Oficial e Explicações</b></summary>
 
-### Respostas Oficiais:
+### Respostas Oficiais (1,0 ponto por questão / Total: 10,0):
 
 #### Parte A: Kanji & Leitura
-1. **Resposta:** [Leitura em Kana] — *Explicação didática*.
-2. **Resposta:** [Leitura em Kana] — *Explicação didática*.
+1. **Resposta:** ほん (本) — *Explicativo: 本 lê-se ほん quando indica livro.*
+2. **Resposta:** きょう (今日) — *Explicativo: 今日 lê-se きょう.*
 
 #### Parte B: Gramática & Estruturas
-1. **Resposta:** [Item correto] — *Explicação do motivo gramatical*.
-2. **Resposta:** [Item correto] — *Explicação do motivo gramatical*.
+1. **Resposta:** は — *Explicação: Partícula は indica o tópico da frase.*
+2. **Resposta:** へ (ou に) — *Explicação: Partícula へ/に indica a direção ou destino do movimento.*
 
 #### Parte C: Tradução Guiada
-1. **Resposta:** [Frase correta em japonês]
-2. **Resposta:** [Tradução correta em português]
+1. **Resposta:** 毎日、水を飲みます。 (まいにち、みずをのみます) — *Explicação da ordem SOV e uso da partícula を.*
+2. **Resposta:** Estudei na biblioteca. — *Explicação: で indica o local de ação e しました é o passado do verbo fazer/estudar.*
 
 #### Parte D: Caça-Erros
-1. **Resposta:** ✅ [Frase corrigida] — *Explicação de por que a forma original estava incorreta*.
+1. **Resposta:** ✅ 私 は 日本語 を 話 す こと が で き ま す。 — *Explicação: O objeto direto do verbo 話す exige a partícula を antes da nominalização こと.*
+2. **Resposta:** ✅ 昨日 映画 を 見 ま し た。 — *Explicação: O advérbio 昨日 (ontem) exige a terminação verbal no passado (ました).*
 
 #### Parte E: Revisão Cumulativa
-1. **Resposta:** [Solução integrada]
-2. **Resposta:** [Solução integrada]
+1. **Resposta:** [Solução integrada com leitura dos Kanjis em Kana] — *Explicação pedagógica.*
+2. **Resposta:** [Solução do diálogo com leitura dos Kanjis em Kana] — *Explicação gramatical dos dois itens.*
 
 </details>
 ```
 
 ---
 
-## 🔄 4. FLUXO DE INTERAÇÃO & CORREÇÃO PELA IA (AI-PAIR REVIEW)
+## 🔄 3. FLUXO DE INTERAÇÃO & CORREÇÃO PELA IA (AI-PAIR REVIEW)
 
-Quando o estudante enviar a mensagem `"Corrigir Aula X"` ou `"Avalie meu Practice/N5_PX.md"`, a IA deve executar o seguinte procedimento:
+Quando o estudante enviar no chat `"Corrigir Aula X"` ou `"Avalie Practice/N5_PX.md"`, a IA DEVE executar o seguinte procedimento estrito:
 
-1. **Abrir e Ler:** Inspecionar o arquivo `/Users/bmanica/Documents/GitHub/Bruno/Japones/Practice/N5_PX.md`.
-2. **Extrair e Analisar:** Comparar as respostas digitadas após os blocos de citação (`> `) com o gabarito oficial.
-3. **Retornar Feedback Didático no Chat:**
-   - Atribuir uma pontuação final (ex: `8.5 / 10`).
-   - Elogiar acertos em estruturas complexas.
-   - Fornecer **explicações gramaticais minuciosas** para cada erro ou hesitação.
-4. **Atualizar o Arquivo Local:**
-   - Alterar o status do cabeçalho em `Practice/N5_PX.md` de `⏳ Pendente` para `✅ Corrigido em [Data] — Nota: X/10`.
-   - Adicionar uma seção final `## 📝 Feedback da IA` ao fim do arquivo com o resumo dos comentários.
+1. **Abrir e Ler:** Inspecionar o arquivo local `Practice/N5_PX.md`.
+2. **Extrair e Analisar Respostas:** Extrair os textos digitados após o caractere `> ` em cada uma das 10 questões e comparar com o gabarito oficial.
+3. **Cálculo da Nota (Rubrica Padrão - Total 10,0):**
+   - Cada questão inteiramente correta = **1,0 ponto**.
+   - Acerto parcial (ex: trocou partícula mas acertou o verbo/leitura) = **0,5 ponto**.
+   - Erro total ou sem resposta = **0,0 ponto**.
+4. **Atualizar o Arquivo Local (`Practice/N5_PX.md`):**
+   - Alterar a linha de status no cabeçalho de `> **Status:** ⏳ Pendente` para `> **Status:** ✅ Corrigido em [AAAA-MM-DD] — Nota: [X.X]/10.0`.
+   - **Substituir ou Adicionar Seção de Feedback:** Se o arquivo já contiver uma seção `## 📝 Feedback da IA`, a IA DEVE **substituí-la** por inteiro (para não acumular feedbacks antigos). Caso contrário, adicioná-la ao final do arquivo.
+5. **Retornar Feedback Didático no Chat:**
+   - Apresentar a nota final calculada (ex: `8.5 / 10.0`).
+   - Fornecer explicações gramaticais e de leitura minuciosas para cada erro ou hesitação.
+   - Elogiar acertos em estruturas mais complexas.

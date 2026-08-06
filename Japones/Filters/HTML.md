@@ -295,8 +295,22 @@ h3.subsection-title {
   margin-right: 0.4rem;
 }
 
-.tag-onyomi { background: var(--accent-blue-bg); color: var(--accent-blue); }
-.tag-kunyomi { background: var(--accent-green-bg); color: var(--accent-green); }
+.tag-radical { background: var(--accent-yellow-bg); color: var(--accent-yellow); }
+
+.kanji-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+}
+
+.kanji-word-chip {
+  background-color: var(--bg-card-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.95rem;
+}
 
 .kanji-mnemonic {
   background-color: var(--bg-card-subtle);
@@ -687,7 +701,7 @@ details.gabarito-box summary:hover {
       <strong>🎯 Objetivo Prático:</strong> [Descrever exatamente o que o aluno comunicará/entenderá ao fim da aula].
     </div>
     <div class="header-objective" style="border-top: none; padding-top: 0.25rem; font-size: 0.85rem;">
-      <strong>✍️ Kanji da Aula (para escrita):</strong> [Kanji 1], [Kanji 2], [Kanji 3]. *(Todos os demais kanjis apresentados são exclusivamente para reconhecimento de leitura e trazem Furigana).*
+      <strong>✍️ Kanji da Aula (âncoras de reconhecimento):</strong> [Kanji 1], [Kanji 2], [Kanji 3]. *(Estude forma + significado com o radical; a leitura é aprendida nas palavras. Escrita à mão é opcional — o JLPT N5 não testa escrita. Todos os demais kanjis apresentados são exclusivamente para reconhecimento de leitura e trazem Furigana).*
     </div>
   </header>
 
@@ -703,19 +717,25 @@ details.gabarito-box summary:hover {
     </div>
   </section>
 
-  <!-- SEÇÃO 1: ESCRITA & KANJI DA AULA -->
+  <!-- SEÇÃO 1: KANJI DA AULA (ÂNCORAS DE RECONHECIMENTO) -->
   <section id="sec-1">
-    <h2 class="section-title">1. 🔤 ESCRITA & KANJI DA AULA</h2>
+    <h2 class="section-title">1. 🔤 KANJI DA AULA — ÂNCORAS DE RECONHECIMENTO</h2>
+    <p style="margin-bottom: 1rem; color: var(--text-muted);">⚠️ Estes kanji <strong>não</strong> se estudam decorando leituras (onyomi/kunyomi) — isso é baixo rendimento e o JLPT N5 não testa escrita. Estude a <strong>forma</strong> + o <strong>significado</strong>, usando o radical como gancho de memória. A <strong>leitura</strong> é aprendida exclusivamente nas palavras da aula e do Anki.</p>
     <div class="kanji-grid">
       <div class="kanji-card">
         <div class="kanji-big-box">
-          <ruby class="kanji-glyph">[Kanji]<rt>[Reading Principal em Kana]</rt></ruby>
+          <ruby class="kanji-glyph">[Kanji]<rt>[Leitura na palavra-chave]</rt></ruby>
         </div>
         <div class="kanji-details">
           <div><strong>Significado:</strong> [Significado PT-BR]</div>
-          <div><span class="reading-tag tag-onyomi">ONYOMI</span> [Katakana] ➔ Ex: <ruby>[Composto]<rt>[Leitura]</rt></ruby></div>
-          <div><span class="reading-tag tag-kunyomi">KUNYOMI</span> [Hiragana] ➔ Ex: <ruby>[Palavra]<rt>[Leitura]</rt></ruby></div>
-          <div><strong>Radical & Traços:</strong> [Radical] | [Nº de Traços] traços</div>
+          <div><span class="reading-tag tag-radical">RADICAL</span> [Radical] — [1 linha: por que o radical ajuda a lembrar o significado]</div>
+          <div><strong>Leitura em palavras (é assim que se aprende a ler):</strong></div>
+          <div class="kanji-words">
+            <span class="kanji-word-chip ja-text"><ruby>[Palavra 1]<rt>[Leitura]</rt></ruby></span>
+            <span class="kanji-word-chip ja-text"><ruby>[Palavra 2]<rt>[Leitura]</rt></ruby></span>
+            <span class="kanji-word-chip ja-text"><ruby>[Palavra 3]<rt>[Leitura]</rt></ruby></span>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-dim);">✍️ Opcional (só se quiser escrever à mão): [Nº] traços. Ordem dos traços não é cobrada no JLPT N5.</div>
         </div>
         <div class="kanji-mnemonic">
           💡 <strong>Mnemônica Visual:</strong> [Explicação de associação mental fácil].
@@ -1020,6 +1040,7 @@ A autoridade determinística é a lista de 80 kanji formais em `Content/N5_Kanji
 3. **Ruby sobre a Palavra Inteira (Jamais Kanji a Kanji):**
    - A anotação deve cobrir a palavra inteira: ex: `<ruby>今日<rt>きょう</rt></ruby>`, `<ruby>大人<rt>おとな</rt></ruby>`.
    - **Proibido** dividir kanji por kanji (`<ruby>今<rt>きょ</rt>日<rt>う</rt></ruby>`), pois isso destrói leituras irregulares (jukujikun).
+4. **Proibido ensinar leituras isoladas:** Onyomi/kunyomi e contagem de traços **NUNCA** são apresentados como conteúdo de estudo nem cobrados em exercícios. A leitura do kanji é aprendida exclusivamente pelas palavras (`Leitura (Kana)` de `Content/N5_Vocabulary.md`). O radical aparece apenas como **gancho mnemônico** forma→significado. As colunas `Onyomi`/`Kunyomi` de `Content/N5_Kanji.md` são apenas dados de referência para o gerador, **nunca** conteúdo para o aluno. *(Única exceção de exibição: o card da Seção 1 do Template A pode mostrar a leitura do glifo no contexto da palavra-chave — é âncora de apresentação, não conteúdo de estudo; não quebra a regra do ruby por palavra inteira da Seção 4.2 item 3.)*
 
 ### 4.3 Padrão Obrigatório de 4 Camadas para Exemplos
 Todo e qualquer exemplo de frase em japonês no documento deve apresentar exatamente as 4 camadas especificadas no CSS:

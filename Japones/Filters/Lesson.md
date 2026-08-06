@@ -59,7 +59,7 @@ Generate the output following this EXACT section sequence:
 > **Registro**: [Polido (Desu/Masu) / Casual / Keigo / Escrito / Falado]
 > **Objetivo Prático**: [O que o estudante será capaz de comunicar/entender exatamente ao fim desta aula]
 > **Tempo estimado**: ~60 minutos
-> **Kanji da Aula (escrever):** [X], [Y], [Z] — os ÚNICOS kanji cobrados para escrita nesta semana. Todos os demais kanji que aparecerem nesta aula são de reconhecimento (leitura) e SEMPRE trazem furigana.
+> **Kanji da Aula (âncoras de reconhecimento):** [X], [Y], [Z] — estude forma + significado (radical como gancho de memória). A leitura é aprendida nas palavras; escrita à mão é opcional (JLPT N5 não testa escrita). Todos os demais kanji que aparecerem nesta aula são de reconhecimento (leitura) e SEMPRE trazem furigana.
 
 ---
 
@@ -73,15 +73,14 @@ Formato sugerido:
 
 ---
 
-## 1. 🔤 ESCRITA & KANJI DA AULA
+## 1. 🔤 KANJI DA AULA — ÂNCORAS DE RECONHECIMENTO
 
 ### [Kanji Character] — [Significado Principal]
-- **Leituras**:
-  - **Onyomi (Chinesa)**: [KATAKANA] ➔ *Uso comum*: [Exemplo com Onyomi]
-  - **Kunyomi (Japonesa)**: [Hiragana] ➔ *Uso comum*: [Exemplo com Kunyomi]
-- **Radical & Estrutura**: [Radical principal e contagem de traços]
+- **Radical (gancho de memória)**: [Radical principal] ➔ [1 linha: por que ajuda a lembrar o significado]
+- **Leitura em palavras (nunca decorar leituras isoladas)**: `<ruby>[Palavra 1]<rt>[Leitura]</rt></ruby>`, `<ruby>[Palavra 2]<rt>[Leitura]</rt></ruby>`, `<ruby>[Palavra 3]<rt>[Leitura]</rt></ruby>` — palavras cumulativas ou da aula atual (é aqui que a leitura é aprendida)
 - **Mnemônica Visual/Mental**: [Explicação curta da forma para memorização instantânea]
 - **Aviso de Confusão**: [Diferença visual para caracteres semelhantes, ex: 待 vs 持]
+- **Escrita (OPCIONAL — JLPT N5 não testa escrita)**: [Nº de traços]; ordem dos traços não é cobrada
 
 ---
 
@@ -234,7 +233,7 @@ Consolidation lessons do NOT teach new content. They review and reinforce everyt
 ### Kanji → Significado
 | Kanji | Sua resposta | Resposta correta |
 | :---: | :---: | :--- |
-| [Kanji 1] | _________ | [Significado + leituras] |
+| [Kanji 1] | _________ | [Significado + palavra-exemplo com leitura] |
 
 ### Vocabulário → Tradução
 | Palavra | Sua resposta | Resposta correta |

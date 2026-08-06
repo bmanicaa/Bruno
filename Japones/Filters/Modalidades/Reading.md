@@ -8,12 +8,12 @@ Esta especificação define o padrão determinístico para a geração de exerc�
 
 1. **Princípio da Lista Branca (Escopo Cumulativo Estrito):** Utilizar **exclusivamente** itens das colunas `Cum.G`, `Cum.K` e `Cum.V` acumulados até a `Aula X` em `JLPTN5.md`. Proibida a introdução de gramática, partículas ou vocabulário de aulas futuras.
 2. **Política de Furigana por Recuperação Ativa (Primeira Ocorrência):**
-   - Na modalidade Reading (treinamento), a tag `<ruby>` deve ser aplicada **apenas na PRIMEIRA ocorrência** de cada palavra com kanji no texto.
+   - Na modalidade Reading (treinamento), a tag `<ruby>` deve ser aplicada **apenas na PRIMEIRA ocorrência** de cada palavra com kanji no texto (independente de ser Nível 1 ou Nível 2).
    - Ocorrências subsequentes da mesma palavra/kanji ao longo do texto **DEVEM aparecer SEM furigana**, estimulando o resgate ativo de memória pelo estudante.
    - *Regra de Aplicação:* A tag `<ruby>` é sempre aplicada sobre a **palavra inteira** (ex: `<ruby>日本語<rt>にほんご</rt></ruby>`), nunca dividida kanji por kanji.
 3. **Zero Romaji:** Todo texto em japonês utiliza exclusivamente Kana + Kanji com furigana HTML.
 4. **Registro Linguístico:** Respeitar o nível de polidez (`です/ます` vs. casual) autorizado pelo escopo acumulado.
-5. **Escopo de Salvamento Exclusivamente Local (Markdown):** A modalidade Reading gera um arquivo Markdown local em `Practice/N5_P{X}_Reading.md`. **NÃO** executar o script Node de upload para o Google Drive (`upload_to_gdrive.js`), pois este é restrito a aulas de conteúdo em HTML.
+5. **Escopo de Salvamento em HTML e Google Drive:** A modalidade Reading gera um arquivo em formato HTML baseado no template especificado em `Filters/HTML_reading.md`. O arquivo deve ser salvo localmente em `Practice/N5_P{X}_Reading.html` e a IA **DEVE** executar o script Node de upload para o Google Drive (`upload_to_gdrive.js`).
 
 ---
 
@@ -23,11 +23,12 @@ Ao receber o comando `"Reading Aula X"` (ou `"Leitura Aula X"`), a IA DEVE execu
 
 1. **Carregar Escopo:** Consultar `JLPTN5.md` (Aula X) e extrair o inventário acumulado (`Cum.G`, `Cum.K`, `Cum.V`) dos arquivos de referência em `Content/`.
 2. **Seleção de Vocabulário (Regra dos 50% + Estendido):**
-   - **Sessão Base (`Practice/N5_P{X}_Reading.md`):** Incluir obrigatoriamente pelo menos **50% das palavras novas** da Aula X no texto, tecendo a narrativa em conjunto com o vocabulário de revisão (aulas 1 a X-1).
-   - **Sessão Estendida (Comando `"Mais Reading Aula X"` / `"Extensão Reading Aula X"`):** Criar uma Segunda Narrativa (`Practice/N5_P{X}_Reading_Parte2.md`) focando nas palavras novas remanescentes que não entraram no primeiro texto.
+   - **Sessão Base (`Practice/N5_P{X}_Reading.html`):** Incluir obrigatoriamente pelo menos **50% do vocabulário foco (`focus_vocab`) novo** da Aula X no texto, tecendo a narrativa em conjunto com o vocabulário de revisão (aulas 1 a X-1). O vocabulário de Anki (`anki_vocab`) não entra nessa exigência.
+   - **Sessão Estendida (Comando `"Mais Reading Aula X"` / `"Extensão Reading Aula X"`):** Criar uma Segunda Narrativa (`Practice/N5_P{X}_Reading_Parte2.html`) focando nas palavras foco novas remanescentes que não entraram no primeiro texto.
 3. **Redação & Furigana Gradual:** Escrever a história/diálogo aplicando a Regra do Furigana (ruby na 1ª ocorrência da palavra; sem ruby nas ocorrências seguintes).
-4. **Compor Exercício & Ocultação de Gabarito:** Gerar de 3 a 5 perguntas de interpretação em português e incluir o gabarito oficial dentro da tag HTML `<details>` (colapsado).
-5. **Salvar Arquivo:** Escrever o conteúdo final em `Practice/N5_P{X}_Reading.md` (substituindo `{X}` pelo número da aula).
+4. **Compor Exercício:** Gerar de 3 a 5 perguntas de interpretação em português.
+5. **Gerar HTML:** Formatando as informações usando a estrutura e CSS definidos em `Filters/HTML_reading.md`.
+6. **Salvar e Upload:** Escrever o conteúdo final em `Practice/N5_P{X}_Reading.html` e executar o script de upload para o Google Drive: `node "/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js" "Japones/Practice/N5_P{X}_Reading.html" "N5_P{X}_Reading.html"`. A discussão e correção ocorrerão interativamente via chat.
 
 ---
 
@@ -44,63 +45,17 @@ O tamanho da narrativa ajusta-se estritamente pela quantidade de frases e faixa 
 
 ---
 
-## 🏗️ 4. TEMPLATE CANÔNICO DE SAÍDA (`Practice/N5_P{X}_Reading.md`)
+## 🏗️ 4. TEMPLATE CANÔNICO DE SAÍDA (`Practice/N5_P{X}_Reading.html`)
 
-O arquivo DEVE ser salvo em `Practice/N5_P{X}_Reading.md` (onde `{X}` é o número da aula):
-
-```markdown
-# 📖 LEITURA: AULA [X] — [TÍTULO DA HISTÓRIA]
-
-> **Nível:** JLPT N5
-> **Escopo:** Aula [X] (Cumulativo: Aulas 1 a [X])
-> **Tempo Estimado de Leitura:** ~[Y] minutos
-> **Tema:** [Breve descrição da cena/história]
-> **Status:** ⏳ Pendente
+A estrutura do arquivo HTML é definida rigorosamente em `Filters/HTML_reading.md`. Consulte-o para detalhes estruturais e visuais.
 
 ---
 
-## 📜 TEXTO
+## 🔄 5. FLUXO DE CORREÇÃO E DISCUSSÃO NO CHAT
 
-[Texto narrativo/diálogo com a 1ª ocorrência de cada palavra em kanji formatada com <ruby>Palavra<rt>kana</rt></ruby> e ocorrências subsequentes em Kanji puro]
+Diferente dos exercícios tradicionais, a correção do Reading não envolve ler um arquivo modificado pelo estudante. O estudante acessará e lerá a versão impressa ou hospedada do HTML, e interará diretamente com a IA no chat:
 
----
-
-## ❓ COMPREENSÃO DE TEXTO
-
-Responda em português com base no texto acima:
-
-1. [Pergunta factual: quem, o quê, onde ou quando]
-   > 
-
-2. [Pergunta de inferência ou contexto de diálogo]
-   > 
-
-3. [Pergunta sobre vocabulário ou gramática em contexto]
-   > 
-
----
-
-## 🔍 GABARITO & EXPLICAÇÕES
-
-<details>
-<summary><b>👉 Clique aqui para abrir o Gabarito Oficial e Explicações</b></summary>
-
-### Respostas Esperadas:
-
-1. **Resposta:** [...] — *Explicação: [...].*
-2. **Resposta:** [...] — *Explicação: [...].*
-3. **Resposta:** [...] — *Explicação: [...].*
-
-</details>
-```
-
----
-
-## 🔄 5. FLUXO DE CORREÇÃO PELA IA
-
-Ao receber no chat `"Corrigir Reading Aula X"` ou `"Avalie Practice/N5_PX_Reading.md"`:
-1. Ler o arquivo `Practice/N5_P{X}_Reading.md` (ou `N5_P{X}_Reading_Parte2.md`).
-2. Avaliar as respostas digitadas pelo estudante após os marcadores `> `.
-3. Atribuir nota de 0.0 a 10.0 baseada na precisão de interpretação.
-4. Atualizar o cabeçalho no arquivo para `> **Status:** ✅ Corrigido em [DATA] — Nota: [X.X]/10.0`.
-5. Enviar feedback didático no chat detalhando acertos e destacando vocabulários e estruturas gramaticais relevantes da aula.
+1. A IA apresenta, no chat, as perguntas de interpretação geradas.
+2. O estudante responde pelo chat.
+3. A IA avalia a precisão da resposta.
+4. A IA envia feedback didático no chat detalhando acertos, explicando conceitos relevantes e fornecendo o gabarito oficial em caso de erros ou se solicitado.

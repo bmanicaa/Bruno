@@ -1,4 +1,4 @@
-# ESPECIFICAÇÃO TÉCNICA: TEMPLATE HTML PARA READING (`Filters/HTML_reading.md`)
+# ESPECIFICAÇÃO TÉCNICA: TEMPLATE HTML PARA READING (`Filters/HTML/HTML_reading.md`)
 
 Este arquivo define a estrutura canônica e o design (CSS) dos exercícios de Leitura (Reading). Todos os exercícios gerados pela IA sob o comando `"Reading Aula N"` (ou `"Leitura Aula N"`) **DEVEM** aderir rigorosamente à estrutura canônica abaixo.
 

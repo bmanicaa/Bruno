@@ -7,10 +7,10 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
 ## How This System Works
 
 1. **This file (JLPTN5.md)** defines the curriculum: which grammar points, kanji, and vocabulary belong to each lesson, via row references to the data files in `Content/`.
-2. **`Filters/HTML.md`** defines the lesson output specifications: CSS master styling, HTML5 structure, furigana rules, and canonical skeletons for both content and consolidation lessons.
+2. **`Filters/HTML/HTML_Lesson.md`** defines the lesson output specifications: CSS master styling, HTML5 structure, furigana rules, and canonical skeletons for both content and consolidation lessons.
 3. **The data files** (`Content/N5_Grammar.md`, `Content/N5_Kanji.md`, `Content/N5_Vocabulary.md`) contain the raw reference data.
 
-**Workflow:** When generating a lesson, the AI must (1) read the lesson definition here in `JLPTN5.md`, (2) open the referenced rows in the data files in `Content/` to extract the raw content, and (3) format the output in HTML following the canonical specifications in `Filters/HTML.md`.
+**Workflow:** When generating a lesson, the AI must (1) read the lesson definition here in `JLPTN5.md`, (2) open the referenced rows in the data files in `Content/` to extract the raw content, and (3) format the output in HTML following the canonical specifications in `Filters/HTML/HTML_Lesson.md`.
 
 ## Prerequisites
 
@@ -30,8 +30,8 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
 3. **Cumulative principle:** Lessons build on each other. Lesson N assumes ALL content from lessons 1 to N-1 is mastered. Example sentences and practice questions for lesson N may freely use grammar, kanji, and vocabulary from lessons 1..N, but must NOT use content from lessons N+1 or beyond.
 4. **Row references:** Each lesson is defined in the `## Curriculum Data (YAML)` section at the end of this file. The YAML block uses row numbers referencing `Content/N5_Grammar.md`, `Content/N5_Kanji.md`, and `Content/N5_Vocabulary.md`. Before teaching, locate the lesson entry in the YAML block, then open the referenced rows in the data files and read them. For consolidation lessons, use the `scope` field to identify which previous content lessons are being reviewed.
 5. **Two lesson types:**
-   - **📘 Content lessons** teach new grammar, kanji, and vocabulary following Template A in `Filters/HTML.md`.
-   - **🔄 Consolidation lessons** review and reinforce the previous 3-4 content lessons following Template B in `Filters/HTML.md`. They introduce NO new content.
+   - **📘 Content lessons** teach new grammar, kanji, and vocabulary following Template A in `Filters/HTML/HTML_Lesson.md`.
+   - **🔄 Consolidation lessons** review and reinforce the previous 3-4 content lessons following Template B in `Filters/HTML/HTML_Lesson.md`. They introduce NO new content.
 6. **Vocabulary classification:**
    - **Focus (12-15 words):** Fully taught in the lesson body with 4-layer examples, collocations, and nuances.
    - **Anki (6-16 words):** Listed in a reference table. The student adds them to Anki and reviews throughout the week.
@@ -46,9 +46,9 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
 8. Never use a grammar point in examples before it has been introduced.
 9. Teach in **Portuguese (PT-BR)**. Write Japanese examples with kanji + hiragana reading. All explanations, translations, and instructions must be in Portuguese.
 10. **Session commands:** 
-    - `"Lesson N"` / `"Aula N"` / `"Inicie a aula N"` → gera a aula completa em HTML no Google Drive seguindo `Filters/HTML.md`.
+    - `"Lesson N"` / `"Aula N"` / `"Inicie a aula N"` → gera a aula completa em HTML no Google Drive seguindo `Filters/HTML/HTML_Lesson.md`.
     - `"Exercícios Aula N"` / `"Drill Aula N"` → gera o caderno de exercícios interativo em Markdown em `Practice/N5_PN.md` seguindo `Filters/Exercises.md`.
-    - `"Reading Aula N"` / `"Leitura Aula N"` → gera o treino de leitura narrativa em HTML (salvo em `Practice/N5_PN_Reading.html` e enviado ao Google Drive) seguindo as regras e fluxos descritos em `Filters/Modalidades/Reading.md` e o formato em `Filters/HTML_reading.md`. A correção/discussão deste módulo acontece diretamente no chat.
+    - `"Reading Aula N"` / `"Leitura Aula N"` → gera o treino de leitura narrativa em HTML (salvo em `Practice/N5_PN_Reading.html` e enviado ao Google Drive) seguindo as regras e fluxos descritos em `Filters/Modalidades/Reading.md` e o formato em `Filters/HTML/HTML_reading.md`. A correção/discussão deste módulo acontece diretamente no chat.
     - `"Corrigir Aula N"` / `"Avalie o Practice/N5_PN.md"` → lê o arquivo de exercícios `Practice/N5_PN.md`, corrige as respostas digitadas pelo estudante, atribui nota e dá feedback detalhado no chat. (Nota: não usado para Reading).
 11. **POLÍTICA DE KANJI EM DOIS NÍVEIS (Furigana/Ruby):** Todo texto japonês gerado nas aulas (tabelas de vocabulário, exemplos com 4 camadas, diálogos, exercícios, gabaritos) segue esta regra determinística. A autoridade é a lista de 80 kanji formais de `Content/N5_Kanji.md`, usando a coluna `Aula (intro)` para saber quando cada kanji formal é introduzido.
     - **Nível 1 — Kanji Formal (os 80 da lista):** a partir da SUA aula de introdução (`Aula (intro)` ≤ aula atual), o kanji é de responsabilidade do aluno (escrever + ler) e recebe ruby **apenas na primeira ocorrência por aula**; nas demais ocorrências, escrever sem ruby para ativar a recuperação ativa da memória.
@@ -60,10 +60,10 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
     - A regra cumulativa (regra 3) continua valendo para palavras e gramática; este tratamento de ruby é o que resolve a exposição de kanji.
 12. **CONTRATO DE EXPECTATIVA DA AULA (promessa honesta):** Cada aula de conteúdo declara no cabeçalho exatamente quais kanji formais ela ensina (3-4 por aula, conforme `Aula (intro)` em `Content/N5_Kanji.md`). Os kanji formais da aula são ensinados como **âncoras de reconhecimento** (forma → significado, com o radical como gancho mnemônico; a leitura é aprendida nas palavras) — **nunca** cobrar onyomi/kunyomi memorizados nem contagem de traços. Todos os demais kanji que aparecerem na aula são exclusivamente de reconhecimento (leitura) e sempre carregam furigana. **Proibido** criar exercícios que exijam ESCREVER kanji de Nível 2 ou kanji formais ainda não introduzidos; eles só podem ser cobrados em leitura (reconhecimento).
 13. **Geração HTML & Upload Direto no Google Drive:** Ao receber a instrução de iniciar uma aula ("Lesson X" / "Aula X"), **NÃO** imprima o texto completo da aula na conversa do chat nem salve arquivos locais permanentes. Em vez disso:
-    - (a) Gerar a aula completa em formato HTML5 puro com CSS3 embutido, seguindo rigorosamente a arquitetura e especificações de `Filters/HTML.md`.
+    - (a) Gerar a aula completa em formato HTML5 puro com CSS3 embutido, seguindo rigorosamente a arquitetura e especificações de `Filters/HTML/HTML_Lesson.md`.
     - (b) Salvar temporariamente o código HTML gerado e executar o script de upload para o Google Drive:
       `node "/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js" "<caminho_do_arquivo_html_temp>" "N5_LX.html"`
-      (o script executará a **validação automática de ruby** — regra 11, conforme `Filters/HTML.md` §4.6 — **ANTES** do upload e **BLOQUEARÁ** o envio se o arquivo reprovar em qualquer checagem. Somente arquivos aprovados são enviados para a pasta `Meu Drive > Aulas > Japones` como `N5_LX.html`, sem converter para Google Doc. Se a validação falhar, corrija o HTML conforme `Filters/HTML.md` §4.6 e tente novamente).
+      (o script executará a **validação automática de ruby** — regra 11, conforme `Filters/HTML/HTML_Lesson.md` §4.6 — **ANTES** do upload e **BLOQUEARÁ** o envio se o arquivo reprovar em qualquer checagem. Somente arquivos aprovados são enviados para a pasta `Meu Drive > Aulas > Japones` como `N5_LX.html`, sem converter para Google Doc. Se a validação falhar, corrija o HTML conforme `Filters/HTML/HTML_Lesson.md` §4.6 e tente novamente).
     - (c) Após a confirmação do upload, apagar o arquivo temporário local (respeitando a Regra 1 de não deixar arquivos temporários no repositório).
     - (d) Responda no chat com uma mensagem curta de confirmação informando que a aula foi gerada em formato HTML e enviada ao Google Drive com sucesso.
 14. **Geração e Correção Interativa de Exercícios (`Practice/`):** Ao receber o comando de exercícios (`"Exercícios Aula X"` / `"Drill Aula X"`), a IA deve gerar o caderno em Markdown no caminho `/Users/bmanica/Documents/GitHub/Bruno/Japones/Practice/N5_PX.md` seguindo rigorosamente a especificação em `Filters/Exercises.md`. O arquivo contém campos de resposta em branco digitáveis (`> `). Quando o estudante solicitar a correção (`"Corrigir Aula X"` / `"Avalie o Practice/N5_PX.md"`), a IA lê o arquivo local, analisa as respostas digitadas pelo aluno após o caractere `>`, fornece nota e feedback didático detalhado no chat e atualiza o status do arquivo.

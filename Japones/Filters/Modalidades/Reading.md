@@ -13,7 +13,7 @@ Esta especificação define o padrão determinístico para a geração de exerc�
    - *Regra de Aplicação:* A tag `<ruby>` é sempre aplicada sobre a **palavra inteira** (ex: `<ruby>日本語<rt>にほんご</rt></ruby>`), nunca dividida kanji por kanji.
 3. **Zero Romaji:** Todo texto em japonês utiliza exclusivamente Kana + Kanji com furigana HTML.
 4. **Registro Linguístico:** Respeitar o nível de polidez (`です/ます` vs. casual) autorizado pelo escopo acumulado.
-5. **Escopo de Salvamento em HTML e Google Drive:** A modalidade Reading gera um arquivo em formato HTML baseado no template especificado em `Filters/HTML_reading.md`. O arquivo deve ser salvo localmente em `Practice/N5_P{X}_Reading.html` e a IA **DEVE** executar o script Node de upload para o Google Drive (`upload_to_gdrive.js`).
+5. **Escopo de Salvamento em HTML e Google Drive:** A modalidade Reading gera um arquivo em formato HTML baseado no template especificado em `Filters/HTML/HTML_reading.md`. O arquivo deve ser salvo localmente em `Practice/N5_P{X}_Reading.html` e a IA **DEVE** executar o script Node de upload para o Google Drive (`upload_to_gdrive.js`).
 
 ---
 
@@ -27,7 +27,7 @@ Ao receber o comando `"Reading Aula X"` (ou `"Leitura Aula X"`), a IA DEVE execu
    - **Sessão Estendida (Comando `"Mais Reading Aula X"` / `"Extensão Reading Aula X"`):** Criar uma Segunda Narrativa (`Practice/N5_P{X}_Reading_Parte2.html`) focando nas palavras foco novas remanescentes que não entraram no primeiro texto.
 3. **Redação & Furigana Gradual:** Escrever a história/diálogo aplicando a Regra do Furigana (ruby na 1ª ocorrência da palavra; sem ruby nas ocorrências seguintes).
 4. **Compor Exercício:** Gerar de 3 a 5 perguntas de interpretação em português.
-5. **Gerar HTML:** Formatando as informações usando a estrutura e CSS definidos em `Filters/HTML_reading.md`.
+5. **Gerar HTML:** Formatando as informações usando a estrutura e CSS definidos em `Filters/HTML/HTML_reading.md`.
 6. **Salvar e Upload:** Escrever o conteúdo final em `Practice/N5_P{X}_Reading.html` e executar o script de upload para o Google Drive: `node "/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js" "Japones/Practice/N5_P{X}_Reading.html" "N5_P{X}_Reading.html"`. A discussão e correção ocorrerão interativamente via chat.
 
 ---
@@ -47,7 +47,7 @@ O tamanho da narrativa ajusta-se estritamente pela quantidade de frases e faixa 
 
 ## 🏗️ 4. TEMPLATE CANÔNICO DE SAÍDA (`Practice/N5_P{X}_Reading.html`)
 
-A estrutura do arquivo HTML é definida rigorosamente em `Filters/HTML_reading.md`. Consulte-o para detalhes estruturais e visuais.
+A estrutura do arquivo HTML é definida rigorosamente em `Filters/HTML/HTML_reading.md`. Consulte-o para detalhes estruturais e visuais.
 
 ---
 

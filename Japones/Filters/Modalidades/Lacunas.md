@@ -17,8 +17,7 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
    - **Princípio da Carga Cognitiva (Comprehensible Input / i+1):** O scaffolding deve formar frases naturais, porém a estrutura geral da frase NÃO deve ser complexa ao ponto de ofuscar a lacuna. A energia mental do aluno deve ser gasta resolvendo a lacuna, não decifrando o contexto. O contexto deve ser perfeitamente claro (i+1). O scaffolding **nunca** é pontuado.
 
 3. **Política de Furigana Universal ("Sempre Furigana em Todo Kanji"):**
-   - **Garantia de Furigana Universal Irrestrito:** TODO e QUALQUER kanji que aparecer em qualquer lugar do caderno de lacunas (frases-contexto, enunciados, opções, dicas, gabarito e explicações) **DEVE carregar a tag `<ruby>` obrigatoriamente, em todas as ocorrências, sem exceção**, independente de ser Kanji Nível 1 ou Nível 2.
-   - **Nota de Compatibilidade:** Esta regra se **sobrepõe intencionalmente** à Regra 11 de `JLPTN5.md` apenas para esta modalidade.
+   - **Garantia de Furigana Universal Irrestrito:** TODO e QUALQUER kanji que aparecer em qualquer lugar do caderno de lacunas (frases-contexto, enunciados, opções, dicas, gabarito e explicações) **DEVE carregar a tag `<ruby>` obrigatoriamente, em todas as ocorrências, sem exceção**. Esta regra é consistente com a política global de furigana definida na Regra 11 de `JLPTN5.md`.
    - **Objetivo Pedagógico:** A modalidade Lacunas visa o treino puro e sem fricção da sintaxe, uso de partículas, conjugações e escolha lexical. A decodificação ou leitura memorizada do kanji **NUNCA** deve atuar como barreira cognitiva ou causa de erro nesta modalidade.
    - **Regra de Aplicação por Palavra Inteira:** A tag `<ruby>` é sempre aplicada sobre a palavra inteira (ex: `<ruby>日本語<rt>にほんご</rt></ruby>`), nunca dividida kanji por kanji.
 
@@ -119,10 +118,12 @@ Ao receber o comando `"Corrigir Lacunas Aula X"` ou `"Avalie o Practice/N5_PX_La
 
 ## 🏗️ 6. TEMPLATE CANÔNICO DE SAÍDA (`Practice/N5_P{X}_Lacunas.md`)
 
+O arquivo gerado deve seguir **exatamente** a estrutura esquemática abaixo. Todos os placeholders entre `[COLCHETES]` devem ser substituídos pela IA com conteúdo real extraído do ementário da aula solicitada. **Nenhum exemplo concreto é fornecido neste template** — a IA deve criar todas as questões e respostas do zero com base no escopo da aula.
+
 ```markdown
 # 🧩 EXERCÍCIO DE LACUNAS: AULA [X] — [TÍTULO DA AULA]
 
-> **Nível:** JLPT N5
+> **Nível:** [NÍVEL DO EMENTÁRIO — ex: JLPT N5]
 > **Modalidade:** Lacunas (穴埋め - Preenchimento de Frases)
 > **Escopo Avaliado:** Aula [X] (conteúdo novo: [N] gramática, [N] partículas, [N] vocabulário)
 > **Política de Furigana:** Universal Irrestrito (todos os kanji possuem furigana <ruby>)
@@ -133,50 +134,62 @@ Ao receber o comando `"Corrigir Lacunas Aula X"` ou `"Avalie o Practice/N5_PX_La
 
 ## 📝 SEÇÃO 1: LACUNAS DE PARTÍCULA & CONECTORES (25 PONTOS)
 
-Preencha a lacuna `[ ___ ]` com a partícula ou conector adequado **ensinado na Aula X**:
+Preencha a lacuna `[ ___ ]` com a partícula ou conector adequado **ensinado na Aula [X]**:
 
-1. <ruby>私<rt>わたし</rt></ruby> [ ___ 1 ___ ] (partícula) <ruby>学生<rt>がくせい</rt></ruby> です。
-   > Resposta 1: 
+[GERAR 5 QUESTÕES. Cada questão segue este formato esquemático:]
 
-2. <ruby>本<rt>ほん</rt></ruby> [ ___ 2 ___ ] (partícula) <ruby>読<rt>よ</rt></ruby>みます。
-   > Resposta 2: 
+[N]. <ruby>[PALAVRA_SCAFFOLDING]<rt>[LEITURA]</rt></ruby> [ ___ N ___ ] (partícula) <ruby>[PALAVRA_SCAFFOLDING]<rt>[LEITURA]</rt></ruby> [TERMINAÇÃO_SCAFFOLDING]。
+   > Resposta [N]: 
+
+[NOTAS PARA A IA GERADORA:]
+- A lacuna DEVE exigir uma partícula ou conector NOVO da Aula [X].
+- O scaffolding ao redor da lacuna pode usar vocabulário cumulativo (Aulas 1 a [X]).
+- Aplicar furigana <ruby> em TODA palavra com kanji, sem exceção.
 
 ---
 
 ## 📝 SEÇÃO 2: LACUNAS DE VOCABULÁRIO & EXPRESSÕES (25 PONTOS)
 
-Preencha a lacuna `[ ___ ]` com o vocabulário correto em japonês **da Aula X** conforme a dica:
+Preencha a lacuna `[ ___ ]` com o vocabulário correto em japonês **da Aula [X]** conforme a dica:
 
-1. <ruby>毎日<rt>まいにち</rt></ruby> [ ___ 1 ___ ] (dica: "jornal") を <ruby>読<rt>よ</rt></ruby>みます。
-   > Resposta 1: 
+[GERAR 5 QUESTÕES. Cada questão segue este formato esquemático:]
 
-2. <ruby>昨日<rt>きのう</rt></ruby> [ ___ 2 ___ ] (dica: "amigo") に <ruby>会<rt>あ</rt></ruby>いました。
-   > Resposta 2: 
+[N]. [FRASE_SCAFFOLDING_COM_FURIGANA] [ ___ N ___ ] (dica: "[TRADUÇÃO_PT-BR_DO_VOCAB_ALVO]") [CONTINUAÇÃO_SCAFFOLDING]。
+   > Resposta [N]: 
+
+[NOTAS PARA A IA GERADORA:]
+- A lacuna DEVE exigir um termo de vocabulário NOVO da Aula [X] (focus_vocab ou anki_vocab).
+- A dica em português deve ser suficiente para o aluno identificar a palavra japonesa correta.
 
 ---
 
 ## 📝 SEÇÃO 3: LACUNAS DE FORMA GRAMATICAL & CONJUGAÇÃO (25 PONTOS)
 
-Complete a lacuna `[ ___ ]` adaptando a forma gramatical exigida **pela Aula X**:
+Complete a lacuna `[ ___ ]` adaptando a forma gramatical exigida **pela Aula [X]**:
 
-1. <ruby>肉<rt>にく</rt></ruby> を [ ___ 1 ___ ] (forma: negativo cortês de 食べる)。
-   > Resposta 1: 
+[GERAR 5 QUESTÕES. Cada questão segue este formato esquemático:]
 
-2. <ruby>図書室<rt>としょしつ</rt></ruby> で [ ___ 2 ___ ] (forma: passado cortês de 勉強する)。
-   > Resposta 2: 
+[N]. [FRASE_SCAFFOLDING_COM_FURIGANA] [ ___ N ___ ] (forma: [INSTRUÇÃO_GRAMATICAL — ex: "negativo cortês de [VERBO]", "passado de [ADJ]", etc.])。
+   > Resposta [N]: 
+
+[NOTAS PARA A IA GERADORA:]
+- A lacuna DEVE exigir uma transformação gramatical conforme as REGRAS NOVAS da Aula [X].
+- A instrução entre parênteses deve ser precisa e inequívoca.
 
 ---
 
 ## 📝 SEÇÃO 4: LACUNAS DE COMPLETAÇÃO SINTÁTICA & DISCURSO (25 PONTOS)
 
-Preencha a lacuna `[ ___ ]` com a estrutura gramatical completa **da Aula X** para dar sentido à frase:
+Preencha a lacuna `[ ___ ]` com a estrutura gramatical completa **da Aula [X]** para dar sentido à frase:
 
-1. A: <ruby>明日<rt>あした</rt></ruby> <ruby>一緒<rt>いっしょ</rt></ruby> に <ruby>行<rt>い</rt></ruby>きませんか。
-   B: ええ、[ ___ 1 ___ ] (expressar concordância entusiástica: "vamos (fazer isso)!").
-   > Resposta 1: 
+[GERAR 5 QUESTÕES. Cada questão segue este formato esquemático:]
 
-2. <ruby>時間<rt>じかん</rt></ruby> が ありませんから、[ ___ 2 ___ ] (expressar razão / causa: "porque estou com pressa").
-   > Resposta 2: 
+[N]. [FRASE_OU_MICRO-DIÁLOGO_SCAFFOLDING_COM_FURIGANA] [ ___ N ___ ] (expressar [FUNÇÃO_COMUNICATIVA — ex: "concordância", "razão/causa", "pedido cortês", etc.])。
+   > Resposta [N]: 
+
+[NOTAS PARA A IA GERADORA:]
+- A lacuna DEVE exigir uma ESTRUTURA GRAMATICAL COMPLETA nova da Aula [X].
+- A resposta esperada pode conter múltiplas palavras (ex: uma oração subordinada, uma forma verbal composta).
 
 ---
 
@@ -187,21 +200,10 @@ Preencha a lacuna `[ ___ ]` com a estrutura gramatical completa **da Aula X** pa
 
 ### Gabarito Detalhado:
 
-#### Seção 1: Lacunas de Partícula & Conectores
-1. **Resposta:** は — *Explicação: A partícula は marca o tópico da frase (私).*
-2. **Resposta:** を — *Explicação: A partícula を marca o objeto direto da ação de ler (本).*
+[A IA DEVE gerar o gabarito completo com a seguinte estrutura para CADA seção:]
 
-#### Seção 2: Lacunas de Vocabulário & Expressões
-1. **Resposta:** 新聞 (しんぶん) — *Explicação: 新聞 significa "jornal".*
-2. **Resposta:** 友達 (ともだち) — *Explicação: 友達 significa "amigo".*
-
-#### Seção 3: Lacunas de Forma Gramatical & Conjugação
-1. **Resposta:** 食べません — *Explicação: Forma negativa no presente/futuro cortês do verbo 食べる.*
-2. **Resposta:** 勉強しました — *Explicação: Forma passada cortês do verbo 勉強する.*
-
-#### Seção 4: Lacunas de Completação Sintática & Discurso
-1. **Resposta:** 行きましょう — *Explicação: A forma ~ましょう é usada para aceitar convites e propor ações seguras.*
-2. **Resposta:** 急ぎますから — *Explicação: A estrutura ~から indica a razão/causa da ação.*
+#### Seção [N]: [NOME_DA_SEÇÃO]
+[N]. **Resposta:** [RESPOSTA_CORRETA_EM_JAPONÊS] — *Explicação: [JUSTIFICATIVA_GRAMATICAL_EM_PT-BR, explicando POR QUE esta é a resposta correta e qual regra da Aula [X] fundamenta a escolha.]*
 
 </details>
 ```

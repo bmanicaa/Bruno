@@ -127,7 +127,7 @@ Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 
 Responda às questões de leitura e significado dos termos **novos desta aula**:
 
-1. Escreva o significado em PT-BR e forneça um exemplo de uso para o termo: <ruby>[Kanji Nível 1 novo da Aula X]<rt>[Leitura]</rt></ruby>
+1. Escreva o significado em PT-BR e forneça um exemplo de uso para o termo: <ruby>[Kanji formal novo da Aula X]<rt>[Leitura]</rt></ruby>
    > 
 
 2. Traduza o seguinte vocabulário foco **da Aula X** para o japonês (Kana ou Kanji): [Palavra em PT-BR]

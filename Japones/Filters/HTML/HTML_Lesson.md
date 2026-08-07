@@ -1073,7 +1073,7 @@ Em conformidade com a Regra 13 de `JLPTN5.md`:
 O script `upload_to_gdrive.js` executa esta validação mecanicamente e **BLOQUEIA** o upload se qualquer checagem de 1 a 4 falhar (a 5 é aviso não bloqueante). O gerador DEVE conferir o mesmo antes de salvar o arquivo:
 
 1. **Sem ruby sobre kana puro** (bloqueante): todo `<ruby>` deve ter base contendo ≥1 kanji. `あなた`, `はい`, `ええ`, `どうも`, `どうぞ`, `じゃあ`, `さあ` e partículas ficam **sem** `<ruby>`.
-2. **Todo kanji com ruby** (política "sempre furigana"): não deve existir kanji solto fora das exceções (layer-4 breakdown, exemplo kunyomi do card com leitura em parênteses, listas meta). O script bloqueia kanji "Nível 2" sem ruby e apenas **avisa** sobre kanji dos 80 sem ruby — o gerador aplica ruby em **TODO** kanji, sem depender de o script bloquear.
+2. **Todo kanji com ruby** (política "sempre furigana"): não deve existir kanji solto fora das exceções (layer-4 breakdown, exemplo kunyomi do card com leitura em parênteses, listas meta). O script **bloqueia** qualquer kanji sem ruby — o gerador aplica ruby em **TODO** kanji, sem exceção.
 3. **Nenhuma `layer-2-kana`** (bloqueante): como a `layer-1-ja` é sempre 100% anotada por ruby, a camada `layer-2-kana` **não deve existir** em exemplos ou diálogos.
 4. **Ruby sobre a palavra inteira** (bloqueante): nenhum `<ruby>` dividido kanji a kanji; leituras irregulares (`今日` = きょう, `大人` = おとな) preservadas.
-5. **Aviso não bloqueante esperado:** o script pode emitir avisos de "ruby repetido" para kanji dos 80 já introduzidos (CHECK 4 do script) — **ignorar**; a política atual é ruby em toda ocorrência.
+5. **Aviso não bloqueante esperado:** o script pode emitir avisos de "ruby repetido" para kanji dos 80 já introduzidos — **ignorar**; a política atual é ruby em toda ocorrência.

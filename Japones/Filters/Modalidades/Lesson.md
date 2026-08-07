@@ -21,27 +21,23 @@ The lesson MUST eliminate 100% of ambiguity. The student's capacity to absorb ma
 1. **NO SKIPPING**: Every single vocabulary item, Kanji, and grammar point defined for the lesson in `JLPTN5.md` MUST be fully taught, analyzed, and used in examples.
 2. **ZERO AMBIGUITY**: Never use vague explanations like "used in certain contexts". State EXACTLY which contexts (formal/informal, spoken/written, male/female, region, emotional nuance).
 3. **CONTROLLED COGNITIVE LOAD**: Sentence examples MUST ONLY use vocabulary from the current lesson or from previous lessons (cumulative principle defined in `JLPTN5.md`). Do NOT introduce words that haven't been taught yet.
-4. **FURIGANA (RUBY) — SEMPRE FURIGANA**: Applies to ALL Japanese text in the lesson (vocab tables, examples, dialogues, exercises, answer keys). **EVERY kanji in EVERY occurrence carries `<ruby>`** with the word's full reading. The 80 kanji in `Content/N5_Kanji.md` are the Anki priority list (column `Aula (intro)`), NOT a furigana rule.
-   - **Sempre furigana:** every word containing kanji gets `<ruby>` on every occurrence — no "first occurrence only" and no bare kanji. The reading is the word's full reading placed over the whole word (for vocabulary, copy the `Leitura (Kana)` column from `Content/N5_Vocabulary.md`). NEVER split ruby kanji-by-kanji — this breaks irregular readings such as 今日 = きょう, 大人 = おとな, 時々 = ときどき.
-   - **Kana puro nunca ruby:** words with no kanji (あなた, はい, particles...) are written clean without `<ruby>`.
-   - **Auto-teste é opcional:** the lesson's "👁️ Furigana" toggle hides `<rt>` for self-testing; the daily active recall is the student's Anki cards (front = kanji without furigana / back = reading + translation).
+4. **FURIGANA (RUBY):** Segue rigorosamente a Regra 11 de `JLPTN5.md` e a especificação técnica detalhada em `Filters/HTML/HTML_Lesson.md` §4.2. Resumo: todo kanji em toda ocorrência recebe `<ruby>` com leitura por palavra inteira; kana puro nunca recebe ruby.
 5. **MANDATORY 4-LAYER SENTENCE BREAKDOWN**: Every Japanese phrase/example MUST include all 4 layers detailed below.
 6. **CUMULATIVE RULE**: Follow the cumulative principle strictly — lesson N may use all content from lessons 1..N, but NEVER content from lessons N+1 or beyond. This applies to grammar, vocabulary, and kanji.
 7. **VOCAB FOCO vs ANKI**: "Vocabulário Foco" items receive full 4-layer examples and in-depth teaching. "Vocabulário Anki" items appear in a reference table — the student drills them via spaced repetition (Anki) during the week.
 8. **VERBO-CORE & MÓDULO DE CONJUGAÇÃO**: The Aula 6 introduces the Verbo-Core — verbs presented in the 4 lexical forms (dictionary / ます / ました / ません) as fixed pairs, WITHOUT group-systematization. The systematization (Grupos 1-3, て-form, ない-form, た-form) belongs EXCLUSIVELY to the MÓDULO DE CONJUGAÇÃO da Aula 19 (seção 3E do Template A em `Filters/HTML/HTML_Lesson.md`). Every verb taught before Aula 19 (Aula 7: ある/いる; Aulas 16-17: 食べる, 飲む, 話す, 書く) is also presented as a dictionary/ます pair (with ました/ません when useful).
-9. **OUTPUT & DRIVE EXPORT**: Never dump the raw lesson text directly into the chat response. Generate the lesson in pure HTML5 with embedded CSS3 according to `Filters/HTML/HTML_Lesson.md`. Save the code temporarily and execute the Node.js script `/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js` to upload `N5_LX.html` directly to Google Drive (`Meu Drive > Aulas > Japones`). Delete the temporary local file afterwards. Output only a short confirmation message in chat.
+9. **OUTPUT & DRIVE EXPORT**: Segue o fluxo completo descrito na Regra 13 de `JLPTN5.md` e em `Filters/HTML/HTML_Lesson.md` §4.4. Resumo: gerar HTML5, salvar temporariamente, upload via `upload_to_gdrive.js`, apagar arquivo local, confirmar no chat.
 
 ---
 
-## 📐 THE 4-LAYER EXAMPLE STANDARD (MANDATORY FORMAT)
+## 📐 PADRÃO DE CAMADAS PARA EXEMPLOS
 
-For EVERY single example sentence in the lesson, you MUST use this exact layout:
+Todo exemplo de frase japonesa segue o padrão de **3 camadas** especificado em `Filters/HTML/HTML_Lesson.md` §4.3:
+1. **`layer-1-ja`**: Texto em japonês com furigana `<ruby>` em todo kanji.
+2. **`layer-3-pt`**: Tradução idiomática em PT-BR.
+3. **`layer-4-breakdown`**: Decomposição sintática elemento por elemento.
 
-* **Japanese**: [Kanji + Kana original — todo kanji com furigana, regra 4]
-* **Reading**: [Leitura completa em Kana — sem Romaji] *(linha de planejamento apenas; no HTML final a camada kana (layer-2) é SEMPRE omitida — regra 4/HTML_Lesson.md §4.3, pois o furigana já dá a leitura)*
-* **Natural PT-BR**: "[Tradução natural e idiomática em Português]"
-* **Structural Breakdown**:
-  `[Word/Kanji 1]` ([Significado]) + `[Particle/Element]` ([Função Gramatical]) + `[Word/Kanji 2]` ([Significado]) + `[Verb/Ending]` ([Conjugação/Função])
+> A antiga `layer-2-kana` (leitura integral em kana) é SEMPRE OMITIDA, pois é redundante com o furigana da camada 1.
 
 ---
 

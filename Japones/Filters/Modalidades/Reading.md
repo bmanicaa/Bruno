@@ -8,7 +8,7 @@ Esta especificação define o padrão determinístico para a geração de exerc�
 
 1. **Princípio da Lista Branca (Escopo Cumulativo Estrito):** Utilizar **exclusivamente** itens das colunas `Cum.G`, `Cum.K` e `Cum.V` acumulados até a `Aula X` em `JLPTN5.md`. Proibida a introdução de gramática, partículas ou vocabulário de aulas futuras.
 2. **Política de Furigana por Recuperação Ativa (Primeira Ocorrência):**
-   - Na modalidade Reading (treinamento), a tag `<ruby>` deve ser aplicada **apenas na PRIMEIRA ocorrência** de cada palavra com kanji no texto (independente de ser Nível 1 ou Nível 2).
+   - Na modalidade Reading (treinamento), a tag `<ruby>` deve ser aplicada **apenas na PRIMEIRA ocorrência** de cada palavra com kanji no texto.
    - Ocorrências subsequentes da mesma palavra/kanji ao longo do texto **DEVEM aparecer SEM furigana**, estimulando o resgate ativo de memória pelo estudante.
    - *Regra de Aplicação:* A tag `<ruby>` é sempre aplicada sobre a **palavra inteira** (ex: `<ruby>日本語<rt>にほんご</rt></ruby>`), nunca dividida kanji por kanji.
 3. **Zero Romaji:** Todo texto em japonês utiliza exclusivamente Kana + Kanji com furigana HTML.
@@ -28,7 +28,7 @@ Ao receber o comando `"Reading Aula X"` (ou `"Leitura Aula X"`), a IA DEVE execu
 3. **Redação & Furigana Gradual:** Escrever a história/diálogo aplicando a Regra do Furigana (ruby na 1ª ocorrência da palavra; sem ruby nas ocorrências seguintes).
 4. **Compor Exercício:** Gerar de 3 a 5 perguntas de interpretação em português.
 5. **Gerar HTML:** Formatando as informações usando a estrutura e CSS definidos em `Filters/HTML/HTML_reading.md`.
-6. **Salvar e Upload:** Escrever o conteúdo final em `Practice/N5_P{X}_Reading.html` e executar o script de upload para o Google Drive: `node "/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js" "Japones/Practice/N5_P{X}_Reading.html" "N5_P{X}_Reading.html"`. A discussão e correção ocorrerão interativamente via chat.
+6. **Salvar e Upload:** Escrever o conteúdo final em `Practice/N5_P{X}_Reading.html` e executar o script de upload para o Google Drive: `node "/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js" "/Users/bmanica/Documents/GitHub/Bruno/Japones/Practice/N5_P{X}_Reading.html" "N5_P{X}_Reading.html"`. A discussão e correção ocorrerão interativamente via chat.
 
 ---
 

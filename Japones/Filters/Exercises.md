@@ -16,7 +16,6 @@ Todas as modalidades sob esta arquitetura herdam obrigatoriamente a seguinte res
 | Modalidade | Descrição / Foco | Arquivo de Especificação | Comando no Chat |
 |---|---|---|---|
 | **📖 Leitura (Reading)** | Leitura narrativa/diálogo (3 a 12 min) com furigana gradual (1ª ocorrência) e questões de compreensão. | [Reading.md](file:///Users/bmanica/Documents/GitHub/Bruno/Japones/Filters/Modalidades/Reading.md) | `"Reading Aula X"` / `"Leitura Aula X"` |
-| **✍️ Caderno Canônico (Treino Geral)** | Exercícios de 5 partes (Vocabulário, Gramática, Tradução, Caça-Erros, Revisão). | [Exercises_bckp.md](file:///Users/bmanica/Documents/GitHub/Bruno/Japones/Filters/Exercises_bckp.md) | `"Exercícios Aula X"` / `"Drill Aula X"` |
 
 ---
 

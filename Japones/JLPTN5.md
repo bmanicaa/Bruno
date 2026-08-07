@@ -7,10 +7,10 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
 ## How This System Works
 
 1. **This file (JLPTN5.md)** defines the curriculum: which grammar points, kanji, and vocabulary belong to each lesson, via row references to the data files in `Content/`.
-2. **`Filters/HTML/HTML_Lesson.md`** defines the lesson output specifications: CSS master styling, HTML5 structure, furigana rules, and canonical skeletons for both content and consolidation lessons.
+2. **`Filters/Modalidades/Lesson.md`** and **`Filters/HTML/HTML_Lesson.md`** define the lesson pedagogical rules and output specifications: CSS master styling, HTML5 structure, furigana rules, and canonical skeletons for both content and consolidation lessons.
 3. **The data files** (`Content/N5_Grammar.md`, `Content/N5_Kanji.md`, `Content/N5_Vocabulary.md`) contain the raw reference data.
 
-**Workflow:** When generating a lesson, the AI must (1) read the lesson definition here in `JLPTN5.md`, (2) open the referenced rows in the data files in `Content/` to extract the raw content, and (3) format the output in HTML following the canonical specifications in `Filters/HTML/HTML_Lesson.md`.
+**Workflow:** When generating a lesson, the AI must (1) read the lesson definition here in `JLPTN5.md`, (2) open the referenced rows in the data files in `Content/` to extract the raw content, and (3) format the output in HTML following the canonical specifications in `Filters/Modalidades/Lesson.md` and `Filters/HTML/HTML_Lesson.md`.
 
 ## Prerequisites
 
@@ -46,7 +46,7 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
 8. Never use a grammar point in examples before it has been introduced.
 9. Teach in **Portuguese (PT-BR)**. Write Japanese examples with kanji + hiragana reading. All explanations, translations, and instructions must be in Portuguese.
 10. **Session commands:** 
-    - `"Lesson N"` / `"Aula N"` / `"Inicie a aula N"` → gera a aula completa em HTML no Google Drive seguindo `Filters/HTML/HTML_Lesson.md`.
+    - `"Lesson N"` / `"Aula N"` / `"Inicie a aula N"` → gera a aula completa em HTML no Google Drive seguindo `Filters/Modalidades/Lesson.md` e o formato em `Filters/HTML/HTML_Lesson.md`.
     - `"Exercícios Aula N"` / `"Drill Aula N"` → gera o caderno de exercícios interativo em Markdown em `Practice/N5_PN.md` seguindo `Filters/Exercises.md`.
     - `"Reading Aula N"` / `"Leitura Aula N"` → gera o treino de leitura narrativa em HTML (salvo em `Practice/N5_PN_Reading.html` e enviado ao Google Drive) seguindo as regras e fluxos descritos em `Filters/Modalidades/Reading.md` e o formato em `Filters/HTML/HTML_reading.md`. A correção/discussão deste módulo acontece diretamente no chat.
     - `"Corrigir Aula N"` / `"Avalie o Practice/N5_PN.md"` → lê o arquivo de exercícios `Practice/N5_PN.md`, corrige as respostas digitadas pelo estudante, atribui nota e dá feedback detalhado no chat. (Nota: não usado para Reading).

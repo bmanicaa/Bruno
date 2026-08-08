@@ -12,9 +12,9 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
    - **Exceção para Aulas de Consolidação:** Nas aulas de consolidação (ex: Aula 5, 9, 13, 18, 26, 32), o escopo avaliado abrange todos os itens introduzidos na respectiva fase/bloco de aulas recém-concluído.
 
 2. **Distinção Obrigatória: Conteúdo TESTADO vs. Conteúdo de SCAFFOLDING:**
-   - **Conteúdo TESTADO (as lacunas `[ ___ ]`):** Apenas itens novos da Aula X. Cada lacuna avaliada e pontuada deve exigir a aplicação ativa de um ponto gramatical, partícula, forma de verbo/adjetivo ou termo de vocabulário da Aula X.
+   - **Conteúdo TESTADO (as lacunas `[ ___ ]`):** Apenas itens novos da Aula X. A resposta esperada na lacuna e pontuada deve exigir a aplicação ativa de um termo que está no `focus_vocab` ou `anki_vocab` da Aula X. É EXPRESSAMENTE PROIBIDO exigir palavras como resposta que não estão formalmente na Aula X.
    - **Conteúdo de SCAFFOLDING (frase-contexto ao redor da lacuna):** Pode utilizar livremente vocabulário e gramática cumulativos (Aulas 1 a X).
-   - **ATENÇÃO CRÍTICA:** A palavra usada como scaffolding TAMBÉM deve pertencer ao inventário cumulativo (Aulas 1 a X). A IA NÃO pode assumir que o aluno conhece uma palavra "comum" como おはよう, これ ou しゃいん se essa palavra não foi formalmente ensinada no currículo até a Aula X. Verificar contra a Regra 3.1 de `JLPTN5.md`.
+   - **ATENÇÃO CRÍTICA / ERRO FATAL:** A palavra usada como scaffolding TAMBÉM deve pertencer ao inventário cumulativo (Aulas 1 a X). A IA NÃO pode introduzir, mesmo como contexto de fundo ou pegadinha, vocabulário inédito. Exemplos de ERROS cometidos: usar おはよう, これ ou しゃいん antes de serem ensinados. Verifique CADA palavra contra a Regra 3.1 de `JLPTN5.md`.
    - **Princípio da Carga Cognitiva (Comprehensible Input / i+1):** O scaffolding deve formar frases naturais, porém a estrutura geral da frase NÃO deve ser complexa ao ponto de ofuscar a lacuna. A energia mental do aluno deve ser gasta resolvendo a lacuna, não decifrando o contexto. O contexto deve ser perfeitamente claro (i+1). O scaffolding **nunca** é pontuado.
 
 3. **Política de Furigana Universal ("Sempre Furigana em Todo Kanji"):**

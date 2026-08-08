@@ -26,4 +26,4 @@
 Exemplos de palavras não presentes na aula correspondente: おはよう (exigida na pergunta), これ, しゃいん (também cobrado como resposta).
 
 ## Teste.md
- > Problema 1: Está uma bagunça! Teste = Multipla escolha nao uma prova! Eu quero aqui multipla escolha obedecendo as regras e padroes de qualidade dos demais
+ > [RESOLVIDO] Problema 1: Está uma bagunça! Teste = Multipla escolha nao uma prova! Eu quero aqui multipla escolha obedecendo as regras e padroes de qualidade dos demais

@@ -68,14 +68,14 @@ Formato sugerido:
 
 ## 1. 🔤 CHAVES DE LEITURA — COMO OS IDEOGRAMAS CONSTROEM AS PALAVRAS
 
-> ⏱️ **Primer de 2 minutos**: Esta seção NÃO é para memorizar. É para entender a LÓGICA por trás das palavras que você vai aprender. Observe a ideia central de cada ideograma — quando encontrar as palavras que o usam, a conexão será instantânea.
+> ⏱️ **Primer de 2 minutos**: Esta seção NÃO é para memorizar múltiplas leituras isoladas (onyomi/kunyomi). O significado e a leitura de um kanji dependem EXCLUSIVAMENTE da palavra em que ele se encontra. O objetivo aqui é entender a LÓGICA visual por trás das palavras. Observe a ideia central de cada ideograma — a conexão será instantânea ao aplicá-lo no vocabulário.
 
 ### [Kanji Character] — Ideia Central: "[CONCEITO SEMÂNTICO em 2-4 palavras]"
 - **Conceito visual**: [1-2 frases: por que o desenho/forma transmite essa ideia. Usar o radical como gancho.]
 - **Radical**: [Nome] ([leitura]) — [Conexão com o significado]
 - **Composição nas palavras do vocabulário:**
-  ▸ `<ruby>[Palavra]<rt>[Leitura]</rt></ruby>` — [Decomposição: Kanji(significado) + Kanji(significado) → "tradução"] [Aula N]
-  ▸ `<ruby>[Palavra]<rt>[Leitura]</rt></ruby>` — [Decomposição] [Aula N]
+  ▸ `<ruby>[Palavra]<rt>[Leitura]</rt></ruby>` — **[Tradução PT-BR Obrigatória]** (Decomposição: Kanji(significado) + Kanji(significado)) [Aula N]
+  ▸ `<ruby>[Palavra]<rt>[Leitura]</rt></ruby>` — **[Tradução PT-BR Obrigatória]** (Decomposição) [Aula N]
   *(OBRIGATÓRIO: Somente palavras do inventário cumulativo até Aula X. Se todas as palavras com este kanji pertencem a aulas futuras, listar com [Aula N] e incluir nota de bridging.)*
   *(Para composições opacas/jukujikun: mostrar tradução + nota "composição irregular — memorize como palavra completa via Anki".)*
 - **Nota de bridging** *(quando todas as palavras são de aulas futuras)*: "Estas palavras entram no vocabulário na Aula N. Por agora, grave apenas a ideia central."
@@ -110,9 +110,9 @@ Formato sugerido:
 | <ruby>[Word]<rt>[Reading]</rt></ruby> | [Meaning] | [Type] |
 
 > [!TIP] Dica de Estudo Anki
-> - O deck Anki desta aula já contém os cards formatados (frente = kanji sem furigana / verso = leitura em kana + tradução PT-BR).
-> - Palavra 100% kana: card simples (frente = kana / verso = tradução).
-> - Revise ~10 minutos/dia. Não tente memorizar todas de uma vez.
+> - O arquivo correspondente do Anki desta aula é gerado instantaneamente. **Não instrua o usuário a adicionar estas palavras manualmente**.
+> - Instrua o usuário a usar o Anki no tempo de reforço sugerido (~10 minutos/dia). Não tente memorizar todas de uma vez.
+> - O deck já contém os cards formatados (frente = kanji sem furigana / verso = leitura em kana + tradução PT-BR). Palavra 100% kana: card simples (frente = kana / verso = tradução).
 
 ---
 
@@ -179,6 +179,8 @@ Formato sugerido:
 > ❌ **Errado**: [Frase incorreta]
 > 💡 **Por que é errado**: [Explicação lógica de onde o raciocínio em português falhou]
 > ✅ **Correto**: [Frase correta com a regra da aula]
+
+*(FIM DA AULA DE CONTEÚDO. NÃO ADICIONE seções extras como "Fixação", "Exercícios" ou "Autoavaliação" aqui, pois o fluxo de exercícios já possui arquivos próprios).*
 ```
 
 ---

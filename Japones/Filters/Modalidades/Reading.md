@@ -23,6 +23,11 @@ Esta especificação define o padrão determinístico universal para a geração
 Ao receber o comando de leitura no chat (ex: `"Reading Aula X"`, `"Reading N4 Aula X"`), a IA DEVE executar os passos:
 
 1. **Carregar Escopo do Nível Ativo:** Consultar o ementário mestre vigente (`JLPTN5.md` para N5, `JLPTN4.md` para N4) e extrair o inventário acumulado até a Aula X.
+1.5 **Análise Prévia de Inventário (Vocabulary Gate — OBRIGATÓRIO):**
+   - Antes de redigir qualquer texto, construir a **lista branca completa** de palavras e gramática disponíveis (inventário cumulativo até Aula X, conforme Regra 3.1 de `JLPTN5.md`).
+   - Analisar o inventário e identificar: (a) quais palavras têm potencial narrativo (substantivos concretos, verbos de ação, adjetivos descritivos), (b) quais estruturas gramaticais permitem construir frases complexas o suficiente para uma narrativa coerente, (c) qual tipo de cenário/história é viável com esse inventário específico.
+   - **Planejamento da narrativa ANTES da redação:** Montar um esqueleto mental da história/diálogo que maximize o uso do vocabulário disponível sem forçar palavras fora do inventário. Se o inventário é limitado (ex: Aula 1 com ~25 palavras), priorizar simplicidade com coerência ao invés de tentar uma narrativa complexa que exija palavras inexistentes.
+   - **Regra de ouro:** É preferível um texto curto, coerente e 100% dentro do inventário a um texto longo que introduza palavras inéditas para "preencher buracos".
 2. **Seleção de Vocabulário (Regra dos 50% + Estendido):**
    - **Sessão Base (`Practice/{NIVEL}_P{X}_Reading.html`):** Incluir pelo menos **50% do vocabulário foco novo** da Aula X no texto, integrando-o com o vocabulário acumulado de revisão.
    - **Sessão Estendida (`"Mais Reading Aula X"`):** Criar uma Segunda Narrativa (`Practice/{NIVEL}_P{X}_Reading_Parte2.html`) focando no vocabulário remanescente.

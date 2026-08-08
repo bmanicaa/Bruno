@@ -14,6 +14,7 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
 2. **Distinção Obrigatória: Conteúdo TESTADO vs. Conteúdo de SCAFFOLDING:**
    - **Conteúdo TESTADO (as lacunas `[ ___ ]`):** Apenas itens novos da Aula X. Cada lacuna avaliada e pontuada deve exigir a aplicação ativa de um ponto gramatical, partícula, forma de verbo/adjetivo ou termo de vocabulário da Aula X.
    - **Conteúdo de SCAFFOLDING (frase-contexto ao redor da lacuna):** Pode utilizar livremente vocabulário e gramática cumulativos (Aulas 1 a X).
+   - **ATENÇÃO CRÍTICA:** A palavra usada como scaffolding TAMBÉM deve pertencer ao inventário cumulativo (Aulas 1 a X). A IA NÃO pode assumir que o aluno conhece uma palavra "comum" como おはよう, これ ou しゃいん se essa palavra não foi formalmente ensinada no currículo até a Aula X. Verificar contra a Regra 3.1 de `JLPTN5.md`.
    - **Princípio da Carga Cognitiva (Comprehensible Input / i+1):** O scaffolding deve formar frases naturais, porém a estrutura geral da frase NÃO deve ser complexa ao ponto de ofuscar a lacuna. A energia mental do aluno deve ser gasta resolvendo a lacuna, não decifrando o contexto. O contexto deve ser perfeitamente claro (i+1). O scaffolding **nunca** é pontuado.
 
 3. **Política de Furigana Universal ("Sempre Furigana em Todo Kanji"):**
@@ -70,11 +71,12 @@ O volume de itens e a complexidade estrutural das frases ajustam-se estritamente
 
 Ao receber o comando `"Lacunas Aula X"` ou `"Preencher Lacunas Aula X"`:
 
-1. **Leitura de Escopo (Foco na Aula X):**
+1. **Leitura de Escopo e Construção da Lista Branca (Vocabulary Gate — OBRIGATÓRIO):**
    - Abrir `JLPTN5.md` (ou ementário ativo) e extrair os itens da Aula X (`grammar`, `kanji`, `focus_vocab`, `anki_vocab`).
    - Carregar as especificações de cada item nos arquivos de referência em `Content/`.
    - Mapear os conteúdos novos a serem convertidos em lacunas (itens TESTADOS).
-   - Carregar o inventário acumulado (Aulas 1 a X-1) para uso como scaffolding.
+   - Carregar o inventário acumulado completo (Aulas 1 a X) para uso como scaffolding — conforme Regra 3.1 de `JLPTN5.md`.
+   - **Verificação crítica**: Confirmar que CADA palavra usada no scaffolding pertence ao inventário cumulativo. Palavras fora do inventário são PROIBIDAS, mesmo que pareçam "básicas" (ex: おはよう, これ — só podem ser usadas se já foram ensinadas em Aulas 1..X).
 
 2. **Geração das Frases & Aplicativo do Furigana:**
    - Compor frases naturais e gramaticalmente perfeitas.

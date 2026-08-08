@@ -297,19 +297,51 @@ h3.subsection-title {
 
 .tag-radical { background: var(--accent-yellow-bg); color: var(--accent-yellow); }
 
-.kanji-words {
+/* Composição semântica dentro do kanji card */
+.kanji-composition {
+  font-size: 0.88rem;
+  color: var(--text-main);
+  padding: 0.25rem 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0.25rem 0;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
-.kanji-word-chip {
-  background-color: var(--bg-card-subtle);
-  border: 1px solid var(--border-color);
+.kanji-composition-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.composition-arrow {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+.composition-result {
+  color: var(--accent-green);
+  font-weight: 500;
+}
+
+.lesson-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.4rem;
   border-radius: 9999px;
-  padding: 0.3rem 0.75rem;
-  font-size: 0.95rem;
+  background: var(--accent-blue-bg);
+  color: var(--accent-blue);
+  border: 1px solid var(--accent-blue);
+  white-space: nowrap;
+}
+
+.kanji-future-note {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  border-left: 2px solid var(--border-light);
 }
 
 .kanji-mnemonic {
@@ -602,6 +634,18 @@ details.gabarito-box summary:hover {
     color: #0f172a !important;
   }
 
+  .composition-arrow, .composition-result {
+    color: #16a34a !important;
+  }
+  .lesson-tag {
+    background: #f0f9ff !important;
+    color: #0284c7 !important;
+    border: 1px solid #0284c7 !important;
+  }
+  .kanji-future-note {
+    color: #64748b !important;
+  }
+
   .table-wrapper {
     overflow: visible !important;
   }
@@ -636,6 +680,11 @@ details.gabarito-box summary:hover {
     color: #334155 !important;
     font-weight: 600 !important;
     opacity: 1 !important; /* Garante que Furigana sempre imprime */
+  }
+
+  .chip-translation {
+    color: #475569 !important;
+    font-size: 0.72rem !important;
   }
 
   details.gabarito-box {
@@ -694,7 +743,7 @@ details.gabarito-box summary:hover {
       <strong>🎯 Objetivo Prático:</strong> [Descrever exatamente o que o aluno comunicará/entenderá ao fim da aula].
     </div>
     <div class="header-objective" style="border-top: none; padding-top: 0.25rem; font-size: 0.85rem;">
-      <strong>✍️ Kanji da Aula (âncoras de reconhecimento):</strong> [Kanji 1], [Kanji 2], [Kanji 3]. *(Estude forma + significado com o radical; a leitura é aprendida nas palavras. Escrita à mão é opcional — o JLPT N5 não testa escrita. Todos os demais kanjis apresentados são exclusivamente para reconhecimento de leitura e trazem Furigana).*
+      <strong>✍️ Chaves de Leitura:</strong> [Kanji 1], [Kanji 2], [Kanji 3]. *(Estude forma + significado com o radical; a leitura é aprendida nas palavras. Escrita à mão é opcional — o JLPT N5 não testa escrita. Todos os demais kanjis apresentados são exclusivamente para reconhecimento de leitura e trazem Furigana).*
     </div>
   </header>
 
@@ -710,28 +759,43 @@ details.gabarito-box summary:hover {
     </div>
   </section>
 
-  <!-- SEÇÃO 1: KANJI DA AULA (ÂNCORAS DE RECONHECIMENTO) -->
+  <!-- SEÇÃO 1: CHAVES DE LEITURA -->
   <section id="sec-1">
-    <h2 class="section-title">1. 🔤 KANJI DA AULA — ÂNCORAS DE RECONHECIMENTO</h2>
-    <p style="margin-bottom: 1rem; color: var(--text-muted);">⚠️ Estes kanji <strong>não</strong> se estudam decorando leituras (onyomi/kunyomi) — isso é baixo rendimento e o JLPT N5 não testa escrita. Estude a <strong>forma</strong> + o <strong>significado</strong>, usando o radical como gancho de memória. A <strong>leitura</strong> é aprendida exclusivamente nas palavras da aula e do Anki.</p>
+    <h2 class="section-title">1. 🔤 CHAVES DE LEITURA — COMO OS IDEOGRAMAS CONSTROEM AS PALAVRAS</h2>
+    <p style="margin-bottom: 1rem; color: var(--text-muted);">
+      ⏱️ <strong>Primer de 2 minutos</strong> — Esta seção não é para memorizar. É para entender a
+      <strong>lógica</strong> por trás das palavras que você vai aprender. Observe a ideia central de cada
+      ideograma — quando encontrar as palavras que o usam, a conexão será instantânea.
+    </p>
     <div class="kanji-grid">
       <div class="kanji-card">
         <div class="kanji-big-box">
           <ruby class="kanji-glyph">[Kanji]<rt>[Leitura na palavra-chave]</rt></ruby>
         </div>
         <div class="kanji-details">
-          <div><strong>Significado:</strong> [Significado PT-BR]</div>
-          <div><span class="reading-tag tag-radical">RADICAL</span> [Radical] — [1 linha: por que o radical ajuda a lembrar o significado]</div>
-          <div><strong>Leitura em palavras (é assim que se aprende a ler):</strong></div>
-          <div class="kanji-words">
-            <span class="kanji-word-chip ja-text"><ruby>[Palavra 1]<rt>[Leitura]</rt></ruby></span>
-            <span class="kanji-word-chip ja-text"><ruby>[Palavra 2]<rt>[Leitura]</rt></ruby></span>
-            <span class="kanji-word-chip ja-text"><ruby>[Palavra 3]<rt>[Leitura]</rt></ruby></span>
+          <div><strong>Ideia Central:</strong> "[CONCEITO SEMÂNTICO]"</div>
+          <div style="font-size: 0.88rem; color: var(--text-muted);">[Conceito visual: por que o desenho transmite essa ideia]</div>
+          <div><span class="reading-tag tag-radical">RADICAL</span> [Radical] — [Conexão com significado]</div>
+          <div><strong>Composição nas palavras do vocabulário:</strong></div>
+          <div class="kanji-composition">
+            <div class="kanji-composition-item">
+              <span>▸</span>
+              <span class="ja-text"><ruby>[Palavra]<rt>[Leitura]</rt></ruby></span>
+              <span>—</span>
+              <span>[Kanji](significado) + [Kanji](significado)</span>
+              <span class="composition-arrow">→</span>
+              <span class="composition-result">"[tradução]"</span>
+              <span class="lesson-tag">Aula N</span>
+            </div>
           </div>
-          <div style="font-size: 0.8rem; color: var(--text-dim);">✍️ Opcional (só se quiser escrever à mão): [Nº] traços. Ordem dos traços não é cobrada no JLPT N5.</div>
+          <!-- CONDICIONAL: nota de bridging quando palavras são de aulas futuras -->
+          <div class="kanji-future-note">
+            💡 Estas palavras entram no vocabulário na Aula X. Por agora, grave apenas a ideia central.
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-dim);">✍️ Opcional: [Nº] traços.</div>
         </div>
         <div class="kanji-mnemonic">
-          💡 <strong>Mnemônica Visual:</strong> [Explicação de associação mental fácil].
+          💡 <strong>Mnemônica:</strong> [Associação mental].
         </div>
       </div>
     </div>

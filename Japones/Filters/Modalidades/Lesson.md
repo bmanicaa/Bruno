@@ -66,14 +66,22 @@ Formato sugerido:
 
 ---
 
-## 1. 🔤 KANJI DA AULA — ÂNCORAS DE RECONHECIMENTO
+## 1. 🔤 CHAVES DE LEITURA — COMO OS IDEOGRAMAS CONSTROEM AS PALAVRAS
 
-### [Kanji Character] — [Significado Principal]
-- **Radical (gancho de memória)**: [Radical principal] ➔ [1 linha: por que ajuda a lembrar o significado]
-- **Leitura em palavras (nunca decorar leituras isoladas)**: `<ruby>[Palavra 1]<rt>[Leitura]</rt></ruby>`, `<ruby>[Palavra 2]<rt>[Leitura]</rt></ruby>`, `<ruby>[Palavra 3]<rt>[Leitura]</rt></ruby>` — palavras cumulativas ou da aula atual (é aqui que a leitura é aprendida)
-- **Mnemônica Visual/Mental**: [Explicação curta da forma para memorização instantânea]
-- **Aviso de Confusão**: [Diferença visual para caracteres semelhantes, ex: 待 vs 持]
-- **Escrita (OPCIONAL — JLPT N5 não testa escrita)**: [Nº de traços]; ordem dos traços não é cobrada
+> ⏱️ **Primer de 2 minutos**: Esta seção NÃO é para memorizar. É para entender a LÓGICA por trás das palavras que você vai aprender. Observe a ideia central de cada ideograma — quando encontrar as palavras que o usam, a conexão será instantânea.
+
+### [Kanji Character] — Ideia Central: "[CONCEITO SEMÂNTICO em 2-4 palavras]"
+- **Conceito visual**: [1-2 frases: por que o desenho/forma transmite essa ideia. Usar o radical como gancho.]
+- **Radical**: [Nome] ([leitura]) — [Conexão com o significado]
+- **Composição nas palavras do vocabulário:**
+  ▸ `<ruby>[Palavra]<rt>[Leitura]</rt></ruby>` — [Decomposição: Kanji(significado) + Kanji(significado) → "tradução"] [Aula N]
+  ▸ `<ruby>[Palavra]<rt>[Leitura]</rt></ruby>` — [Decomposição] [Aula N]
+  *(OBRIGATÓRIO: Somente palavras do inventário cumulativo até Aula X. Se todas as palavras com este kanji pertencem a aulas futuras, listar com [Aula N] e incluir nota de bridging.)*
+  *(Para composições opacas/jukujikun: mostrar tradução + nota "composição irregular — memorize como palavra completa via Anki".)*
+- **Nota de bridging** *(quando todas as palavras são de aulas futuras)*: "Estas palavras entram no vocabulário na Aula N. Por agora, grave apenas a ideia central."
+- **Mnemônica** *(CONDICIONAL — somente se adiciona valor além do conceito visual)*: [Associação mental]
+- **Aviso de Confusão** *(CONDICIONAL — somente quando há risco REAL no nível atual)*: [Kanji similar + diferença]
+- **Escrita (OPCIONAL)**: [Nº de traços]
 
 ---
 

@@ -39,7 +39,7 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
    - **🔄 Consolidation lessons** review and reinforce the previous 3-4 content lessons following Template B in `Filters/HTML/HTML_Lesson.md`. They introduce NO new content.
 6. **Vocabulary classification:**
    - **Focus (12-15 words):** Fully taught in the lesson body with 4-layer examples, collocations, and nuances.
-   - **Anki (6-16 words):** Listed in a reference table. The student adds them to Anki and reviews throughout the week.
+   - **Anki (6-16 words):** Listed in a reference table. The student reviews them in the automatically generated Anki deck throughout the week.
 7. **Lesson teaching format (content lessons):**
    - **Review (5 min):** Quick recap of the previous lesson's most important points. Show 3-5 review questions. *(Skip for Lesson 1.)*
    - **Grammar (core):** Teach each grammar point — pattern, meaning, usage, contrast, 2-3 example sentences using ONLY cumulative vocabulary.

@@ -915,23 +915,6 @@ details.gabarito-box summary:hover {
     </div>
   </section>
 
-  <!-- SEÇÃO 5: FIXAÇÃO & AUTOAVALIAÇÃO -->
-  <section id="sec-5">
-    <h2 class="section-title">5. 🎯 FIXAÇÃO & AUTOAVALIAÇÃO</h2>
-    <div class="exercise-card">
-      <p><strong>Exercícios da Aula Atual</strong></p>
-      <ol style="margin-left: 1.25rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
-        <li><span class="exercise-number">1. [Reconhecimento]</span> Identifique a função da partícula は na frase "...".</li>
-      </ol>
-    </div>
-
-    <details class="gabarito-box">
-      <summary>🔍 Clique aqui para ver o Gabarito Comentado</summary>
-      <div class="gabarito-content">
-        <p><strong>1. Resposta:</strong> [Explicação didática da resposta].</p>
-      </div>
-    </details>
-  </section>
 
   <!-- SCRIPT INLINE DE CONTROLES (TEMA + FURIGANA) -->
   <script>
@@ -1108,7 +1091,7 @@ Todo kanji em TODA ocorrência recebe `<ruby>` com a leitura completa da palavra
    - A anotação deve cobrir a palavra inteira: ex: `<ruby>今日<rt>きょう</rt></ruby>`, `<ruby>大人<rt>おとな</rt></ruby>`.
    - **Proibido** dividir kanji por kanji (`<ruby>今<rt>きょ</rt>日<rt>う</rt></ruby>`), pois isso destrói leituras irregulares (jukujikun).
 3. **Proibido ensinar leituras isoladas:** Onyomi/kunyomi e contagem de traços **NUNCA** são apresentados como conteúdo de estudo nem cobrados em exercícios. A leitura do kanji é aprendida exclusivamente pelas palavras (`Leitura (Kana)` de `Content/N5_Vocabulary.md`). O radical aparece apenas como **gancho mnemônico** forma→significado. As colunas `Onyomi`/`Kunyomi` de `Content/N5_Kanji.md` são apenas dados de referência para o gerador, **nunca** conteúdo para o aluno. *(Única exceção de exibição: o card da Seção 1 do Template A pode mostrar a leitura do glifo no contexto da palavra-chave — é âncora de apresentação, não conteúdo de estudo; não quebra a regra do ruby por palavra inteira da Seção 4.2 item 2.)*
-4. **Kanji em Callouts e Dicas do Anki:** NENHUM kanji pode aparecer sem `<ruby>` em nenhuma parte do documento HTML, inclusive dentro de callouts, avisos ou caixas de dica do Anki. Ao instruir o aluno a criar cards no Anki, use a palavra com `<ruby>` normalmente (ex: `<ruby>医者<rt>いしゃ</rt></ruby>`) ou descreva genericamente (*"mantendo a palavra em kanji na frente"*). Jamais escreva palavras em kanji puro sem `<ruby>` no texto corrido dos callouts.
+4. **Kanji em Callouts e Dicas do Anki:** NENHUM kanji pode aparecer sem `<ruby>` em nenhuma parte do documento HTML, inclusive dentro de callouts, avisos ou caixas de dica do Anki. Ao instruir o aluno a usar/revisar os cards no Anki, use a palavra com `<ruby>` normalmente (ex: `<ruby>医者<rt>いしゃ</rt></ruby>`). Jamais escreva palavras em kanji puro sem `<ruby>` no texto corrido dos callouts.
 
 ### 4.3 Padrão de Camadas para Exemplos (3 Camadas com Layer-2 Sempre Omitida)
 Todo exemplo de frase em japonês no documento deve apresentar as camadas especificadas no CSS. Como a `layer-1-ja` é sempre 100% anotada por `<ruby>` (§4.2), a antiga camada `layer-2-kana` (leitura integral) é **sempre redundante e DEVE ser omitida** em exemplos e diálogos:

@@ -103,14 +103,14 @@ Formato sugerido:
 ---
 
 ## 2.5 📋 VOCABULÁRIO ANKI — REVISÃO SEMANAL
-*(Estas palavras complementares devem ser adicionadas ao Anki pelo estudante. São apresentadas em tabela de referência de 3 colunas.)*
+*(O estudante deve revisar estas palavras complementares no deck Anki gerado com a aula. São apresentadas em tabela de referência de 3 colunas.)*
 
 | Palavra & Leitura (Kanji + Furigana) | Tradução PT-BR | Classe |
 | :--- | :--- | :--- |
 | <ruby>[Word]<rt>[Reading]</rt></ruby> | [Meaning] | [Type] |
 
 > [!TIP] Dica de Estudo Anki
-> - Card padrão para palavra com kanji: **frente = palavra em kanji SEM furigana** / **verso = leitura em kana + tradução PT-BR**. Este é o único ponto do sistema onde o kanji aparece sem furigana (recall de leitura).
+> - O deck Anki desta aula já contém os cards formatados (frente = kanji sem furigana / verso = leitura em kana + tradução PT-BR).
 > - Palavra 100% kana: card simples (frente = kana / verso = tradução).
 > - Revise ~10 minutos/dia. Não tente memorizar todas de uma vez.
 
@@ -179,39 +179,6 @@ Formato sugerido:
 > ❌ **Errado**: [Frase incorreta]
 > 💡 **Por que é errado**: [Explicação lógica de onde o raciocínio em português falhou]
 > ✅ **Correto**: [Frase correta com a regra da aula]
-
----
-
-## 5. 🎯 FIXAÇÃO & AUTOAVALIAÇÃO
-
-### Exercícios da Aula Atual
-*(Regra: os exercícios NUNCA exigem ESCREVER kanji de memória — o exame N5 não testa produção de escrita. Todos os kanjis sempre aparecem com furigana; a ênfase é leitura, vocabulário e gramática.)*
-1. **[Reconhecimento]**: Identifique a função de [elemento] na frase X.
-2. **[Construção]**: Complete a lacuna usando a regra Y.
-3. **[Tradução Guiada]**: Traduza a ideia Z aplicando o vocabulário e gramática desta aula.
-4. **[Diálogo Livre]**: Construa 2 frases sobre [tema da aula] usando pelo menos 2 pontos gramaticais aprendidos.
-
-### 🔀 Exercícios Interleaved (Revisão Cumulativa)
-*(Incluir 2-3 exercícios que misturam conteúdo de aulas ANTERIORES com o conteúdo atual. Isso força a recuperação de memória e fortalece a retenção.)*
-5. **[Revisão Interleaved]**: [Exercício usando gramática/vocab de aulas anteriores + aula atual]
-6. **[Revisão Interleaved]**: [Exercício usando gramática/vocab de aulas anteriores + aula atual]
-
-<details>
-<summary><b>🔍 Clique aqui para ver o Gabarito Comentado</b></summary>
-
-1. **Resposta**: [Resposta]
-   - *Explicação didática*: [Por que esta é a única resposta correta].
-2. **Resposta**: [Resposta]
-   - *Explicação didática*: [Por que esta é a única resposta correta].
-3. **Resposta**: [Resposta]
-   - *Explicação didática*: [Por que esta é a única resposta correta].
-4. **Resposta**: [Resposta(s) possíveis]
-   - *Explicação didática*: [Comentário sobre variações aceitáveis].
-5. **Resposta**: [Resposta]
-   - *Explicação didática*: [Revisão do conteúdo anterior].
-6. **Resposta**: [Resposta]
-   - *Explicação didática*: [Revisão do conteúdo anterior].
-</details>
 ```
 
 ---
@@ -282,6 +249,6 @@ Marque com ✅ (seguro), ⚠️ (preciso revisar), ou ❌ (não lembro):
 | Vocabulário do tema [X] | _____ |
 
 > [!TIP] Itens marcados ⚠️ ou ❌
-> - Adicione-os como cards prioritários no Anki.
+> - Revise-os com prioridade no deck Anki gerado.
 > - Revise antes de avançar para a próxima aula de conteúdo.
 ```

@@ -7,12 +7,12 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
 ## ⛔ 1. REGRAS INVIOLÁVEIS (HARD RULES)
 
 1. **Princípio do Foco na Matéria Vigente (Escopo de Avaliação):**
-   - A modalidade **Lacunas** testa **exclusivamente** a gramática, partículas, conjugações e vocabulário **novos da Aula X** — os itens listados nos campos `grammar`, `kanji`, `focus_vocab` e `anki_vocab` da Aula X em `JLPTN5.md` (ou ementário correspondente).
+   - A modalidade **Lacunas** testa **exclusivamente** a gramática, partículas, conjugações e vocabulário **novos da Aula X** — a gramática e os kanji listados nos campos `grammar` e `kanji` da Aula X em `JLPTN5.md`, e o vocabulário definido na seção `## Aula X` de `Content/N5_Vocabulary.md` (ou ementário correspondente).
    - É **estritamente proibido** colocar lacunas que cobrem ou pontuem itens gramaticais ou vocabulário ensinados exclusivamente em aulas futuras (X+1 em diante).
    - **Exceção para Aulas de Consolidação:** Nas aulas de consolidação (ex: Aula 5, 9, 13, 18, 26, 32), o escopo avaliado abrange todos os itens introduzidos na respectiva fase/bloco de aulas recém-concluído.
 
 2. **Distinção Obrigatória: Conteúdo TESTADO vs. Conteúdo de SCAFFOLDING:**
-   - **Conteúdo TESTADO (as lacunas `[ ___ ]`):** Apenas itens novos da Aula X. A resposta esperada na lacuna e pontuada deve exigir a aplicação ativa de um termo que está no `focus_vocab` ou `anki_vocab` da Aula X. É EXPRESSAMENTE PROIBIDO exigir palavras como resposta que não estão formalmente na Aula X.
+   - **Conteúdo TESTADO (as lacunas `[ ___ ]`):** Apenas itens novos da Aula X. A resposta esperada na lacuna e pontuada deve exigir a aplicação ativa de um termo de vocabulário da Aula X (seção `## Aula X` de `Content/N5_Vocabulary.md`). É EXPRESSAMENTE PROIBIDO exigir palavras como resposta que não estão formalmente na Aula X.
    - **Conteúdo de SCAFFOLDING (frase-contexto ao redor da lacuna):** Pode utilizar livremente vocabulário e gramática cumulativos (Aulas 1 a X).
    - **ATENÇÃO CRÍTICA / ERRO FATAL:** A palavra usada como scaffolding TAMBÉM deve pertencer ao inventário cumulativo (Aulas 1 a X). A IA NÃO pode introduzir, mesmo como contexto de fundo ou pegadinha, vocabulário inédito. Exemplos de ERROS cometidos: usar おはよう, これ ou しゃいん antes de serem ensinados. Verifique CADA palavra contra a Regra 3.1 de `JLPTN5.md`.
    - **Princípio da Carga Cognitiva (Comprehensible Input / i+1):** O scaffolding deve formar frases naturais, porém a estrutura geral da frase NÃO deve ser complexa ao ponto de ofuscar a lacuna. A energia mental do aluno deve ser gasta resolvendo a lacuna, não decifrando o contexto. O contexto deve ser perfeitamente claro (i+1). O scaffolding **nunca** é pontuado.
@@ -46,7 +46,7 @@ Todo caderno de exercícios de lacunas gerado deve conter exatamente as 4 seçõ
 | Seção | Nome da Seção | Foco Pedagógico | Formato do Desafio | Pontuação |
 |---|---|---|---|---|
 | **Seção 1** | **Lacunas de Partícula & Conectores** (助詞・接続詞の穴埋め) | Testar a precisão no encaixe de partículas gramaticais e conectores **ensinados na Aula X**. | Frases com `[ ___ ] (partícula)` para identificação da função sintática e escolha da partícula correta. | **25 pts** |
-| **Seção 2** | **Lacunas de Vocabulário & Expressões** (語彙の穴埋め) | Testar a evocação ativa do **vocabulário foco e Anki novo da Aula X** em contexto de frase. | Frases com `[ ___ ] (dica: "tradução em PT-BR")` para preenchimento com o termo correto em japonês. | **25 pts** |
+| **Seção 2** | **Lacunas de Vocabulário & Expressões** (語彙の穴埋め) | Testar a evocação ativa do **vocabulário novo da Aula X** em contexto de frase. | Frases com `[ ___ ] (dica: "tradução em PT-BR")` para preenchimento com o termo correto em japonês. | **25 pts** |
 | **Seção 3** | **Lacunas de Forma Gramatical & Conjugação** (文法・活用形の穴埋め) | Testar a capacidade de modificar formas de palavras (conjugação verbal/adjetival, formas negativas, corteses, te, etc.) conforme a **gramática da Aula X**. | Frases com `[ ___ ] (forma: instrução gramatical)` exigindo a transformação e encaixe correto do verbo/adjetivo/estrutura. | **25 pts** |
 | **Seção 4** | **Lacunas de Completação Sintática & Discurso** (文脈・構文の穴埋め) | Testar a síntese de estruturas gramaticais complexas e expressões de discurso **novas da Aula X** em contextos comunicativos. | Frases ou micro-diálogos com lacunas mais amplas `[ ___ ] (função comunicativa)` para preenchimento com a estrutura/frase completa. | **25 pts** |
 
@@ -72,7 +72,7 @@ O volume de itens e a complexidade estrutural das frases ajustam-se estritamente
 Ao receber o comando `"Lacunas Aula X"` ou `"Preencher Lacunas Aula X"`:
 
 1. **Leitura de Escopo e Construção da Lista Branca (Vocabulary Gate — OBRIGATÓRIO):**
-   - Abrir `JLPTN5.md` (ou ementário ativo) e extrair os itens da Aula X (`grammar`, `kanji`, `focus_vocab`, `anki_vocab`).
+   - Abrir `JLPTN5.md` (ou ementário ativo) e extrair os itens da Aula X: `grammar` e `kanji` do YAML, e o vocabulário da seção `## Aula X` de `Content/N5_Vocabulary.md`.
    - Carregar as especificações de cada item nos arquivos de referência em `Content/`.
    - Mapear os conteúdos novos a serem convertidos em lacunas (itens TESTADOS).
    - Carregar o inventário acumulado completo (Aulas 1 a X) para uso como scaffolding — conforme Regra 3.1 de `JLPTN5.md`.
@@ -160,7 +160,7 @@ Preencha a lacuna `[ ___ ]` com o vocabulário correto em japonês **da Aula [X]
    > Resposta [N]: 
 
 [NOTAS PARA A IA GERADORA:]
-- A lacuna DEVE exigir um termo de vocabulário NOVO da Aula [X] (focus_vocab ou anki_vocab).
+- A lacuna DEVE exigir um termo de vocabulário NOVO da Aula [X] (seção `## Aula [X]` de `Content/N5_Vocabulary.md`).
 - A dica em português deve ser suficiente para o aluno identificar a palavra japonesa correta.
 
 ---

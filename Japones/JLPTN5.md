@@ -30,22 +30,21 @@ This file is the single source of truth for the JLPT N5 self-study program. It d
 3. **Cumulative principle:** Lessons build on each other. Lesson N assumes ALL content from lessons 1 to N-1 is mastered. Example sentences and practice questions for lesson N may freely use grammar, kanji, and vocabulary from lessons 1..N, but must NOT use content from lessons N+1 or beyond.
    3.1 **VOCABULARY GATE (Portão de Vocabulário — Enforcement Mecânico):** Antes de gerar QUALQUER output para a Aula X (aula HTML, Reading, Lacunas, Teste), a IA DEVE executar obrigatoriamente os seguintes passos:
        (a) **Construir o inventário cumulativo**: Abrir o bloco YAML deste arquivo e coletar TODAS as rows de `grammar`, `kanji`, `focus_vocab` e `anki_vocab` das Aulas 1 até X (inclusive). Resolver cada row number nos arquivos `Content/` para obter a palavra/estrutura real.
-       (b) **Gerar conteúdo SOMENTE com o inventário**: Toda palavra japonesa, estrutura gramatical, ou kanji presente no output final DEVE pertencer ao inventário construído em (a). Se uma palavra é desejável mas NÃO está no inventário, ela NÃO pode ser usada — a IA deve encontrar uma alternativa cumulativa ou reformular a frase.
+       (b) **Gerar conteúdo SOMENTE com o inventário**: Toda palavra japonesa, estrutura gramatical, ou kanji presente no output final DEVE pertencer ao inventário construído em (a). Se uma palavra é desejável mas NÃO está no inventário, ela NÃO pode ser usada — a IA deve encontrar uma alternativa cumulativa ou reformular a frase. IMPORTANTE: Conforme Regra 7, ao gerar a seção de Gramática, a IA DEVE priorizar ativamente o uso do vocabulário da Aula X (novo) ensinado na seção de Vocabulário para fixação.
        (c) **Auto-verificação pós-geração**: Após gerar o output, varrer todo o texto japonês e confirmar que nenhuma palavra fora do inventário escapou. Se encontrar uma violação, corrigir antes de salvar/enviar.
        (d) **Exceções permitidas**: Partículas gramaticais (は, が, を, に, で, へ, と, も, か, の, よ, ね, etc.), cópula (です/だ/でした/じゃない), verbos de existência básicos (ある/いる — quando no escopo), pronomes demonstrativos (これ/それ/あれ/この/その/あの — quando no escopo), e expressões de cortesia básica (はい, いいえ, ありがとう, すみません — quando no escopo) são permitidas desde que já tenham sido introduzidas no inventário cumulativo.
 4. **Row references:** Each lesson is defined in the `## Curriculum Data (YAML)` section at the end of this file. The YAML block uses row numbers referencing `Content/N5_Grammar.md`, `Content/N5_Kanji.md`, and `Content/N5_Vocabulary.md`. Before teaching, locate the lesson entry in the YAML block, then open the referenced rows in the data files and read them. For consolidation lessons, use the `scope` field to identify which previous content lessons are being reviewed.
 5. **Two lesson types:**
    - **📘 Content lessons** teach new grammar, kanji, and vocabulary following Template A in `Filters/HTML/HTML_Lesson.md`.
    - **🔄 Consolidation lessons** review and reinforce the previous 3-4 content lessons following Template B in `Filters/HTML/HTML_Lesson.md`. They introduce NO new content.
-6. **Vocabulary classification:**
-   - **Focus (12-15 words):** Fully taught in the lesson body with 4-layer examples, collocations, and nuances.
-   - **Anki (6-16 words):** Listed in a reference table. The student reviews them in the automatically generated Anki deck throughout the week.
+6. **Vocabulary unificado:**
+   - Todo o vocabulário da aula (indicado pelas listas `focus_vocab` e `anki_vocab` no YAML) constitui um único "pool" de palavras a ser ensinado.
+   - Na hora de gerar a aula, as listas `focus_vocab` e `anki_vocab` DEVEM ser agrupadas em uma única seção chamada "Vocabulário da Aula", categorizando as palavras semanticamente para melhor didática (ex: agrupar por polidez, verbos vs adjetivos, temas, etc). Todo esse vocabulário deve ser o foco da aula e irá para o Anki.
 7. **Lesson teaching format (content lessons):**
    - **Review (5 min):** Quick recap of the previous lesson's most important points. Show 3-5 review questions. *(Skip for Lesson 1.)*
-   - **Grammar (core):** Teach each grammar point — pattern, meaning, usage, contrast, 2-3 example sentences using ONLY cumulative vocabulary.
    - **Kanji:** Present new kanji as **compositional reading keys** (chaves de leitura composicional): glyph + **core idea** (conceito semântico, not a simple translation) + radical as mnemonic hook + 2-3 words from cumulative vocabulary showing **explicit compositional breakdown** (e.g., 外(fora) + 国(país) + 人(pessoa) → "estrangeiro"), each tagged with the lesson where the word appears [Aula N]. When all words containing the kanji belong to future lessons, include a bridging note. For opaque compositions (jukujikun), show only translation + note "composição irregular". The reading is learned exclusively through words — NEVER drill onyomi/kunyomi or stroke counts. Mnemonic and confusion warnings are CONDITIONAL — include only when they add genuine value at the current level.
-   - **Focus Vocabulary:** Present focus words grouped by **semantic theme** with full examples.
-   - **Anki Vocabulary:** Present Anki words in a reference table.
+   - **Vocabulário da Aula:** Apresentar todo o pool de palavras (Focus + Anki) agrupado por **tema semântico/didático**, com traduções e collocations.
+   - **Grammar (core):** Teach each grammar point — pattern, meaning, usage, contrast, 2-3 example sentences. **ATENÇÃO:** Os exemplos gramaticais DEVEM **priorizar ativamente** o uso do vocabulário novo recém-ensinado na seção anterior para garantir a fixação, completando com vocabulário cumulativo das aulas passadas para maior fluidez e naturalidade.
    - **Anki card (reading recall engine):** for each kanji word — **front = word in kanji WITHOUT furigana** / **back = kana reading + PT-BR translation**. This is the ONLY place in the system where kanji appears without furigana. Pure-kana words use a simple card (front = kana / back = translation).
    - **Practice (end):** Exercises including **interleaved** questions mixing current and past content.
 8. Never use a grammar point in examples before it has been introduced.
@@ -128,7 +127,7 @@ Total: 84 grammar points, 80 kanji, 644 vocabulary items (todas as linhas do arq
 
 ## Curriculum Data (YAML)
 
-O bloco abaixo define as 32 aulas do currículo em formato estruturado. Os números em `grammar`, `kanji`, `focus_vocab` e `anki_vocab` são referências de linha (row #) aos arquivos em `Content/`. Para aulas de consolidação, `scope` lista as aulas de conteúdo cobertas na revisão.
+O bloco abaixo define as 32 aulas do currículo em formato estruturado. Os números em `grammar`, `kanji`, `focus_vocab` e `anki_vocab` são referências de linha (row #) aos arquivos em `Content/`. Para aulas de consolidação, `scope` lista as aulas de conteúdo cobertas na revisão. **Nota Importante para a IA geradora**: Embora o vocabulário esteja dividido no YAML entre `focus_vocab` e `anki_vocab` por razões de estrutura de dados legada, na geração da aula em HTML eles DEVEM ser consolidados em um único "pool" e ensinados juntos na Seção "Vocabulário da Aula" conforme a Regra 6.
 
 ```yaml
 lessons:

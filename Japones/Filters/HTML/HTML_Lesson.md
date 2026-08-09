@@ -801,11 +801,11 @@ details.gabarito-box summary:hover {
     </div>
   </section>
 
-  <!-- SEÇÃO 2: VOCABULÁRIO DA AULA (NOVO) -->
+  <!-- SEÇÃO 2: VOCABULÁRIO DA AULA -->
   <section id="sec-2">
     <h2 class="section-title">2. 📖 VOCABULÁRIO DA AULA</h2>
     <p style="margin-bottom: 1rem; color: var(--text-muted);">
-      💡 Todo o vocabulário ensinado aqui será focado nos exemplos e atividades práticas da aula.
+      💡 Todo o vocabulário ensinado aqui será focado nos exemplos e atividades práticas da aula (inclui todo o conteúdo Foco e Anki definido em N5_Vocabulary.md).
     </p>
 
     <h3 class="subsection-title">Tema/Grupo: [Ex: Família e Relações]</h3>

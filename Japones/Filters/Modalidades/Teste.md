@@ -7,7 +7,7 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
 ## ⛔ 1. REGRAS INVIOLÁVEIS (HARD RULES)
 
 1. **Princípio do Foco na Matéria Vigente (Escopo de Avaliação):**
-   - O teste avalia **exclusivamente** a gramática, kanji e vocabulário **novos da Aula X** — os itens listados nos campos `grammar`, `kanji`, `focus_vocab` e `anki_vocab` da Aula X em `JLPTN5.md`.
+   - O teste avalia **exclusivamente** a gramática, kanji e vocabulário **novos da Aula X** — a gramática e os kanji listados nos campos `grammar` e `kanji` da Aula X em `JLPTN5.md`, e o vocabulário definido na seção `## Aula X` de `Content/N5_Vocabulary.md`.
    - É **estritamente proibido** cobrar, avaliar ou pontuar conhecimento de gramática, kanji ou vocabulário ensinados em aulas anteriores (1 a X-1). A revisão cumulativa é responsabilidade de outros mecanismos do sistema.
    - É **estritamente proibido** introduzir gramática, kanji ou vocabulário de aulas futuras (X+1 em diante).
 
@@ -97,7 +97,7 @@ Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 # 🧪 TESTE DE FIXAÇÃO (MÚLTIPLA ESCOLHA): AULA [X] — [TÍTULO DA AULA]
 
 > **Nível:** JLPT N5
-> **Escopo Avaliado:** Aula [X] (conteúdo novo: [N] gramática, [N] kanji, [N] vocabulário foco, [N] vocabulário Anki)
+> **Escopo Avaliado:** Aula [X] (conteúdo novo: [N] gramática, [N] kanji, [N] vocabulário)
 > **Instruções:** Este é um teste de múltipla escolha. Marque a alternativa correta colocando um 'x' entre os colchetes, assim: `- [x] A)`.
 > **Status:** ⏳ Pendente
 

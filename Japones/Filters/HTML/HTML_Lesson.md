@@ -805,7 +805,7 @@ details.gabarito-box summary:hover {
   <section id="sec-2">
     <h2 class="section-title">2. 📖 VOCABULÁRIO DA AULA</h2>
     <p style="margin-bottom: 1rem; color: var(--text-muted);">
-      💡 Todo o vocabulário ensinado aqui será focado nos exemplos e atividades práticas da aula (inclui todo o conteúdo Foco e Anki definido em N5_Vocabulary.md).
+      💡 Todo o vocabulário ensinado aqui será focado nos exemplos e atividades práticas da aula (todo o conteúdo da seção `## Aula X` de N5_Vocabulary.md).
     </p>
 
     <h3 class="subsection-title">Tema/Grupo: [Ex: Família e Relações]</h3>
@@ -1084,7 +1084,7 @@ Toda IA responsável pela geração dos arquivos das aulas **DEVE** obedecer rig
 
 ### 4.1 Proibição Absoluta de Resumos ou Omissões de Conteúdo
 - É **estritamente proibido** omitir itens da ementa (`JLPTN5.md`), resumir tabelas com reticências `...` ou pular exercícios.
-- Se a ementa atribui listas de vocabulário (`focus_vocab` e `anki_vocab`) para a Aula X, **todas as palavras de ambas as listas DEVEM ser consolidadas e explicitamente apresentadas em código HTML completo na Seção 2 da Aula.** Não deixe nenhuma palavra de fora.
+- Se a ementa define o vocabulário da Aula X (seção `## Aula X` de `Content/N5_Vocabulary.md`), **todas as palavras daquela seção DEVEM ser consolidadas e explicitamente apresentadas em código HTML completo na Seção 2 da Aula.** Não deixe nenhuma palavra de fora.
 
 ### 4.2 Política de Furigana/Ruby (Sempre Furigana)
 

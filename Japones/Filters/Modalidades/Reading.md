@@ -30,7 +30,7 @@ Ao receber o comando de leitura no chat (ex: `"Reading Aula X"`, `"Reading N4 Au
    - **Planejamento Estratégico:** A IA deve gerar um plano (texto interno ou introdução no chat) de qual a estratégia narrativa baseada nas palavras que o usuário conhece, visando criar uma história envolvente e coerente, ainda que simples.
    - **Regra de ouro:** É fundamental que o texto tenha significado narrativo coerente e não apenas aglomere o vocabulário. Se o vocabulário disponível exigir uma história simples, faça uma história simples e bem construída, mas com sentido claro (sujeito lógico, ação lógica).
 2. **Seleção de Vocabulário (Regra dos 50% + Estendido):**
-   - **Sessão Base (`Practice/{NIVEL}_P{X}_Reading.html`):** Incluir pelo menos **50% do vocabulário foco novo** da Aula X no texto, integrando-o com o vocabulário acumulado de revisão.
+   - **Sessão Base (`Practice/{NIVEL}_P{X}_Reading.html`):** Incluir pelo menos **50% do vocabulário novo** da Aula X no texto, integrando-o com o vocabulário acumulado de revisão.
    - **Sessão Estendida (`"Mais Reading Aula X"`):** Criar uma Segunda Narrativa (`Practice/{NIVEL}_P{X}_Reading_Parte2.html`) focando no vocabulário remanescente.
 3. **Redação Orgânica (Narrativa Mista) & Furigana Gradual:** Escrever o texto de forma fluida, intercalando descrições, narrativas e diálogos de maneira natural (como em um livro/conto). Aplicar furigana apenas na 1ª ocorrência das palavras com kanji.
 4. **Compor Exercício:** Gerar de 4 a 6 perguntas de interpretação profunda em português.

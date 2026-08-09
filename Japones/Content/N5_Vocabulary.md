@@ -4,6 +4,8 @@ Source: https://jlptsensei.com/jlpt-n5-vocabulary-list/
 
 Esta lista foi reestruturada cronologicamente para facilitar o consumo da IA durante a geração das aulas. As palavras estão agrupadas nas exatas aulas em que são introduzidas.
 
+> Nota: As aulas de consolidação (5, 9, 13, 18, 22, 26, 30, 32) não introduzem vocabulário novo e, por isso, não possuem seção própria — a numeração das seções segue apenas as aulas de conteúdo.
+
 ## Aula 1
 *(Total: 25 palavras introduzidas nesta aula)*
 

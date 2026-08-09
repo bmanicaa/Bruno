@@ -801,10 +801,14 @@ details.gabarito-box summary:hover {
     </div>
   </section>
 
-  <!-- SEÇÃO 2: VOCABULÁRIO FOCO (TABELAS SEMÂNTICAS ENXUTAS) -->
+  <!-- SEÇÃO 2: VOCABULÁRIO DA AULA (NOVO) -->
   <section id="sec-2">
-    <h2 class="section-title">2. 📖 VOCABULÁRIO FOCO DA AULA</h2>
-    <h3 class="subsection-title">Tema: [Ex: Família e Relações]</h3>
+    <h2 class="section-title">2. 📖 VOCABULÁRIO DA AULA</h2>
+    <p style="margin-bottom: 1rem; color: var(--text-muted);">
+      💡 Todo o vocabulário ensinado aqui será focado nos exemplos e atividades práticas da aula.
+    </p>
+
+    <h3 class="subsection-title">Tema/Grupo: [Ex: Família e Relações]</h3>
     <div class="table-wrapper">
       <table>
         <thead>
@@ -829,25 +833,23 @@ details.gabarito-box summary:hover {
         </tbody>
       </table>
     </div>
-  </section>
 
-  <!-- SEÇÃO 2.5: VOCABULÁRIO ANKI -->
-  <section id="sec-2-5">
-    <h2 class="section-title">2.5 📋 VOCABULÁRIO ANKI — REVISÃO SEMANAL</h2>
+    <!-- Adicione múltiplas seções h3 conforme necessário para categorizar o pool de vocabulário da aula -->
+    <h3 class="subsection-title">Tema/Grupo: [Ex: Outras Palavras]</h3>
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
             <th>Palavra &amp; Leitura (Kanji + Furigana)</th>
-            <th>Tradução PT-BR</th>
-            <th>Classe</th>
+            <th>Significado &amp; Classe (PT-BR)</th>
+            <th>Combinação Comum (Collocation)</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="ja-text"><ruby>外国人<rt>がいこくじん</rt></ruby></td>
-            <td>Estrangeiro</td>
-            <td>Substantivo</td>
+            <td>Estrangeiro <span style="color: var(--text-muted); font-size: 0.85em;">(Substantivo)</span></td>
+            <td class="ja-text"><ruby>外国人<rt>がいこくじん</rt></ruby>です</td>
           </tr>
         </tbody>
       </table>
@@ -857,6 +859,9 @@ details.gabarito-box summary:hover {
   <!-- SEÇÃO 3: ESTRUTURAS GRAMATICAIS -->
   <section id="sec-3">
     <h2 class="section-title">3. 🧩 ESTRUTURAS GRAMATICAIS & REGRAS</h2>
+    <p style="margin-bottom: 1.25rem; font-weight: 500; color: var(--accent-purple);">
+      🎯 <strong>Foco:</strong> Os exemplos abaixo aplicam ativamente o vocabulário recém-ensinado na Seção 2 para fixação em contexto.
+    </p>
     <div class="grammar-block">
       <h3 class="subsection-title" style="margin-top: 0;">3.1 [Nome do Ponto Gramatical]</h3>
       
@@ -1079,7 +1084,7 @@ Toda IA responsável pela geração dos arquivos das aulas **DEVE** obedecer rig
 
 ### 4.1 Proibição Absoluta de Resumos ou Omissões de Conteúdo
 - É **estritamente proibido** omitir itens da ementa (`JLPTN5.md`), resumir tabelas com reticências `...` ou pular exercícios.
-- Se a ementa atribui 15 palavras de vocabulário Foco e 10 palavras de vocabulário Anki para a Aula X, **todas as 25 palavras DEVEM ser explicitamente apresentadas em código HTML completo**.
+- Se a ementa atribui listas de vocabulário (`focus_vocab` e `anki_vocab`) para a Aula X, **todas as palavras de ambas as listas DEVEM ser consolidadas e explicitamente apresentadas em código HTML completo na Seção 2 da Aula.** Não deixe nenhuma palavra de fora.
 
 ### 4.2 Política de Furigana/Ruby (Sempre Furigana)
 

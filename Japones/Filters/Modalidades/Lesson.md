@@ -24,7 +24,7 @@ The lesson MUST eliminate 100% of ambiguity. The student's capacity to absorb ma
 4. **FURIGANA (RUBY):** Segue rigorosamente a Regra 11 de `JLPTN5.md` e a especificação técnica detalhada em `Filters/HTML/HTML_Lesson.md` §4.2. Resumo: todo kanji em toda ocorrência recebe `<ruby>` com leitura por palavra inteira; kana puro nunca recebe ruby.
 5. **MANDATORY 4-LAYER SENTENCE BREAKDOWN**: Every Japanese phrase/example MUST include all 4 layers detailed below.
 6. **CUMULATIVE RULE**: Follow the cumulative principle strictly — lesson N may use all content from lessons 1..N, but NEVER content from lessons N+1 or beyond. This applies to grammar, vocabulary, and kanji.
-7. **VOCABULÁRIO UNIFICADO**: The vocabulary list for each lesson is strictly defined in `Content/N5_Vocabulary.md` under `## Aula X`. The AI MUST extract exactly those words, group them by semantic themes, and teach them in a single consolidated "Vocabulário da Aula" section (combining what used to be Focus and Anki). Provide robust examples using the 3-layer breakdown.
+7. **VOCABULÁRIO UNIFICADO**: The vocabulary list for each lesson is strictly defined in `Content/N5_Vocabulary.md` under `## Aula X`. Os dados já vêm pré-agrupados por temas semânticos (ex: `### Saudações e Expressões`, `### Lugares e Direções`). A IA DEVE extrair exatamente essas palavras, preservando e utilizando EXATAMENTE as categorias semânticas (subtítulos) que já vêm predefinidas e mastigadas no arquivo, ensinando-as em uma seção consolidada "Vocabulário da Aula". Provide robust examples using the 3-layer breakdown.
 8. **VERBO-CORE & MÓDULO DE CONJUGAÇÃO**: The Aula 6 introduces the Verbo-Core — verbs presented in the 4 lexical forms (dictionary / ます / ました / ません) as fixed pairs, WITHOUT group-systematization. The systematization (Grupos 1-3, て-form, ない-form, た-form) belongs EXCLUSIVELY to the MÓDULO DE CONJUGAÇÃO da Aula 19 (seção 3E do Template A em `Filters/HTML/HTML_Lesson.md`). Every verb taught before Aula 19 (Aula 7: ある/いる; Aulas 16-17: 食べる, 飲む, 話す, 書く) is also presented as a dictionary/ます pair (with ました/ません when useful).
 9. **OUTPUT & DRIVE EXPORT**: Segue o fluxo completo descrito na Regra 13 de `JLPTN5.md` e em `Filters/HTML/HTML_Lesson.md` §4.4. Resumo: gerar HTML5, salvar temporariamente, upload via `upload_to_gdrive.js`, apagar arquivo local, confirmar no chat.
 
@@ -86,7 +86,7 @@ Formato sugerido:
 ---
 
 ## 2. 📖 VOCABULÁRIO DA AULA
-*(Ensine AQUI todas as palavras listadas para esta aula no arquivo `N5_Vocabulary.md`. Não use palavras de outras aulas ou palavras alucinadas. Agrupe por TEMA SEMÂNTICO — ex: família, lugares, adjetivos de emoção — e NÃO por classe gramatical.)*
+*(Ensine AQUI todas as palavras listadas para esta aula no arquivo `N5_Vocabulary.md`. Não use palavras de outras aulas ou palavras alucinadas. **Atenção**: O agrupamento semântico já vem pronto do arquivo de dados. Preserve e utilize OBRIGATORIAMENTE os mesmos subtítulos semânticos que já organizam os blocos de vocabulário da respectiva aula em `N5_Vocabulary.md`.)*
 *(Utilizar a Arquitetura de 3 Colunas Inteligentes especificada em HTML_Lesson.md: Kanji+Furigana <ruby>, Significado & Classe, Collocation.)*
 
 | Palavra & Leitura (Kanji + Furigana) | Significado & Classe (PT-BR) | Combinação Comum (Collocation) |

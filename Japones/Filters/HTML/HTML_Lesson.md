@@ -808,7 +808,7 @@ details.gabarito-box summary:hover {
       💡 Todo o vocabulário ensinado aqui será focado nos exemplos e atividades práticas da aula (todo o conteúdo da seção `## Aula X` de N5_Vocabulary.md).
     </p>
 
-    <h3 class="subsection-title">Tema/Grupo: [Ex: Família e Relações]</h3>
+    <h3 class="subsection-title">[Copiar exatamente o subtítulo ### de N5_Vocabulary.md, ex: ### Lugares e Direções]</h3>
     <div class="table-wrapper">
       <table>
         <thead>
@@ -834,8 +834,8 @@ details.gabarito-box summary:hover {
       </table>
     </div>
 
-    <!-- Adicione múltiplas seções h3 conforme necessário para categorizar o pool de vocabulário da aula -->
-    <h3 class="subsection-title">Tema/Grupo: [Ex: Outras Palavras]</h3>
+    <!-- Crie uma nova subseção para CADA subtítulo semântico (###) encontrado na respectiva Aula em N5_Vocabulary.md -->
+    <h3 class="subsection-title">[Copiar o próximo subtítulo ###, ex: ### Verbos de Movimento]</h3>
     <div class="table-wrapper">
       <table>
         <thead>

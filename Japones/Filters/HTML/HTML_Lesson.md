@@ -1091,7 +1091,7 @@ Toda IA responsável pela geração dos arquivos das aulas **DEVE** obedecer rig
 Todo kanji em TODA ocorrência recebe `<ruby>` com a leitura completa da palavra. Não há níveis de renderização: a lista de 80 kanji de `Content/N5_Kanji.md` deixa de definir furigana e passa a ser apenas a **prioridade de foco no Anki** (a coluna `Aula (intro)` indica quando cada kanji entra na rotação de cards).
 
 0. **Kana Puro — NUNCA `<ruby>`:** Se a palavra **não contém NENHUM kanji** (hiragana/katakana puro: `あなた`, `はい`, `ええ`, `どうも`, `どうぞ`, `じゃあ`, `さあ`, partículas `は`/`です`/`か`/`を`/`に`...), escrever em **texto limpo, SEM `<ruby>`**. Ruby existe apenas para anotar a leitura de kanji. `<ruby>じゃあ<rt>じゃあ</rt></ruby>` é PROIBIDO.
-1. **Todo kanji, sempre com `<ruby>`:** qualquer palavra que contenha kanji recebe `<ruby>` em **TODA ocorrência**, sem exceção por nível ou por repetição na aula. O furigana fica visível por padrão; o auto-teste é opcional, feito pelo botão "👁️ Furigana" (CSS `hide-furigana`) quando o aluno quiser. O recall ativo de leitura acontece no Anki (frente = kanji sem furigana / verso = leitura + tradução), não no HTML.
+1. **Todo kanji, sempre com `<ruby>`:** qualquer palavra que contenha kanji recebe `<ruby>` em **TODA ocorrência**, sem exceção por nível ou por repetição na aula. O furigana fica visível por padrão; o auto-teste é opcional, feito pelo botão "👁️ Furigana" (CSS `hide-furigana`) quando o aluno quiser. O recall ativo no Anki também inclui furigana (frente = kanji COM furigana / verso = leitura + tradução).
 2. **Ruby sobre a Palavra Inteira (Jamais Kanji a Kanji):**
    - A anotação deve cobrir a palavra inteira: ex: `<ruby>今日<rt>きょう</rt></ruby>`, `<ruby>大人<rt>おとな</rt></ruby>`.
    - **Proibido** dividir kanji por kanji (`<ruby>今<rt>きょ</rt>日<rt>う</rt></ruby>`), pois isso destrói leituras irregulares (jukujikun).
@@ -1112,6 +1112,7 @@ Em conformidade com a Regra 13 de `JLPTN5.md`:
    node "/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js" "<caminho_do_arquivo_html_temp>" "N5_LX.html"
    ```
 3. Retornar no chat apenas uma mensagem sucinta de confirmação do salvamento e upload.
+4. Gerar o arquivo `.tsv` do Anki em `Anki/N5_LX_Anki.tsv` com os cabeçalhos `#separator:tab`, `#html:true` e `#notetype:Basic` no topo e furigana `<ruby>` na frente dos cards.
 
 ### 4.5 Arquitetura de Tabelas Inteligentes (3 Colunas) & Otimização para Impressão
 - Como toda palavra com Kanji já carrega o Furigana `<ruby>` sobreposto, a coluna isolada de "Leitura (Kana)" é redundante.

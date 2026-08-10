@@ -188,7 +188,7 @@ Consolidation lessons do NOT teach new content. They review and reinforce everyt
 *(Perguntas diretas para testar memória ativa — o estudante deve tentar responder ANTES de olhar a resposta.)*
 
 ### Kanji → Significado
-*(Kanji sempre com furigana — o recall de leitura fica no Anki; aqui testa-se o significado.)*
+*(Kanji sempre com furigana — inclusive no Anki; aqui testa-se o significado.)*
 | Kanji &amp; Leitura | Sua resposta | Resposta correta |
 | :---: | :---: | :--- |
 | [Kanji 1] | _________ | [Significado + palavra-exemplo com leitura] |

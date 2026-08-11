@@ -1,0 +1,35 @@
+#separator:tab
+#html:true
+#notetype:Basic
+<ruby>一<rt>いち</rt></ruby>	いち — Um / Número 1
+<ruby>二<rt>に</rt></ruby>	に — Dois / Número 2
+<ruby>三<rt>さん</rt></ruby>	さん — Três / Número 3
+<ruby>四<rt>し</rt></ruby>	し / よん — Quatro / Número 4
+<ruby>五<rt>ご</rt></ruby>	ご — Cinco / Número 5
+<ruby>六<rt>ろく</rt></ruby>	ろく — Seis / Número 6
+<ruby>七<rt>しち</rt></ruby>	しち / なな — Sete / Número 7
+<ruby>八<rt>はち</rt></ruby>	はち — Oito / Número 8
+<ruby>九<rt>きゅう</rt></ruby>	きゅう / く — Nove / Número 9
+<ruby>十<rt>じゅう</rt></ruby>	じゅう — Dez / Número 10
+<ruby>百<rt>ひゃく</rt></ruby>	ひゃく — 100 / Cem
+<ruby>千<rt>せん</rt></ruby>	せん — 1.000 / Mil
+<ruby>万<rt>まん</rt></ruby>	まん — 10.000 / Dez mil
+<ruby>一つ<rt>ひとつ</rt></ruby>	ひとつ — Um item / Uma coisa (Contador geral)
+<ruby>二つ<rt>ふたつ</rt></ruby>	ふたつ — Dois itens / Duas coisas (Contador geral)
+<ruby>三つ<rt>みっつ</rt></ruby>	みっつ — Três itens / Três coisas (Contador geral)
+<ruby>四つ<rt>よっつ</rt></ruby>	よっつ — Quatro itens / Quatro coisas (Contador geral)
+<ruby>五つ<rt>いつつ</rt></ruby>	いつつ — Cinco itens / Cinco coisas (Contador geral)
+<ruby>六つ<rt>むっつ</rt></ruby>	むっつ — Seis itens / Seis coisas (Contador geral)
+<ruby>七つ<rt>ななつ</rt></ruby>	ななつ — Sete itens / Sete coisas (Contador geral)
+<ruby>八つ<rt>やっつ</rt></ruby>	やっつ — Oito itens / Oito coisas (Contador geral)
+<ruby>九つ<rt>ここのつ</rt></ruby>	ここのつ — Nove itens / Nove coisas (Contador geral)
+いくつ	いくつ — Quantos? / Quantos anos?
+いくら	いくら — Quanto custa? / Quanto?
+<ruby>零<rt>れい</rt></ruby>	れい — Zero
+ゼロ	ゼロ — Zero (Loanword)
+<ruby>番号<rt>ばんごう</rt></ruby>	ばんごう — Número (Identificador / Telefone)
+<ruby>二人<rt>ふたり</rt></ruby>	ふたり — Duas pessoas / Casal
+<ruby>一人<rt>ひとり</rt></ruby>	ひとり — Uma pessoa / Sozinho
+<ruby>四<rt>よん</rt></ruby>	よん / し — Kanji: Quatro (Chave de Leitura)
+<ruby>五<rt>ご</rt></ruby>	ご — Kanji: Cinco (Chave de Leitura)
+<ruby>六<rt>ろく</rt></ruby>	ろく — Kanji: Seis (Chave de Leitura)

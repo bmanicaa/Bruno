@@ -69,16 +69,29 @@ async function main() {
         files.forEach(f => fileMap[f.id] = f);
 
         // 1. Gerar drive_index.txt
+        const pathCache = new Map();
         function getPath(file) {
+            if (pathCache.has(file.id)) {
+                return pathCache.get(file.id);
+            }
+
             if (!file.parents || file.parents.length === 0 || file.parents[0] === rootId) {
-                return '/' + file.name;
+                const p = '/' + file.name;
+                pathCache.set(file.id, p);
+                return p;
             }
             const parentId = file.parents[0];
             const parent = fileMap[parentId];
             
-            if (!parent) return '/[FORA_DO_ESCOPO]/' + file.name;
+            if (!parent) {
+                const p = '/[FORA_DO_ESCOPO]/' + file.name;
+                pathCache.set(file.id, p);
+                return p;
+            }
             
-            return getPath(parent) + '/' + file.name;
+            const p = getPath(parent) + '/' + file.name;
+            pathCache.set(file.id, p);
+            return p;
         }
 
         const indexLines = [];

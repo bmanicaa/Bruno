@@ -5,12 +5,21 @@ async function getAccessToken() {
     const keysPath = path.join(__dirname, '../../Keys/Google keys.json');
     const tokenPath = path.join(__dirname, '../../Keys/token.json');
     
-    if (!fs.existsSync(keysPath) || !fs.existsSync(tokenPath)) {
-        throw new Error('Chaves de API não encontradas em Keys/');
+    let keys, token;
+    try {
+        const [keysData, tokenData] = await Promise.all([
+            fs.promises.readFile(keysPath, 'utf8'),
+            fs.promises.readFile(tokenPath, 'utf8')
+        ]);
+        keys = JSON.parse(keysData);
+        token = JSON.parse(tokenData);
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            throw new Error('Chaves de API não encontradas em Keys/');
+        }
+        throw error;
     }
 
-    const keys = JSON.parse(fs.readFileSync(keysPath, 'utf8'));
-    const token = JSON.parse(fs.readFileSync(tokenPath, 'utf8'));
     const { client_id, client_secret } = keys.installed || keys.web;
     const { refresh_token } = token;
 

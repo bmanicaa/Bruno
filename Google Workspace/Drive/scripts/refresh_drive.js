@@ -1,27 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-async function getAccessToken() {
-    const keysPath = path.join(__dirname, '../../Keys/Google keys.json');
-    const tokenPath = path.join(__dirname, '../../Keys/token.json');
-    
-    if (!fs.existsSync(keysPath) || !fs.existsSync(tokenPath)) {
-        throw new Error('Chaves de API não encontradas em Keys/');
-    }
-
-    const keys = JSON.parse(fs.readFileSync(keysPath, 'utf8'));
-    const token = JSON.parse(fs.readFileSync(tokenPath, 'utf8'));
-    const { client_id, client_secret } = keys.installed || keys.web;
-    const { refresh_token } = token;
-
-    const response = await fetch('https://oauth2.googleapis.com/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ client_id, client_secret, refresh_token, grant_type: 'refresh_token' }),
-    });
-    const data = await response.json();
-    return data.access_token;
-}
+const { getAccessToken } = require('./auth');
 
 async function getRootId(accessToken) {
     const response = await fetch('https://www.googleapis.com/drive/v3/files/root?fields=id', {
@@ -69,16 +49,29 @@ async function main() {
         files.forEach(f => fileMap[f.id] = f);
 
         // 1. Gerar drive_index.txt
+        const pathCache = new Map();
         function getPath(file) {
+            if (pathCache.has(file.id)) {
+                return pathCache.get(file.id);
+            }
+
             if (!file.parents || file.parents.length === 0 || file.parents[0] === rootId) {
-                return '/' + file.name;
+                const p = '/' + file.name;
+                pathCache.set(file.id, p);
+                return p;
             }
             const parentId = file.parents[0];
             const parent = fileMap[parentId];
             
-            if (!parent) return '/[FORA_DO_ESCOPO]/' + file.name;
+            if (!parent) {
+                const p = '/[FORA_DO_ESCOPO]/' + file.name;
+                pathCache.set(file.id, p);
+                return p;
+            }
             
-            return getPath(parent) + '/' + file.name;
+            const p = getPath(parent) + '/' + file.name;
+            pathCache.set(file.id, p);
+            return p;
         }
 
         const indexLines = [];

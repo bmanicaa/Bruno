@@ -50,7 +50,7 @@ async function downloadFile(fileId, destPath) {
         throw new Error(meta.error.message);
     }
 
-    const fileName = meta.name;
+    const fileName = path.basename(meta.name);
     const isGoogleDoc = meta.mimeType.startsWith('application/vnd.google-apps.');
     let url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
     

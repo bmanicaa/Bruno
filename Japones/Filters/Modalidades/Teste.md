@@ -29,6 +29,10 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
 6. **Local de Salvamento:**
    - O caderno de teste é gerado em Markdown no caminho `/Users/bmanica/Documents/GitHub/Bruno/Japones/Practice/N5_P{X}.md`.
 
+7. **PROIBIDO DAR A RESPOSTA NA DICA OU ENUNCIADO (ANTI-SPOILER RULE):**
+   - As perguntas, dicas ou placeholders (ex: `___`) NUNCA podem entregar a resposta gramatical ou a intenção da questão mastigada.
+   - O aluno deve deduzir a função pelo contexto do enunciado, não lendo a resposta disfarçada de instrução.
+
 ---
 
 ## ⚙️ 2. TAXONOMIA DE QUESTÕES (AS 5 SEÇÕES DO TESTE)

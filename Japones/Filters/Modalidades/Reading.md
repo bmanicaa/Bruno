@@ -15,6 +15,7 @@ Esta especificação define o padrão determinístico universal para a geração
 3. **Zero Romaji e Obrigação Absoluta do Katakana:** Todo texto em japonês utiliza exclusivamente Kana + Kanji com furigana HTML na 1ª ocorrência. Nomes estrangeiros, nomes próprios do usuário (como o seu nome), palavras ocidentais ou termos sem tradução nativa **DEVEM ser escritos obrigatoriamente em Katakana** (ex: "Bruno" -> ブルーノ). O uso de Romaji (letras latinas ou alfabeto ocidental) em qualquer texto japonês gerado é **ESTRITAMENTE PROIBIDO**.
 4. **Registro Linguístico:** Respeitar o nível de polidez (`です/ます` vs. casual) autorizado pelo escopo acumulado da aula.
 5. **Salvamento Paramétrico em HTML e Google Drive:** A modalidade Reading gera um arquivo HTML baseado em `Filters/HTML/HTML_reading.md`. O arquivo é salvo localmente em `Practice/{NIVEL}_P{X}_Reading.html` (ex: `N5_P1_Reading.html`, `N4_P10_Reading.html`) e a IA **DEVE** executar o script de upload para o Google Drive (`upload_to_gdrive.js`).
+6. **PROIBIDO SPOILERS NAS PERGUNTAS (ANTI-SPOILER RULE):** Ao gerar as perguntas de interpretação, NUNCA inclua dicas mastigadas, parênteses ou traduções que entreguem a resposta da questão diretamente. O estudante deve interpretar.
 
 ---
 

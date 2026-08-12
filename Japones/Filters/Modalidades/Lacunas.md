@@ -37,6 +37,11 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
 7. **Local de Salvamento:**
    - O caderno de exercícios é gerado em Markdown no caminho `Practice/N5_P{X}_Lacunas.md`.
 
+8. **PROIBIDO DAR A RESPOSTA NA DICA (ANTI-SPOILER RULE):**
+   - As dicas in-line entre parênteses NUNCA podem entregar a resposta gramatical ou a intenção da questão mastigada.
+   - Em exercícios testando a diferença entre partículas gramaticais (ex: `は` vs `が`), a dica DEVE ser APENAS `(partícula)`.
+   - **JAMAIS** escreva `(partícula de tópico)` ou `(partícula de sujeito)`, pois isso estraga o propósito do exercício. O aluno deve deduzir a função pelo contexto, não ler a função na dica.
+
 ---
 
 ## ⚙️ 2. TAXONOMIA DE QUESTÕES (AS 4 SEÇÕES FIXAS DAS LACUNAS)

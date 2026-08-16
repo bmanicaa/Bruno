@@ -1112,7 +1112,7 @@ Em conformidade com a Regra 13 de `JLPTN5.md`:
    node "/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js" "<caminho_do_arquivo_html_temp>" "N5_LX.html"
    ```
 3. Retornar no chat apenas uma mensagem sucinta de confirmação do salvamento e upload.
-4. Gerar o arquivo `.tsv` do Anki em `Anki/N5_LX_Anki.tsv` com os cabeçalhos `#separator:tab`, `#html:true` e `#notetype:Basic` no topo e furigana `<ruby>` na frente dos cards.
+4. Gerar o arquivo `.tsv` do Anki em `Anki/N5_LX_Anki.tsv` com os cabeçalhos `#separator:tab`, `#html:true` e `#notetype:Básico` no topo e furigana `<ruby>` na frente dos cards.
 
 ### 4.5 Arquitetura de Tabelas Inteligentes (3 Colunas) & Otimização para Impressão
 - Como toda palavra com Kanji já carrega o Furigana `<ruby>` sobreposto, a coluna isolada de "Leitura (Kana)" é redundante.

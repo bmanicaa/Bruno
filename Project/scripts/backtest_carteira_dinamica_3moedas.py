@@ -265,13 +265,13 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
                 trades.append(pos)
                 del active_positions[s]
             else:
-                # Breakeven Antecipado em +1.0R
-                if not pos['be_moved'] and c_high >= be_trigger_price:
-                    pos['be_moved'] = True
-                    pos['stop_loss'] = entry_price
-                    
-                if not pos['partial_taken']:
-                    if c_low <= pos['stop_loss']:
+                # Abordagem Pessimista Intra-Candle:
+                # Avalia SEMPRE o cenário onde o preço atinge o pior caso primeiro dentro do mesmo candle de 4h.
+                # Se bater na mínima (c_low <= stop_loss), ele aciona o stop, INDEPENDENTE de ter batido na máxima (c_high) na mesma vela.
+
+                # Trata Stop Loss e Stop Breakeven primeiro!
+                if c_low <= pos['stop_loss']:
+                    if not pos['partial_taken']:
                         pct_loss = (pos['stop_loss'] - entry_price) / entry_price
                         gross_pnl = allocated_capital * pct_loss
                         exit_fee = (allocated_capital * (1 + pct_loss)) * fee_pct
@@ -279,13 +279,35 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
                         capital += pnl_brl
                         pos['exit_dates'].append(current_time)
                         pos['exit_prices'].append(pos['stop_loss'])
-                        pos['exit_reasons'].append("Stop no Breakeven" if pos['be_moved'] else "Stop Loss Inicial")
+                        pos['exit_reasons'].append("Stop no Breakeven" if pos['be_moved'] else "Stop Loss Inicial (Abordagem Pessimista)")
                         pos['pnl_brl'] += pnl_brl
                         pos['final_capital'] = capital
                         pos['status'] = 'CLOSED'
                         trades.append(pos)
                         del active_positions[s]
-                    elif c_high >= target_1:
+                        continue # Pula resto da lógica pra esse ativo
+                    else:
+                        exit_fee = (allocated_capital * 0.5) * fee_pct
+                        pnl_brl = -exit_fee
+                        capital += pnl_brl
+                        pos['pnl_brl'] += pnl_brl
+                        pos['exit_dates'].append(current_time)
+                        pos['exit_prices'].append(pos['stop_loss'])
+                        pos['exit_reasons'].append("Stop Breakeven (0x0 na 2ª metade) (Abordagem Pessimista)")
+                        pos['final_capital'] = capital
+                        pos['status'] = 'CLOSED'
+                        trades.append(pos)
+                        del active_positions[s]
+                        continue
+
+                # Só processa alvos se a mínima da vela NÃO pegou o nosso stop
+                if not pos['partial_taken']:
+                    # Movimenta Breakeven SE não foi estopado antes
+                    if not pos['be_moved'] and c_high >= be_trigger_price:
+                        pos['be_moved'] = True
+                        pos['stop_loss'] = entry_price
+
+                    if c_high >= target_1:
                         pos['partial_taken'] = True
                         pos['be_moved'] = True
                         pos['stop_loss'] = entry_price
@@ -299,6 +321,7 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
                         pos['exit_prices'].append(target_1)
                         pos['exit_reasons'].append(f"Alvo 1 ({pos['rr_target1']}R)")
                         
+                        # Bater alvo 2 na mesma vela que o alvo 1, E sem ter pego o stop na mínima
                         if c_high >= target_2:
                             pct_gain_2 = (target_2 - entry_price) / entry_price
                             gross_pnl_2 = (allocated_capital * 0.5) * pct_gain_2
@@ -313,20 +336,8 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
                             pos['status'] = 'CLOSED'
                             trades.append(pos)
                             del active_positions[s]
-                else:
-                    if c_low <= pos['stop_loss']:
-                        exit_fee = (allocated_capital * 0.5) * fee_pct
-                        pnl_brl = -exit_fee
-                        capital += pnl_brl
-                        pos['pnl_brl'] += pnl_brl
-                        pos['exit_dates'].append(current_time)
-                        pos['exit_prices'].append(pos['stop_loss'])
-                        pos['exit_reasons'].append("Stop Breakeven (0x0 na 2ª metade)")
-                        pos['final_capital'] = capital
-                        pos['status'] = 'CLOSED'
-                        trades.append(pos)
-                        del active_positions[s]
-                    elif c_high >= target_2:
+                else: # Já pegou parcial antes (em candles passados ou se safou do stop nesse)
+                    if c_high >= target_2:
                         pct_gain_2 = (target_2 - entry_price) / entry_price
                         gross_pnl_2 = (allocated_capital * 0.5) * pct_gain_2
                         exit_fee_2 = (allocated_capital * 0.5 * (1 + pct_gain_2)) * fee_pct
@@ -364,13 +375,19 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
             df_sym_4h = data_4h[s]
             df_sym_1d = data_1d[s]
             
-            sub_4h = df_sym_4h[df_sym_4h['open_time'] <= current_time]
-            sub_1d = df_sym_1d[df_sym_1d['open_time'] <= current_time]
+            sub_4h = df_sym_4h[df_sym_4h['open_time'] < current_time] # LOOKAHEAD FIX: Must strictly use data before current_time to make decision
+            sub_1d = df_sym_1d[df_sym_1d['open_time'] < current_time] # LOOKAHEAD FIX
             if len(sub_4h) < 50 or len(sub_1d) < 30:
                 continue
                 
-            candle = sub_4h.iloc[-1]
-            prev_candle = sub_4h.iloc[-2]
+            # Entry candle will be the one opening at current_time
+            current_open_candle = df_sym_4h[df_sym_4h['open_time'] == current_time]
+            if current_open_candle.empty:
+                continue
+            entry_candle_open = current_open_candle.iloc[0]['open']
+
+            candle = sub_4h.iloc[-1] # This is now the PREVIOUS closed candle (current_time - 4h)
+            prev_candle = sub_4h.iloc[-2] # This is now two candles ago
             candle_1d = sub_1d.iloc[-1]
             
             veto_reasons = []
@@ -413,7 +430,7 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
             onchain_score = 25
             total_score = macro_score + tech_score + deriv_score + onchain_score
             
-            entry_price = candle['close']
+            entry_price = entry_candle_open # LOOKAHEAD FIX: entry price is the open of the current candle, not the close of the closed one
             stop_loss = candle['swing_low_10'] - (1.5 * candle['atr14'])
             stop_dist = entry_price - stop_loss
             stop_dist_pct = stop_dist / entry_price

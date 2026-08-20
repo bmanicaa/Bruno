@@ -129,12 +129,11 @@ def run_single_asset_backtest_5pct(symbol, btc_4h, btc_1d, fng_df, risk_pct=0.05
                     trades.append(active_pos)
                     active_pos = None
                 else:
-                    if not active_pos['be_moved'] and c_high >= be_trigger_price:
-                        active_pos['be_moved'] = True
-                        active_pos['stop_loss'] = entry_price
-                        
-                    if not active_pos['partial_taken']:
-                        if c_low <= active_pos['stop_loss']:
+                    # Abordagem Pessimista Intra-Candle
+
+                    # Stop tem prioridade máxima
+                    if c_low <= active_pos['stop_loss']:
+                        if not active_pos['partial_taken']:
                             pct_loss = (active_pos['stop_loss'] - entry_price) / entry_price
                             gross_pnl = allocated_capital * pct_loss
                             exit_fee = (allocated_capital * (1 + pct_loss)) * fee_pct
@@ -142,26 +141,61 @@ def run_single_asset_backtest_5pct(symbol, btc_4h, btc_1d, fng_df, risk_pct=0.05
                             capital += pnl_brl
                             active_pos['exit_dates'].append(current_time)
                             active_pos['exit_prices'].append(active_pos['stop_loss'])
-                            active_pos['exit_reasons'].append("Stop no Breakeven" if active_pos['be_moved'] else "Stop Loss Inicial")
+                            active_pos['exit_reasons'].append("Stop no Breakeven" if active_pos['be_moved'] else "Stop Loss Inicial (Pessimista)")
                             active_pos['pnl_brl'] += pnl_brl
                             active_pos['final_capital'] = capital
                             active_pos['status'] = 'CLOSED'
                             trades.append(active_pos)
                             active_pos = None
-                        elif c_high >= target_1:
-                            active_pos['partial_taken'] = True
+                        else:
+                            exit_fee = (allocated_capital * 0.5) * fee_pct
+                            pnl_brl = -exit_fee
+                            capital += pnl_brl
+                            active_pos['pnl_brl'] += pnl_brl
+                            active_pos['exit_dates'].append(current_time)
+                            active_pos['exit_prices'].append(active_pos['stop_loss'])
+                            active_pos['exit_reasons'].append("Stop Breakeven (0x0 na 2ª metade) (Pessimista)")
+                            active_pos['final_capital'] = capital
+                            active_pos['status'] = 'CLOSED'
+                            trades.append(active_pos)
+                            active_pos = None
+
+                    if active_pos is not None:
+                        # Movimenta Breakeven SE não foi estopado antes
+                        if not active_pos['be_moved'] and c_high >= be_trigger_price:
                             active_pos['be_moved'] = True
                             active_pos['stop_loss'] = entry_price
-                            pct_gain_1 = (target_1 - entry_price) / entry_price
-                            gross_pnl_1 = (allocated_capital * 0.5) * pct_gain_1
-                            exit_fee_1 = (allocated_capital * 0.5 * (1 + pct_gain_1)) * fee_pct
-                            pnl_1 = gross_pnl_1 - exit_fee_1
-                            capital += pnl_1
-                            active_pos['pnl_brl'] += pnl_1
-                            active_pos['exit_dates'].append(current_time)
-                            active_pos['exit_prices'].append(target_1)
-                            active_pos['exit_reasons'].append(f"Alvo 1 ({active_pos['rr_target1']}R)")
-                            
+
+                        if not active_pos['partial_taken']:
+                            if c_high >= target_1:
+                                active_pos['partial_taken'] = True
+                                active_pos['be_moved'] = True
+                                active_pos['stop_loss'] = entry_price
+                                pct_gain_1 = (target_1 - entry_price) / entry_price
+                                gross_pnl_1 = (allocated_capital * 0.5) * pct_gain_1
+                                exit_fee_1 = (allocated_capital * 0.5 * (1 + pct_gain_1)) * fee_pct
+                                pnl_1 = gross_pnl_1 - exit_fee_1
+                                capital += pnl_1
+                                active_pos['pnl_brl'] += pnl_1
+                                active_pos['exit_dates'].append(current_time)
+                                active_pos['exit_prices'].append(target_1)
+                                active_pos['exit_reasons'].append(f"Alvo 1 ({active_pos['rr_target1']}R)")
+
+                                if c_high >= target_2:
+                                    pct_gain_2 = (target_2 - entry_price) / entry_price
+                                    gross_pnl_2 = (allocated_capital * 0.5) * pct_gain_2
+                                    exit_fee_2 = (allocated_capital * 0.5 * (1 + pct_gain_2)) * fee_pct
+                                    pnl_2 = gross_pnl_2 - exit_fee_2
+                                    capital += pnl_2
+                                    active_pos['pnl_brl'] += pnl_2
+                                    active_pos['exit_dates'].append(current_time)
+                                    active_pos['exit_prices'].append(target_2)
+                                    active_pos['exit_reasons'].append("Alvo 2")
+                                    active_pos['final_capital'] = capital
+                                    active_pos['status'] = 'CLOSED'
+                                    trades.append(active_pos)
+                                    active_pos = None
+                        else: # Já pegou parcial antes
                             if c_high >= target_2:
                                 pct_gain_2 = (target_2 - entry_price) / entry_price
                                 gross_pnl_2 = (allocated_capital * 0.5) * pct_gain_2
@@ -176,54 +210,32 @@ def run_single_asset_backtest_5pct(symbol, btc_4h, btc_1d, fng_df, risk_pct=0.05
                                 active_pos['status'] = 'CLOSED'
                                 trades.append(active_pos)
                                 active_pos = None
-                    else:
-                        if c_low <= active_pos['stop_loss']:
-                            exit_fee = (allocated_capital * 0.5) * fee_pct
-                            pnl_brl = -exit_fee
-                            capital += pnl_brl
-                            active_pos['pnl_brl'] += pnl_brl
-                            active_pos['exit_dates'].append(current_time)
-                            active_pos['exit_prices'].append(active_pos['stop_loss'])
-                            active_pos['exit_reasons'].append("Stop Breakeven (0x0 na 2ª metade)")
-                            active_pos['final_capital'] = capital
-                            active_pos['status'] = 'CLOSED'
-                            trades.append(active_pos)
-                            active_pos = None
-                        elif c_high >= target_2:
-                            pct_gain_2 = (target_2 - entry_price) / entry_price
-                            gross_pnl_2 = (allocated_capital * 0.5) * pct_gain_2
-                            exit_fee_2 = (allocated_capital * 0.5 * (1 + pct_gain_2)) * fee_pct
-                            pnl_2 = gross_pnl_2 - exit_fee_2
-                            capital += pnl_2
-                            active_pos['pnl_brl'] += pnl_2
-                            active_pos['exit_dates'].append(current_time)
-                            active_pos['exit_prices'].append(target_2)
-                            active_pos['exit_reasons'].append("Alvo 2")
-                            active_pos['final_capital'] = capital
-                            active_pos['status'] = 'CLOSED'
-                            trades.append(active_pos)
-                            active_pos = None
-                        elif c_close < c_ema20:
-                            pct_gain_trail = (c_close - entry_price) / entry_price
-                            gross_pnl_trail = (allocated_capital * 0.5) * pct_gain_trail
-                            exit_fee_trail = (allocated_capital * 0.5 * (1 + pct_gain_trail)) * fee_pct
-                            pnl_trail = gross_pnl_trail - exit_fee_trail
-                            capital += pnl_trail
-                            active_pos['pnl_brl'] += pnl_trail
-                            active_pos['exit_dates'].append(current_time)
-                            active_pos['exit_prices'].append(c_close)
-                            active_pos['exit_reasons'].append("Trailing EMA20")
-                            active_pos['final_capital'] = capital
-                            active_pos['status'] = 'CLOSED'
-                            trades.append(active_pos)
-                            active_pos = None
+                            elif c_close < c_ema20:
+                                pct_gain_trail = (c_close - entry_price) / entry_price
+                                gross_pnl_trail = (allocated_capital * 0.5) * pct_gain_trail
+                                exit_fee_trail = (allocated_capital * 0.5 * (1 + pct_gain_trail)) * fee_pct
+                                pnl_trail = gross_pnl_trail - exit_fee_trail
+                                capital += pnl_trail
+                                active_pos['pnl_brl'] += pnl_trail
+                                active_pos['exit_dates'].append(current_time)
+                                active_pos['exit_prices'].append(c_close)
+                                active_pos['exit_reasons'].append("Trailing EMA20")
+                                active_pos['final_capital'] = capital
+                                active_pos['status'] = 'CLOSED'
+                                trades.append(active_pos)
+                                active_pos = None
                             
         # 2. Evaluate Signals
         if active_pos is None:
-            sub_4h = df_4h[df_4h['open_time'] <= current_time]
-            sub_1d = df_1d[df_1d['open_time'] <= current_time]
+            sub_4h = df_4h[df_4h['open_time'] < current_time] # LOOKAHEAD FIX
+            sub_1d = df_1d[df_1d['open_time'] < current_time] # LOOKAHEAD FIX
             if len(sub_4h) >= 50 and len(sub_1d) >= 30:
-                candle = sub_4h.iloc[-1]
+                current_open_candle = df_4h[df_4h['open_time'] == current_time]
+                if current_open_candle.empty:
+                    continue
+                entry_candle_open = current_open_candle.iloc[0]['open']
+
+                candle = sub_4h.iloc[-1] # This is now the PREVIOUS closed candle (current_time - 4h)
                 prev_candle = sub_4h.iloc[-2]
                 candle_1d = sub_1d.iloc[-1]
                 
@@ -254,7 +266,7 @@ def run_single_asset_backtest_5pct(symbol, btc_4h, btc_1d, fng_df, risk_pct=0.05
                 onchain_score = 25
                 total_score = macro_score + tech_score + deriv_score + onchain_score
                 
-                entry_price = candle['close']
+                entry_price = entry_candle_open # LOOKAHEAD FIX
                 stop_loss = candle['swing_low_10'] - (1.5 * candle['atr14'])
                 stop_dist = entry_price - stop_loss
                 stop_dist_pct = stop_dist / entry_price

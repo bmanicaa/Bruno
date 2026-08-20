@@ -1,0 +1,23 @@
+Data Entrada,Ativo,Regime,Preço Entrada,Stop Loss,Alvo 1,Alvo 2,Datas Saída,Preços Saída,Motivo Saída,Resultado (R$),Saldo Acumulado (R$)
+2026-03-04 08:00,SOL,Consolidação Adaptativa (1.8R),$89.7600,$78.0568 (-13.04%),$110.8258,$122.5290,2026-03-18 08:00,$92.0000,Time-Stop (14 Dias Estagnado sem atingir Alvo 1),R$ +0.38,R$ 200.38
+2026-03-04 08:00,SUI,Consolidação Adaptativa (1.8R),$0.9335,$0.9335 (-10.17%),$1.1044,$1.1993,2026-03-18 08:00,$1.0029,Time-Stop (14 Dias Estagnado sem atingir Alvo 1),R$ +1.46,R$ 201.84
+2026-03-23 08:00,SOL,Consolidação Adaptativa (1.8R),$88.7800,$82.2729 (-7.33%),$100.4929,$107.0000,2026-03-27 16:00,$82.2729,Stop Loss Inicial Atingido (100%),R$ -2.02,R$ 199.83
+2026-04-07 20:00,ILV,Consolidação Adaptativa (1.8R),$3.8700,$3.8700 (-11.46%),$4.6684,$5.1120,2026-04-10 12:00 | 2026-04-10 12:00,$4.6684 | $5.1120,"Alvo 1 Atingido (1.8R - 50% Realizado, Stop no Breakeven) | Alvo 2 Atingido (50% Final)",R$ +4.60,R$ 204.42
+2026-04-10 12:00,SUI,Tendência Forte (2.5R),$0.9453,$0.9453 (-8.20%),$1.1391,$1.2554,2026-04-19 00:00,$0.9453,Stop no Breakeven Atingido (+1.0R protegido - 0x0),R$ +0.00,R$ 204.42
+2026-04-06 08:00,SOL,Consolidação Adaptativa (1.8R),$82.4500,$82.4500 (-6.89%),$92.6772,$98.3590,2026-04-20 08:00,$85.0700,Time-Stop (14 Dias Estagnado sem atingir Alvo 1),R$ +0.92,R$ 205.34
+2026-04-21 08:00,SUI,Consolidação Adaptativa (1.8R),$0.9555,$0.8891 (-6.95%),$1.0750,$1.1413,2026-04-29 16:00,$0.8891,Stop Loss Inicial Atingido (100%),R$ -2.05,R$ 203.29
+2026-04-20 12:00,SOL,Consolidação Adaptativa (1.8R),$85.8600,$80.8346 (-5.85%),$94.9056,$99.9310,2026-05-04 12:00,$84.4700,Time-Stop (14 Dias Estagnado sem atingir Alvo 1),R$ -0.57,R$ 202.72
+2026-05-05 00:00,SOL,Consolidação Adaptativa (1.8R),$84.7800,$84.7800 (-3.69%),$90.4069,$93.5330,2026-05-07 04:00 | 2026-05-09 00:00,$90.4069 | $93.5330,"Alvo 1 Atingido (1.8R - 50% Realizado, Stop no Breakeven) | Alvo 2 Atingido (50% Final)",R$ +4.66,R$ 207.38
+2026-05-01 00:00,ILV,Tendência Forte (2.5R),$4.7800,$4.7800 (-9.15%),$5.8729,$6.5286,2026-05-15 00:00,$5.0800,Time-Stop (14 Dias Estagnado sem atingir Alvo 1),R$ +1.40,R$ 208.78
+2026-05-09 16:00,SUI,Tendência Forte (2.5R),$1.0698,$1.0698 (-14.52%),$1.4581,$1.6911,2026-05-15 12:00,$1.0698,Stop no Breakeven Atingido (+1.0R protegido - 0x0),R$ +0.00,R$ 208.78
+2026-05-20 12:00,SOL,Tendência Forte (2.5R),$85.9200,$81.8175 (-4.77%),$96.1762,$102.3300,2026-05-23 04:00,$81.8175,Stop Loss Inicial Atingido (100%),R$ -2.09,R$ 206.69
+2026-05-21 00:00,SUI,Tendência Forte (2.5R),$1.1421,$0.9846 (-13.79%),$1.5359,$1.7722,2026-05-23 04:00,$0.9846,Stop Loss Inicial Atingido (100%),R$ -2.09,R$ 204.60
+2026-07-06 12:00,SOL,Consolidação Adaptativa (1.8R),$81.5000,$77.3368 (-5.11%),$88.9938,$93.1570,2026-07-08 08:00,$77.3368,Stop Loss Inicial Atingido (100%),R$ -2.05,R$ 202.56
+2026-07-06 16:00,SUI,Consolidação Adaptativa (1.8R),$0.7491,$0.6975 (-6.89%),$0.8421,$0.8937,2026-07-08 12:00,$0.6975,Stop Loss Inicial Atingido (100%),R$ -2.05,R$ 200.51
+2026-07-10 00:00,SOL,Consolidação Adaptativa (1.8R),$79.0700,$74.2532 (-6.09%),$87.7402,$92.5570,2026-07-13 20:00,$74.2532,Stop Loss Inicial Atingido (100%),R$ -2.01,R$ 198.51
+2026-07-10 08:00,SUI,Consolidação Adaptativa (1.8R),$0.7381,$0.6875 (-6.86%),$0.8292,$0.8798,2026-07-24 08:00,$0.7311,Time-Stop (14 Dias Estagnado sem atingir Alvo 1),R$ -0.28,R$ 198.23
+2026-07-14 12:00,SOL,Consolidação Adaptativa (1.8R),$77.3800,$72.2432 (-6.64%),$86.6262,$91.7630,2026-07-28 12:00,$74.3500,Time-Stop (14 Dias Estagnado sem atingir Alvo 1),R$ -1.17,R$ 197.06
+2026-08-03 12:00,ILV,Consolidação Adaptativa (1.8R),$2.9600,$2.9600 (-8.12%),$3.3926,$3.6330,2026-08-14 16:00,$2.9600,Stop no Breakeven Atingido (+1.0R protegido - 0x0),R$ +0.00,R$ 197.06
+2026-08-04 12:00,SOL,Consolidação Adaptativa (1.8R),$73.9900,$73.9900 (-4.52%),$80.0091,$83.3530,2026-08-18 12:00,$77.1900,Time-Stop (14 Dias Estagnado sem atingir Alvo 1),R$ +1.89,R$ 198.94
+2026-08-18 12:00,SOL,Tendência Forte (2.5R),$77.1900,$77.1900 (-5.08%),$86.9936,$92.8757,2026-08-19 20:00 | 2026-08-19 20:00,$86.9936 | $85.3600,"Alvo 1 Atingido (2.5R - 50% Realizado, Stop no Breakeven) | Fechamento no Fim do Período de Teste (Mark-to-Market)",R$ +4.56,R$ 203.50
+2026-08-19 12:00,SUI,Tendência Forte (2.5R),$0.6800,$0.6161 (-9.39%),$0.8397,$0.9355,2026-08-19 20:00,$0.7058,Fechamento no Fim do Período de Teste (Mark-to-Market),R$ +0.80,R$ 204.31

@@ -1,0 +1,15 @@
+{
+    "initial_capital": 200.0,
+    "final_capital": 204.3075405629145,
+    "net_profit_brl": 4.307540562914511,
+    "return_pct": 2.1537702814572555,
+    "total_trades": 22,
+    "winning_trades": 9,
+    "losing_trades": 10,
+    "breakeven_trades": 3,
+    "win_rate_pct": 40.909090909090914,
+    "profit_factor": 1.263282773453051,
+    "max_drawdown_pct": 5.614054200766428,
+    "total_vetoes": 275,
+    "total_prejuizo_evitado": 113.44080793130915
+}

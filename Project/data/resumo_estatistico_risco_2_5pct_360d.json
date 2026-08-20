@@ -1,0 +1,98 @@
+{
+    "periodo_1_360d_a_180d": {
+        "base_200": {
+            "initial_capital": 200.0,
+            "final_capital": 162.62327137139448,
+            "net_profit_brl": -37.37672862860552,
+            "return_pct": -18.68836431430276,
+            "peak_capital": 233.0679333725057,
+            "peak_gain_pct": 16.533966686252853,
+            "total_trades": 44,
+            "winning_trades": 12,
+            "losing_trades": 32,
+            "win_rate_pct": 27.27272727272727,
+            "profit_factor": 0.7207929479310753,
+            "max_drawdown_pct": 30.224948143561893,
+            "total_vetoes": 1897
+        },
+        "escala_100k": {
+            "initial_capital": 100000.0,
+            "final_capital": 81311.63568569733,
+            "net_profit_brl": -18688.36431430267,
+            "return_pct": -18.68836431430267,
+            "peak_capital": 116533.96668625288,
+            "peak_gain_pct": 16.53396668625288,
+            "total_trades": 44,
+            "winning_trades": 12,
+            "losing_trades": 32,
+            "win_rate_pct": 27.27272727272727,
+            "profit_factor": 0.7207929479310748,
+            "max_drawdown_pct": 30.224948143561832,
+            "total_vetoes": 1897
+        }
+    },
+    "periodo_2_180d_a_0d": {
+        "base_200": {
+            "initial_capital": 200.0,
+            "final_capital": 259.0889392150695,
+            "net_profit_brl": 59.0889392150695,
+            "return_pct": 29.54446960753475,
+            "peak_capital": 252.29229385586842,
+            "peak_gain_pct": 26.14614692793421,
+            "total_trades": 53,
+            "winning_trades": 18,
+            "losing_trades": 35,
+            "win_rate_pct": 33.9622641509434,
+            "profit_factor": 1.6879896418896936,
+            "max_drawdown_pct": 12.37533459671904,
+            "total_vetoes": 1750
+        },
+        "escala_100k": {
+            "initial_capital": 100000.0,
+            "final_capital": 129544.46960753473,
+            "net_profit_brl": 29544.46960753473,
+            "return_pct": 29.54446960753473,
+            "peak_capital": 126146.14692793421,
+            "peak_gain_pct": 26.14614692793421,
+            "total_trades": 53,
+            "winning_trades": 18,
+            "losing_trades": 35,
+            "win_rate_pct": 33.9622641509434,
+            "profit_factor": 1.6879896418896938,
+            "max_drawdown_pct": 12.37533459671906,
+            "total_vetoes": 1750
+        }
+    },
+    "periodo_total_360d_a_0d_continuo": {
+        "base_200": {
+            "initial_capital": 200.0,
+            "final_capital": 210.66945435649492,
+            "net_profit_brl": 10.669454356494924,
+            "return_pct": 5.334727178247462,
+            "peak_capital": 233.0679333725057,
+            "peak_gain_pct": 16.533966686252853,
+            "total_trades": 97,
+            "winning_trades": 30,
+            "losing_trades": 67,
+            "win_rate_pct": 30.927835051546392,
+            "profit_factor": 1.052377491270856,
+            "max_drawdown_pct": 30.326529579649257,
+            "total_vetoes": 3644
+        },
+        "escala_100k": {
+            "initial_capital": 100000.0,
+            "final_capital": 105334.72717824759,
+            "net_profit_brl": 5334.727178247587,
+            "return_pct": 5.334727178247587,
+            "peak_capital": 116533.96668625288,
+            "peak_gain_pct": 16.53396668625288,
+            "total_trades": 97,
+            "winning_trades": 30,
+            "losing_trades": 67,
+            "win_rate_pct": 30.927835051546392,
+            "profit_factor": 1.0523774912708557,
+            "max_drawdown_pct": 30.32652957964918,
+            "total_vetoes": 3644
+        }
+    }
+}

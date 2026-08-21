@@ -1,0 +1,18 @@
+{
+    "start_date": "2026-02-20",
+    "end_date": "2026-08-19",
+    "initial_capital": 200.0,
+    "final_capital": 99.85712902092,
+    "net_profit_brl": -100.14287097908,
+    "return_pct": -50.07143548954001,
+    "total_trades": 60,
+    "winning_trades": 17,
+    "losing_trades": 43,
+    "breakeven_trades": 0,
+    "win_rate_pct": 28.333333333333332,
+    "profit_factor": 0.6246289863822361,
+    "max_drawdown_pct": 64.04210213344001,
+    "total_funding_fees_brl": 7.082588012246526,
+    "total_vetoes": 7668,
+    "coins_scanned": 536
+}

@@ -1,14 +1,19 @@
 """
 Motor de Simulação de Carteira Dinâmica Institucional (Até 3 Ativos Simultâneos)
 Varredura Point-in-Time sobre o Mercado Total da Binance (~523 Moedas USDT)
-Histórico Completo de 5 Anos (2021 a 2026) com Checkpoints Semestrais (a cada 6 meses)
+Histórico Completo de 5 Anos (2021 a 2026) com Filtro de Regime de Mercado Anti-Chop
 
 Princípios Estruturais Institucionais Aplicados:
-1. Alinhamento Multi-Timeframe (1D/4h): Close 1D >= EMA20 1D >= EMA50 1D.
-2. Volume Institucional Real: Volume 4h >= 1.5x SMA20 com CVD Comprador (> 0).
-3. Rompimento de Pivô Técnico no 4h: Close 4h > máxima recente dos 3 candles anteriores.
-4. Veto Macro do Bitcoin: Proibido Long se BTC < EMA 50 1D (100% Caixa em USDT).
-5. Gestão de Risco: Risco Fixo de 2,5% por trade | Capital Inicial: R$ 100.000,00 | Max 3 Posições.
+1. Regime Macro de Tendência Confirmada do BTC (Anti-Chop):
+   - Proibido Long se BTC 1D não estiver em tendência confirmada (Close 1D >= EMA50 1D e EMA20 1D >= EMA50 1D).
+2. Alinhamento Multi-Timeframe (1D/4h na Moeda):
+   - A moeda precisa estar saudável no gráfico diário (Close 1D >= EMA50 1D e Close 1D >= EMA20 1D).
+3. Volume Institucional Real:
+   - Volume 4h >= 1.5x da média dos últimos 20 períodos com CVD Comprador (> 0).
+4. Rompimento de Pivô Técnico no 4h:
+   - Close 4h > máxima recente dos 3 candles anteriores com RSI entre 50 e 68.
+5. Gestão de Risco:
+   - Risco Fixo de 2,5% por trade | Capital Inicial: R$ 100.000,00 | Max 3 Posições.
 """
 
 import argparse
@@ -115,6 +120,22 @@ def compute_indicators_1d(df):
     df['ema20_1d'] = df['close'].ewm(span=20, adjust=False).mean()
     df['ema50_1d'] = df['close'].ewm(span=50, adjust=False).mean()
     df['ema200_1d'] = df['close'].ewm(span=200, adjust=False).mean()
+    
+    high_low = df['high'] - df['low']
+    high_close = (df['high'] - df['close'].shift()).abs()
+    low_close = (df['low'] - df['close'].shift()).abs()
+    tr = pd.concat([high_low, high_close, low_close], axis=1).max(axis=1)
+    
+    plus_dm = df['high'].diff()
+    minus_dm = -df['low'].diff()
+    plus_dm = plus_dm.where((plus_dm > minus_dm) & (plus_dm > 0), 0.0)
+    minus_dm = minus_dm.where((minus_dm > plus_dm) & (minus_dm > 0), 0.0)
+    
+    tr_smooth = tr.ewm(alpha=1/14, min_periods=14, adjust=False).mean()
+    plus_di = 100 * (pd.Series(plus_dm, index=df.index).ewm(alpha=1/14, min_periods=14, adjust=False).mean() / (tr_smooth + 1e-9))
+    minus_di = 100 * (pd.Series(minus_dm, index=df.index).ewm(alpha=1/14, min_periods=14, adjust=False).mean() / (tr_smooth + 1e-9))
+    dx = 100 * (plus_di - minus_di).abs() / (plus_di + minus_di + 1e-9)
+    df['adx14_1d'] = dx.ewm(alpha=1/14, min_periods=14, adjust=False).mean()
     return df
 
 def is_vesting_cliff(symbol, dt):
@@ -213,8 +234,14 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
         btc_last_1d = btc_sub_1d.iloc[-1]
         btc_last_4h = btc_sub_4h.iloc[-1]
         
-        # Macro Bullish: BTC acima da EMA 50 1D
-        btc_macro_bullish = btc_last_1d['close'] >= btc_last_1d['ema50_1d']
+        # FILTRO DE REGIME INSTITUCIONAL DO BITCOIN:
+        # Tendência de Alta Confirmada no BTC:
+        # 1. Preço do BTC >= EMA 50 1D
+        # 2. EMA 20 1D >= EMA 50 1D (Tendência Rápida alinhada com a Lenta)
+        # 3. BTC não pode estar colapsando no 4h (Close 4h >= EMA 50 4h)
+        btc_macro_bullish = (btc_last_1d['close'] >= btc_last_1d['ema50_1d']) and \
+                            (btc_last_1d['ema20_1d'] >= btc_last_1d['ema50_1d']) and \
+                            (btc_last_4h['close'] >= btc_last_4h['ema50'])
         
         fng_val = 50.0
         if not fng_df.empty:
@@ -421,9 +448,9 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             # PASSO 2: MATRIZ DE DECISÃO & VETOS
             veto_reasons = []
             
-            # VETO 1: Veto Macro Estrito do BTC (Não operar Long em Bear Market do BTC)
+            # VETO 1: Veto Macro de Tendência Confirmada do BTC (Anti-Chop)
             if not btc_macro_bullish:
-                veto_reasons.append("BTC < EMA 50 1D (Bear Market BTC / 100% Caixa)")
+                veto_reasons.append("BTC sem Tendência Confirmada (EMA20 1D < EMA50 1D ou BTC < EMA50)")
                 
             # VETO 2: Alinhamento Estrutural no Gráfico Diário (1D)
             is_1d_aligned = (candle_1d['close'] >= candle_1d['ema50_1d']) and (candle_1d['close'] >= candle_1d['ema20_1d'])
@@ -620,7 +647,7 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
     return summary, trades, vetoes, equity_df
 
 def main():
-    parser = argparse.ArgumentParser(description="Simulação Institucional de Carteira Dinâmica (5 Anos / 523 Moedas / R$ 100k)")
+    parser = argparse.ArgumentParser(description="Simulação Institucional de Carteira Dinâmica (5 Anos / Anti-Chop BTC / R$ 100k)")
     parser.add_argument('--start', type=str, default="2021-11-15", help="Data de Início (YYYY-MM-DD)")
     parser.add_argument('--end', type=str, default="2026-08-20", help="Data de Fim (YYYY-MM-DD)")
     parser.add_argument('--capital', type=float, default=100000.0, help="Capital Inicial em R$")
@@ -631,10 +658,10 @@ def main():
     args = parser.parse_args()
     
     print("=" * 85)
-    print("BACKTEST INSTITUCIONAL DE 5 ANOS (523 MOEDAS / CHECKPOINTS SEMESTRAIS)")
+    print("BACKTEST INSTITUCIONAL DE 5 ANOS (FILTRO DE REGIME CONFIRMADO / ANTI-CHOP)")
     print(f"Janela Temporal: {args.start} a {args.end}")
     print(f"Capital Inicial: R$ {args.capital:,.2f} | Risco: {args.risk*100:.1f}% | Max Posições: {args.max_pos}")
-    print(f"Screener: Volume 30d > ${args.min_vol/1e6:.1f}M/dia | Filtro 1D + Volume Breakout >= 1.5x")
+    print(f"Screener: Volume 30d > ${args.min_vol/1e6:.1f}M/dia | BTC Trend Confirmada (EMA20 1D >= EMA50 1D)")
     print("=" * 85)
     
     summary, trades, vetoes, equity_df = run_portfolio_backtest(

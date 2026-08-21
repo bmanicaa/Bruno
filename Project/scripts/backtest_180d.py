@@ -9,14 +9,32 @@ Strict Point-in-Time Zero Lookahead Simulation with:
 """
 
 import datetime
-import math
-import os
 import json
-import numpy as np
+import os
 import pandas as pd
 import requests
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RAW_DIR = os.path.join(BASE_DIR, 'data', 'raw')
+
 def fetch_klines_extended(symbol, interval='4h', total_candles=1600):
+    # 1. Prioriza carregamento do repositório local data/raw/coins/{symbol}/
+    local_path = os.path.join(RAW_DIR, 'coins', symbol, f'klines_{interval}.csv')
+    if not os.path.exists(local_path):
+        local_path = os.path.join(RAW_DIR, f'klines_{interval}', f'{symbol}.csv')
+    if not os.path.exists(local_path) and symbol == 'BTCUSDT':
+        local_path = os.path.join(RAW_DIR, 'macro', f'BTCUSDT_{interval}.csv')
+        
+    if os.path.exists(local_path):
+        df = pd.read_csv(local_path)
+        df['open_time'] = pd.to_datetime(df['open_time_dt'] if 'open_time_dt' in df.columns else df['open_time'])
+        df['close_time'] = pd.to_datetime(df['close_time_dt'] if 'close_time_dt' in df.columns else df['close_time'])
+        for c in ['open', 'high', 'low', 'close', 'volume', 'quote_volume', 'taker_buy_base']:
+            if c in df.columns:
+                df[c] = df[c].astype(float)
+        return df.sort_values('open_time').reset_index(drop=True)
+        
+    # 2. Fallback para Binance API
     url = 'https://api.binance.com/api/v3/klines'
     all_data = []
     end_time = None
@@ -47,8 +65,20 @@ def fetch_klines_extended(symbol, interval='4h', total_candles=1600):
     return df
 
 def fetch_funding_rates_extended(symbol, limit=1000):
+    # 1. Prioriza carregamento do repositório local data/raw/coins/{symbol}/
+    local_path = os.path.join(RAW_DIR, 'coins', symbol, 'funding_rates.csv')
+    if not os.path.exists(local_path):
+        local_path = os.path.join(RAW_DIR, 'funding_rates', f'{symbol}.csv')
+        
+    if os.path.exists(local_path):
+        df = pd.read_csv(local_path)
+        df['fundingTime'] = pd.to_datetime(df['fundingTime_dt'] if 'fundingTime_dt' in df.columns else df['fundingTime'])
+        df['fundingRate'] = df['fundingRate'].astype(float)
+        return df.sort_values('fundingTime').reset_index(drop=True)
+        
+    fut_symbol = '1000PEPEUSDT' if symbol == 'PEPEUSDT' else symbol
     url = 'https://fapi.binance.com/fapi/v1/fundingRate'
-    params = {'symbol': symbol, 'limit': limit}
+    params = {'symbol': fut_symbol, 'limit': limit}
     try:
         r = requests.get(url, params=params).json()
         df = pd.DataFrame(r)
@@ -60,6 +90,14 @@ def fetch_funding_rates_extended(symbol, limit=1000):
         return pd.DataFrame()
 
 def fetch_fear_and_greed():
+    # 1. Prioriza carregamento do repositório local data/raw/macro/
+    local_path = os.path.join(RAW_DIR, 'macro', 'fear_and_greed.csv')
+    if os.path.exists(local_path):
+        df = pd.read_csv(local_path)
+        df['timestamp'] = pd.to_datetime(df['date'])
+        df['value'] = df['value'].astype(float)
+        return df.sort_values('timestamp').reset_index(drop=True)
+        
     try:
         url = 'https://api.alternative.me/fng/?limit=220'
         r = requests.get(url)
@@ -95,8 +133,8 @@ def compute_indicators_4h(df):
     
     plus_dm = df['high'].diff()
     minus_dm = -df['low'].diff()
-    plus_dm = np.where((plus_dm > minus_dm) & (plus_dm > 0), plus_dm, 0.0)
-    minus_dm = np.where((minus_dm > plus_dm) & (minus_dm > 0), minus_dm, 0.0)
+    plus_dm = plus_dm.where((plus_dm > minus_dm) & (plus_dm > 0), 0.0)
+    minus_dm = minus_dm.where((minus_dm > plus_dm) & (minus_dm > 0), 0.0)
     
     tr_smooth = tr.ewm(alpha=1/14, min_periods=14, adjust=False).mean()
     plus_di = 100 * (pd.Series(plus_dm, index=df.index).ewm(alpha=1/14, min_periods=14, adjust=False).mean() / (tr_smooth + 1e-9))

@@ -8,57 +8,50 @@ Este repositório contém a arquitetura completa, o protocolo de auditoria e os 
 
 ```
 Project/
-├── Prompt.md                     # Arquivo Mestre Original (9 Ativos)
-├── Prompt2.md                    # Novo Arquivo Mestre (Carteira Dinâmica 3 Moedas / 20 Ativos)
+├── Prompt.md                     # Arquivo Mestre (Carteira Dinâmica 3 Moedas / 20 Ativos)
 ├── README.md                     # Guia Geral e Documentação Executiva
-├── data/                         # Datasets de Resultados e Histórico de Trades
-│   ├── resumo_estatistico_risco_2_5pct_360d.json         # Comparativo de Risco 2.5% (360d / 180d / 1 Ano)
-│   ├── trades_executados_360d_a_180d.csv                 # Livro de ordens (360d a 180d atrás)
-│   ├── oportunidades_vetadas_360d_a_180d.csv             # Log de vetos (360d a 180d atrás)
-│   ├── resumo_estatistico_360d_a_180d.json               # Resumo estatístico (360d a 180d atrás)
-│   ├── trades_executados_mercado_total.csv               # Livro de ordens (Mercado Total Binance)
-│   ├── oportunidades_vetadas_mercado_total.csv           # Log de 5.632 vetos do mercado
-│   ├── resumo_estatistico_mercado_total.json             # Resumo estatístico (Mercado Total)
-│   ├── trades_executados_carteira_dinamica_3moedas.csv   # Livro de ordens (Carteira 3 Moedas)
-│   ├── oportunidades_vetadas_carteira_dinamica_3moedas.csv # Vetos da carteira dinâmica
-│   ├── resumo_estatistico_carteira_dinamica_3moedas.json # Resumo estatístico (+63,14%)
-│   ├── resultado_9_moedas_risco_5pct_com_taxas.csv  # Performance dos 9 ativos iniciais
-│   ├── resultado_6_novas_moedas_risco_5pct_com_taxas.csv # Performance dos 6 novos ativos
-│   ├── trades_executados_6_novas_moedas.csv         # Livro de ordens dos 6 novos ativos
-│   ├── oportunidades_vetadas_6_novas_moedas.csv     # Log de vetos dos 6 novos ativos
-│   ├── resumo_estatistico_6_novas_moedas.json       # Estatísticas consolidadas (6 moedas)
-│   ├── trades_executados_180d_otimizado.csv         # Livro de ordens detalhado (180d)
-│   ├── oportunidades_vetadas_180d_otimizado.csv     # Log de vetos e prejuízos evitados
-│   ├── resumo_estatistico_180d_otimizado.json       # Métricas consolidadas (9 moedas)
-│   ├── trades_executados_oos.csv                    # Teste Fora da Amostra (NEAR/APT/GALA)
-│   ├── oportunidades_vetadas_oos.csv                # Vetos Fora da Amostra
-│   └── resumo_estatistico_oos.json                  # Estatísticas Fora da Amostra
-├── reports/                      # Relatórios Detalhados em Markdown
-│   ├── relatorio_risco_2_5pct_360d.md               # Auditoria Comparativa Risco 2.5% (360d)
-│   ├── relatorio_backtest_360d_a_180d.md            # Auditoria Período 360d a 180d atrás
-│   ├── relatorio_mercado_total_binance.md           # Auditoria Mercado Total Binance (+45,62%)
-│   ├── relatorio_carteira_dinamica_3moedas.md       # Auditoria da Carteira Dinâmica (+63,14%)
-│   ├── relatorio_backtest_6_novas_moedas.md         # Auditoria das 6 Novas Criptomoedas
-│   ├── relatorio_backtest_180_dias.md               # Auditoria Semestral Consolidada
-│   ├── relatorio_backtest_quantitativo.md           # Auditoria dos Primeiros 90 Dias
-│   ├── analise_tempo_real_19_08_2026.md             # Snapshot de Tempo Real (Modelo Estrito)
-│   └── analise_estrategica_melhorias.md             # Diagnóstico e Otimizações
-└── scripts/                      # Motores de Backtest em Python
-    ├── backtest_risco_2_5pct_360d.py         # Motor de Risco 2.5% para 360d, 180d e 1 Ano
-    ├── backtest_mercado_total_binance.py     # Motor Mercado Total (65 Ativos Líquidos)
+├── data/
+│   ├── raw/                      # 🌟 DADOS BRUTOS IMUTÁVEIS (2 Anos: 2024–2026 / Binance)
+│   │   ├── universe_metadata.json# Metadados globais do reservatório de dados
+│   │   ├── macro/                # Referência Macro & Sentimento Global
+│   │   │   ├── BTCUSDT_4h.csv    # 4.500 velas 4h do Bitcoin (Benchmark)
+│   │   │   ├── BTCUSDT_1d.csv    # 800 velas diárias do Bitcoin
+│   │   │   └── fear_and_greed.csv# Histórico diário do Fear & Greed Index
+│   │   └── coins/                # Datasets Modulares Isolados por Ativo
+│   │       ├── SOLUSDT/          # [klines_4h.csv, klines_1d.csv, funding_rates.csv]
+│   │       ├── ETHUSDT/          # [klines_4h.csv, klines_1d.csv, funding_rates.csv]
+│   │       ├── SUIUSDT/          # [klines_4h.csv, klines_1d.csv, funding_rates.csv]
+│   │       └── [SYMBOL]/         # Estrutura modular idêntica para todas as moedas
+│   │
+│   └── [Arquivos .csv e .json de resultados serão gerados ao executar os scripts]
+├── reports/                      # Relatórios de Auditoria (Pronto para novas execuções)
+└── scripts/                      # Motores de Backtest e Utilitários
+    ├── download_raw_market_data.py           # Downloader de Dados Brutos (2 Anos / Binance)
     ├── backtest_carteira_dinamica_3moedas.py # Motor da Carteira Dinâmica (3 Moedas / 20 Ativos)
-    ├── backtest_6_novas_moedas.py# Motor das 6 Novas Moedas (ARB, RENDER, ONDO, PEPE, AAVE, TIA)
-    ├── backtest_engine.py        # Motor Principal (9 Ativos, Risco 5%, Taxas Reais)
-    ├── backtest_180d.py          # Motor de Simulação 180 Dias
-    └── backtest_out_of_sample.py # Motor de Validação Fora da Amostra
+    ├── backtest_engine.py                    # Motor Principal de Validação Monomoeda
+    └── backtest_mercado_total_binance.py     # Motor de Varredura do Mercado Amplo
 ```
 
 ---
 
-## 🎯 As Regras Estruturais do Protocolo ([Prompt.md](file:///c:/Users/bmani/Documents/GitHub/Bruno/Project/Prompt.md))
+## 🗄️ Repositório de Dados Brutos de Mercado (`data/raw/`)
+
+Para garantir **zero viés de contaminação temporal** e permitir que qualquer IA acesse **estritamente o contexto necessário** para tomada de decisões:
+
+1. **Isolamento Total por Moeda (`data/raw/coins/{SYMBOL}/`):**
+   - Cada pasta contém exclusivamente os 3 arquivos brutos do ativo (`klines_4h.csv`, `klines_1d.csv` e `funding_rates.csv`).
+   - A IA/algoritmo só precisa carregar o arquivo da moeda que estiver analisando no momento.
+
+2. **Cegueira Temporal (*Point-in-Time Slicing*):**
+   - Em qualquer instante de simulação $T$, o sistema filtra as linhas onde `open_time < T`.
+   - Nenhuma informação futura (candles seguintes, preços de fechamento futuros) é visível no momento da avaliação.
+
+---
+
+## 🎯 As Regras Estruturais do Protocolo ([Prompt.md](Prompt.md))
 
 1. **Gestão de Risco & Alocação:** Risco Fixo de **5,0% por trade** ($\text{Alocação} = \frac{5,0\%}{\text{Distância do Stop}}$).
-2. **Controle de Correlação da Carteira:** Limite máximo de **2 posições abertas simultaneamente**.
+2. **Controle de Correlação da Carteira:** Limite máximo de **3 posições abertas simultaneamente**.
 3. **Breakeven Antecipado em +1.0R:** Ao atingir $+1.0R$ de valorização, o Stop Loss é automaticamente movido para o preço de entrada (0x0).
 4. **Alvos Adaptativos por Regime (ADX / EMAs):**
    - *Tendência Forte ($BTC > EMA\ 50\ 1D$ e $ADX > 20$):* Alvo 1 em **$2.5R$** e Alvo 2 em **$4.0R$**.

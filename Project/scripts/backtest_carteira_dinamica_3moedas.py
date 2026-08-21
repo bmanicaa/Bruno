@@ -1,6 +1,6 @@
 """
 Motor de Simulação de Carteira Dinâmica Quantitativa (3 Ativos Concomitantes / Universo de 20 Moedas)
-Conforme especificado em Prompt2.md (180 Dias: 20/02/2026 a 19/08/2026)
+Conforme especificado em Prompt.md (180 Dias: 20/02/2026 a 19/08/2026)
 Universo: SOL, ETH, BNB, NEAR, AVAX, SUI, APT, ARB, OP, RENDER, FET, ONDO, LINK, AAVE, INJ, PENDLE, TIA, PEPE, GALA, TON (+ BTC Macro)
 Regras:
 - Risco Fixo de 5,0% do capital atual por trade
@@ -15,14 +15,32 @@ Regras:
 """
 
 import datetime
-import math
-import os
 import json
-import numpy as np
+import os
 import pandas as pd
 import requests
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RAW_DIR = os.path.join(BASE_DIR, 'data', 'raw')
+
 def fetch_klines_extended(symbol, interval='4h', total_candles=1600):
+    # 1. Prioriza carregamento do repositório local data/raw/coins/{symbol}/
+    local_path = os.path.join(RAW_DIR, 'coins', symbol, f'klines_{interval}.csv')
+    if not os.path.exists(local_path):
+        local_path = os.path.join(RAW_DIR, f'klines_{interval}', f'{symbol}.csv')
+    if not os.path.exists(local_path) and symbol == 'BTCUSDT':
+        local_path = os.path.join(RAW_DIR, 'macro', f'BTCUSDT_{interval}.csv')
+        
+    if os.path.exists(local_path):
+        df = pd.read_csv(local_path)
+        df['open_time'] = pd.to_datetime(df['open_time_dt'] if 'open_time_dt' in df.columns else df['open_time'])
+        df['close_time'] = pd.to_datetime(df['close_time_dt'] if 'close_time_dt' in df.columns else df['close_time'])
+        for c in ['open', 'high', 'low', 'close', 'volume', 'quote_volume', 'taker_buy_base']:
+            if c in df.columns:
+                df[c] = df[c].astype(float)
+        return df.sort_values('open_time').reset_index(drop=True)
+        
+    # 2. Fallback para Binance API
     url = 'https://api.binance.com/api/v3/klines'
     all_data = []
     end_time = None
@@ -53,6 +71,17 @@ def fetch_klines_extended(symbol, interval='4h', total_candles=1600):
     return df
 
 def fetch_funding_rates_extended(symbol, limit=1000):
+    # 1. Prioriza carregamento do repositório local data/raw/coins/{symbol}/
+    local_path = os.path.join(RAW_DIR, 'coins', symbol, 'funding_rates.csv')
+    if not os.path.exists(local_path):
+        local_path = os.path.join(RAW_DIR, 'funding_rates', f'{symbol}.csv')
+        
+    if os.path.exists(local_path):
+        df = pd.read_csv(local_path)
+        df['fundingTime'] = pd.to_datetime(df['fundingTime_dt'] if 'fundingTime_dt' in df.columns else df['fundingTime'])
+        df['fundingRate'] = df['fundingRate'].astype(float)
+        return df.sort_values('fundingTime').reset_index(drop=True)
+        
     fut_symbol = '1000PEPEUSDT' if symbol == 'PEPEUSDT' else symbol
     url = 'https://fapi.binance.com/fapi/v1/fundingRate'
     params = {'symbol': fut_symbol, 'limit': limit}
@@ -69,6 +98,14 @@ def fetch_funding_rates_extended(symbol, limit=1000):
         return pd.DataFrame()
 
 def fetch_fear_and_greed():
+    # 1. Prioriza carregamento do repositório local data/raw/macro/
+    local_path = os.path.join(RAW_DIR, 'macro', 'fear_and_greed.csv')
+    if os.path.exists(local_path):
+        df = pd.read_csv(local_path)
+        df['timestamp'] = pd.to_datetime(df['date'])
+        df['value'] = df['value'].astype(float)
+        return df.sort_values('timestamp').reset_index(drop=True)
+        
     try:
         url = 'https://api.alternative.me/fng/?limit=220'
         r = requests.get(url, timeout=10)
@@ -104,8 +141,8 @@ def compute_indicators_4h(df):
     
     plus_dm = df['high'].diff()
     minus_dm = -df['low'].diff()
-    plus_dm = np.where((plus_dm > minus_dm) & (plus_dm > 0), plus_dm, 0.0)
-    minus_dm = np.where((minus_dm > plus_dm) & (minus_dm > 0), minus_dm, 0.0)
+    plus_dm = plus_dm.where((plus_dm > minus_dm) & (plus_dm > 0), 0.0)
+    minus_dm = minus_dm.where((minus_dm > plus_dm) & (minus_dm > 0), 0.0)
     
     tr_smooth = tr.ewm(alpha=1/14, min_periods=14, adjust=False).mean()
     plus_di = 100 * (pd.Series(plus_dm, index=df.index).ewm(alpha=1/14, min_periods=14, adjust=False).mean() / (tr_smooth + 1e-9))
@@ -187,8 +224,8 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
     equity_curve = [{'timestamp': start_date, 'capital': capital, 'cash': capital, 'active_count': 0}]
     
     for current_time in all_timestamps:
-        btc_sub_1d = btc_1d[btc_1d['open_time'] <= current_time]
-        btc_sub_4h = btc_4h[btc_4h['open_time'] <= current_time]
+        btc_sub_1d = btc_1d[btc_1d['open_time'] < current_time]  # LOOKAHEAD FIX: BTC macro
+        btc_sub_4h = btc_4h[btc_4h['open_time'] < current_time]  # LOOKAHEAD FIX: BTC macro
         if len(btc_sub_1d) == 0 or len(btc_sub_4h) == 0:
             continue
             
@@ -233,8 +270,52 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
             
             pos['candles_held'] += 1
             
-            # Saída por Exaustão
-            if c_rsi > 75 and fr_val > 0.0004:
+            # Custo de Financiamento (Funding Rate) a cada 8h (00:00, 08:00, 16:00 UTC)
+            if current_time.hour in [0, 8, 16] and not funding_data[s].empty:
+                rem_pct_funding = 0.5 if pos['partial_taken'] else 1.0
+                current_notional = (allocated_capital * rem_pct_funding) * (c_close / entry_price)
+                funding_fee = current_notional * fr_val
+                capital -= funding_fee
+                pos['pnl_brl'] -= funding_fee
+                pos['funding_paid'] = pos.get('funding_paid', 0.0) + funding_fee
+            
+            # Abordagem Pessimista: Stop Loss tem prioridade MÁXIMA sobre qualquer saída intra-candle.
+            # Se c_low <= stop na mesma vela que RSI > 75, assume-se que o stop foi atingido primeiro.
+            if c_low <= pos['stop_loss']:
+                stop_slippage = 0.0008  # 8 bps de slippage adverso na ordem Stop-Market em dump rápido
+                stop_exec_price = pos['stop_loss'] * (1 - stop_slippage)
+                if not pos['partial_taken']:
+                    pct_loss = (stop_exec_price - entry_price) / entry_price
+                    gross_pnl = allocated_capital * pct_loss
+                    exit_fee = (allocated_capital * (1 + pct_loss)) * fee_pct
+                    pnl_brl = gross_pnl - exit_fee
+                    capital += pnl_brl
+                    pos['exit_dates'].append(current_time)
+                    pos['exit_prices'].append(stop_exec_price)
+                    pos['exit_reasons'].append("Stop no Breakeven (Pessimista)" if pos['be_moved'] else "Stop Loss Inicial (Pessimista)")
+                    pos['pnl_brl'] += pnl_brl
+                    pos['final_capital'] = capital
+                    pos['status'] = 'CLOSED'
+                    trades.append(pos)
+                    del active_positions[s]
+                    continue
+                else:
+                    pct_loss = (stop_exec_price - entry_price) / entry_price
+                    gross_pnl = (allocated_capital * 0.5) * pct_loss
+                    exit_fee = (allocated_capital * 0.5 * (1 + pct_loss)) * fee_pct
+                    pnl_brl = gross_pnl - exit_fee
+                    capital += pnl_brl
+                    pos['pnl_brl'] += pnl_brl
+                    pos['exit_dates'].append(current_time)
+                    pos['exit_prices'].append(stop_exec_price)
+                    pos['exit_reasons'].append("Stop Breakeven 0x0 2ª metade (Pessimista)")
+                    pos['final_capital'] = capital
+                    pos['status'] = 'CLOSED'
+                    trades.append(pos)
+                    del active_positions[s]
+                    continue
+            # Saídas de Exaustão e Time-Stop (só avaliadas se o stop NÃO foi atingido)
+            elif c_rsi > 75 and fr_val > 0.0004:
                 pct_return = (c_close - entry_price) / entry_price
                 remaining_pct = 0.5 if pos['partial_taken'] else 1.0
                 gross_pnl = (allocated_capital * remaining_pct) * pct_return
@@ -265,27 +346,13 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
                 trades.append(pos)
                 del active_positions[s]
             else:
-                # Breakeven Antecipado em +1.0R
+                # Movimenta Breakeven SE não foi estopado
                 if not pos['be_moved'] and c_high >= be_trigger_price:
                     pos['be_moved'] = True
                     pos['stop_loss'] = entry_price
                     
                 if not pos['partial_taken']:
-                    if c_low <= pos['stop_loss']:
-                        pct_loss = (pos['stop_loss'] - entry_price) / entry_price
-                        gross_pnl = allocated_capital * pct_loss
-                        exit_fee = (allocated_capital * (1 + pct_loss)) * fee_pct
-                        pnl_brl = gross_pnl - exit_fee
-                        capital += pnl_brl
-                        pos['exit_dates'].append(current_time)
-                        pos['exit_prices'].append(pos['stop_loss'])
-                        pos['exit_reasons'].append("Stop no Breakeven" if pos['be_moved'] else "Stop Loss Inicial")
-                        pos['pnl_brl'] += pnl_brl
-                        pos['final_capital'] = capital
-                        pos['status'] = 'CLOSED'
-                        trades.append(pos)
-                        del active_positions[s]
-                    elif c_high >= target_1:
+                    if c_high >= target_1:
                         pos['partial_taken'] = True
                         pos['be_moved'] = True
                         pos['stop_loss'] = entry_price
@@ -314,19 +381,7 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
                             trades.append(pos)
                             del active_positions[s]
                 else:
-                    if c_low <= pos['stop_loss']:
-                        exit_fee = (allocated_capital * 0.5) * fee_pct
-                        pnl_brl = -exit_fee
-                        capital += pnl_brl
-                        pos['pnl_brl'] += pnl_brl
-                        pos['exit_dates'].append(current_time)
-                        pos['exit_prices'].append(pos['stop_loss'])
-                        pos['exit_reasons'].append("Stop Breakeven (0x0 na 2ª metade)")
-                        pos['final_capital'] = capital
-                        pos['status'] = 'CLOSED'
-                        trades.append(pos)
-                        del active_positions[s]
-                    elif c_high >= target_2:
+                    if c_high >= target_2:
                         pct_gain_2 = (target_2 - entry_price) / entry_price
                         gross_pnl_2 = (allocated_capital * 0.5) * pct_gain_2
                         exit_fee_2 = (allocated_capital * 0.5 * (1 + pct_gain_2)) * fee_pct
@@ -364,13 +419,19 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
             df_sym_4h = data_4h[s]
             df_sym_1d = data_1d[s]
             
-            sub_4h = df_sym_4h[df_sym_4h['open_time'] <= current_time]
-            sub_1d = df_sym_1d[df_sym_1d['open_time'] <= current_time]
+            sub_4h = df_sym_4h[df_sym_4h['open_time'] < current_time]  # LOOKAHEAD FIX: Must strictly use data before current_time to make decision
+            sub_1d = df_sym_1d[df_sym_1d['open_time'] < current_time]  # LOOKAHEAD FIX
             if len(sub_4h) < 50 or len(sub_1d) < 30:
                 continue
                 
-            candle = sub_4h.iloc[-1]
-            prev_candle = sub_4h.iloc[-2]
+            # Entry candle will be the one opening at current_time
+            current_open_candle = df_sym_4h[df_sym_4h['open_time'] == current_time]
+            if current_open_candle.empty:
+                continue
+            entry_candle_open = current_open_candle.iloc[0]['open']
+
+            candle = sub_4h.iloc[-1]  # This is now the PREVIOUS closed candle (current_time - 4h)
+            prev_candle = sub_4h.iloc[-2]  # This is now two candles ago
             candle_1d = sub_1d.iloc[-1]
             
             veto_reasons = []
@@ -413,9 +474,11 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
             onchain_score = 25
             total_score = macro_score + tech_score + deriv_score + onchain_score
             
-            entry_price = candle['close']
+            entry_price = entry_candle_open * 1.0005  # LOOKAHEAD FIX + Slippage de 5 bps
             stop_loss = candle['swing_low_10'] - (1.5 * candle['atr14'])
             stop_dist = entry_price - stop_loss
+            if stop_dist <= 0:
+                continue  # Guard: stop acima do entry — trade inválido
             stop_dist_pct = stop_dist / entry_price
             if stop_dist_pct < 0.012:
                 stop_loss = entry_price * 0.985
@@ -444,7 +507,12 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
                     })
                 else:
                     # Log de Oportunidade Vetada
-                    idx = df_sym_4h[df_sym_4h['open_time'] == current_time].index[0]
+                    # NOTA: Lookahead INTENCIONAL abaixo — usado apenas para relatório retroativo,
+                    #       NÃO influencia decisões de entrada/saída do backtest.
+                    idx_matches = df_sym_4h[df_sym_4h['open_time'] == current_time].index
+                    if idx_matches.empty:
+                        continue
+                    idx = idx_matches[0]
                     sub_future = df_sym_4h.iloc[idx+1:idx+15]
                     outcome = "Não Executado"
                     simulated_loss = 0.0
@@ -488,12 +556,27 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
                     'target_1': c['target_1'], 'target_2': c['target_2'], 'rr_target1': c['rr_target1'], 'regime': c['regime'],
                     'allocated_capital': allocated_capital, 'risk_brl': risk_brl,
                     'score': c['score'], 'candles_held': 0, 'partial_taken': False,
-                    'exit_dates': [], 'exit_prices': [], 'exit_reasons': [], 'pnl_brl': -entry_fee, 'status': 'OPEN'
+                    'exit_dates': [], 'exit_prices': [], 'exit_reasons': [], 'pnl_brl': -entry_fee, 'status': 'OPEN',
+                    'funding_paid': 0.0
                 }
                 
+        # Curva de Patrimônio Mark-to-Market (Capital Realizado + PnL Não-Realizado a cada 4h)
+        unrealized_pnl = 0.0
+        for s_act, p_act in active_positions.items():
+            df_sym_curr = data_4h[s_act]
+            cand_curr = df_sym_curr[df_sym_curr['open_time'] == current_time]
+            if not cand_curr.empty:
+                c_close_now = cand_curr.iloc[0]['close']
+                rem_pct_now = 0.5 if p_act['partial_taken'] else 1.0
+                pct_ret_now = (c_close_now - p_act['entry_price']) / p_act['entry_price']
+                unrealized_pnl += (p_act['allocated_capital'] * rem_pct_now) * pct_ret_now
+                
+        total_mtm_equity = capital + unrealized_pnl
         equity_curve.append({
             'timestamp': current_time,
-            'capital': capital,
+            'capital': total_mtm_equity,
+            'realized_capital': capital,
+            'unrealized_pnl': unrealized_pnl,
             'active_count': len(active_positions)
         })
         
@@ -533,6 +616,7 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
     
     net_profit_brl = capital - initial_capital
     return_pct = (net_profit_brl / initial_capital) * 100
+    total_funding_fees = sum(t.get('funding_paid', 0.0) for t in trades)
     
     summary = {
         'initial_capital': initial_capital,
@@ -546,6 +630,7 @@ def run_dynamic_portfolio_backtest(symbols, data_4h, data_1d, funding_data, btc_
         'win_rate_pct': win_rate,
         'profit_factor': profit_factor,
         'max_drawdown_pct': max_drawdown_pct,
+        'total_funding_fees_brl': total_funding_fees,
         'total_vetoes': len(vetoes),
         'total_prejuizo_evitado': sum(v['prejuizo_evitado'] for v in vetoes)
     }

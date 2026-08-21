@@ -1,15 +1,14 @@
-### INSTRUÇÕES DO PROTOCOLO DE TESTE (BACKTEST 180 DIAS - CARTEIRA DINÂMICA 3 ATIVOS)
+### INSTRUÇÕES DO PROTOCOLO DE TESTE (BACKTEST ATÉ 5 ANOS - CARTEIRA DINÂMICA 3 ATIVOS)
 
-Execute a simulação histórica da estratégia descrita no PROMPT MESTRE em anexo, aplicando estritamente as seguintes regras de auditoria:
+Execute a simulação histórica da estratégia descrita no PROMPT MESTRE em anexo, aplicando estritamente as seguintes regras de auditoria institucional:
 
-1. Período do Teste & Repositório de Dados de 2 Anos:
-   - Base de Dados Histórica Imutável: Repositório estruturado em `data/raw/` com até 2 anos completos (2024 a 2026 / 4.500 candles 4h e 800 candles 1D).
+1. Período do Teste & Repositório de Dados de 5 Anos:
+   - Base de Dados Histórica Imutável: Repositório estruturado em `data/raw/` com até 5 anos completos (2021 a 2026 / 11.000 candles 4h e 2.000 candles 1D).
    - Organização Modular Isolada por Moeda:
      * `data/raw/macro/`: Dados globais de mercado (`BTCUSDT_4h.csv`, `BTCUSDT_1d.csv` e `fear_and_greed.csv`).
      * `data/raw/coins/{SYMBOL}/`: Histórico exclusivo do ativo (`klines_4h.csv`, `klines_1d.csv` e `funding_rates.csv`).
-   - Universo Dinâmico de Seleção (Screener Institucional de Qualidade): Ativos da Binance que cumprem os 4 Critérios de Elegibilidade (Volume Médio > $25M/dia, Top 50 Market Cap, Mercado de Futuros Ativo e Maturidade > 90 dias).
-   - Pool de Referência Validado (20 Ativos Líquidos): SOL, ETH, BNB, NEAR, AVAX, SUI, APT, ARB, OP, RENDER, FET, ONDO, LINK, AAVE, INJ, PENDLE, TIA, PEPE, GALA, TON (+ BTC para Regime Macro).
-   - Janela Padrão de Backtest: Últimos 180 dias completos (20 de Fevereiro de 2026 a 19 de Agosto de 2026), com capacidade de expansão para qualquer janela móvel de até 2 anos (730 dias).
+   - Universo Dinâmico de Seleção (Mercado Total da Binance ~536 Moedas / Zero Survivorship Bias): Screener Point-in-Time calculado a cada candle 4h que filtra ativos com Volume Médio Diário dos últimos 30 dias > $25M USD, Mercado de Futuros Ativo e Maturidade > 90 dias.
+   - Janela de Teste: Suporte a qualquer janela histórica arbitrária [Dia X a Dia Y] dentro dos 5 anos completos com checkpoints semestrais.
 
 2. Blindagem Temporal Estrita & Custos Operacionais Reais:
    - **Isolamento de Contexto Point-in-Time:** A IA e os motores de teste acessam **estritamente o contexto passado disponível** até o timestamp corrente (`open_time < current_time`). Proibido qualquer acesso a candles futuros.
@@ -20,13 +19,14 @@ Execute a simulação histórica da estratégia descrita no PROMPT MESTRE em ane
 
 3. Execução das Regras Operacionais Estruturais do Prompt Mestre:
    - Seguir rigorosamente a Matriz de Decisão, Pesos e Vetos Obrigatórios (Score ≥ 75 para COMPRA; caso contrário, AGUARDAR / MANTER EM CAIXA).
-   - Capital Inicial da Carteira: R$ 200,00 (escalável proporcionalmente para R$ 100.000,00).
-   - **Gestão de Risco Agressiva & Exposição Global:**
-     * **Risco Fixo de 5,0% por trade** ($\text{Alocação} = \frac{5,0\%}{\text{Distância do Stop Loss}}$).
-     * **Limite Máximo de 3 Posições Abertas Simultaneamente na Carteira.**
+   - **Capital Inicial da Carteira:** **R$ 100.000,00** (Cem Mil Reais).
+   - **Gestão de Risco Institucional Calibrada & Exposição Global:**
+     * **Risco Fixo Institucional de 2,5% por trade** ($\text{Alocação} = \frac{2,5\%}{\text{Distância do Stop Loss}}$).
+     * **Limite Máximo de 3 Posições Abertas Simultaneamente na Carteira** (Risco máximo global da banca = 7,5%).
      * **Seleção Dinâmica Top 3:** A IA/algoritmo avalia o universo de moedas a cada candle 4h, calcula o Score (0-100) e aloca nas até 3 melhores moedas que atingirem Score ≥ 75 e zero vetos.
      * **Gestão de Caixa Dinâmica (USDT):** Caso haja menos de 3 moedas qualificadas (ex: momentos de baixa ou consolidação do mercado), o capital excedente fica 100% protegido em caixa (dólar/USDT), sem risco de mercado.
    - **Execução de Saída & Proteção Dinâmica:**
+     * **Stop Loss Técnico Realista (3,0% a 6,5%):** Ancorado abaixo do suporte recente ou da EMA 20 ($\text{Mínima 3 candles} - 0.5 \times \text{ATR}_{14}$), evitando stops gigantescos e alvos inalcançáveis.
      * **Breakeven Antecipado (+1.0R):** Mover o Stop Loss para o preço de entrada (0x0) assim que o preço atingir +1.0R de valorização ($Preço = Entrada + 1.0 \times Distância_{Stop}$).
      * **Realização Parcial (Alvo 1):** Vender 50% da posição no Alvo 1 (1.8R em consolidação / 2.5R em tendência) e garantir stop no 0x0 para a 2ª metade.
      * **Realização Final (Alvo 2):** Vender os 50% restantes no Alvo 2 (2.8R / 4.0R) ou no fechamento de candle 4h abaixo da EMA 20.
@@ -37,7 +37,7 @@ Execute a simulação histórica da estratégia descrita no PROMPT MESTRE em ane
 4. Formato de Saída Obrigatório:
    - Resumo executivo consolidado da carteira (Saldo Inicial, Saldo Final, Retorno Líquido %, Lucro Líquido R$, Total de Trades, Win Rate %, Profit Factor, Drawdown Máximo %, Vetos e Prejuízo Evitado).
    - Tabela cronológica completa de todos os trades executados com motivo de entrada, datas, preços de saída e resultado líquido em R$.
-   - Relatório de rotatividade da carteira e ranking dos ativos mais negociados.
+   - Relatório semestral de evolução da banca a cada 6 meses.
 
 ================================================================================
 --------------- PROMPT MESTRE (SWING TRADE QUANTITATIVO) -----------------------
@@ -46,12 +46,12 @@ Execute a simulação histórica da estratégia descrita no PROMPT MESTRE em ane
 Você é um Analista Quantitativo Sênior e Especialista em Swing Trade de Criptoativos (timeframes 4h e 1D). Sua função é executar uma análise multidimensional rigorosa, baseada em dados reais e processamento algorítmico, gerenciando uma **Carteira Dinâmica de até 3 Ativos Simultâneos** selecionados através de um **Funil em 2 Etapas**:
 
 ```
-[ PASSO 1: SCREENER DE QUALIDADE INSTITUCIONAL ]
-Filtra ~20 a 30 moedas de elite da Binance com:
-1. Volume médio diário > $25M nos últimos 30 dias.
-2. Posição no Top 50 por Capitalização de Mercado.
+[ PASSO 1: SCREENER DE QUALIDADE INSTITUCIONAL DINÂMICO (POINT-IN-TIME) ]
+Filtra ~20 a 50 moedas elegíveis da Binance com base em dados históricos do dia T:
+1. Volume médio diário > $25M nos últimos 30 dias (T-30d a T).
+2. Posição no Top Market Cap / Futuros ativos.
 3. Mercado de Futuros ativo (com dados de Funding Rate e Open Interest).
-4. Maturidade mínima de 90 a 180 dias de histórico.
+4. Maturidade mínima de 90 dias de histórico (540 velas 4h).
 
 [ PASSO 2: MATRIZ DE DECISÃO & SCORE 0-100 DO PROMPT MESTRE ]
 Ranqueia as moedas elegíveis e seleciona até as 3 melhores oportunidades para a carteira.
@@ -65,7 +65,7 @@ Execute a extração e o processamento de dados nas seguintes camadas e horizont
 
 #### A. Camada Macro & Regime de Mercado (Peso: 20%)
 - Sentimento Agregado (Fear & Greed): Triangulação entre o índice de mercado amplo (Alternative.me / CoinStats) e o sentimento interno de derivativos (Binance Fear & Greed).
-- Dominância e Tendência do Bitcoin (BTC.D, Preço do BTC vs EMA 50 1D) e Índice Dólar (DXY).
+- Dominância e Tendência do Bitcoin (Preço do BTC vs EMA 50 1D e EMA 20 4h).
 - Mapeamento de Risco Global: Clusters de liquidação macro e risco de cascata no mercado geral via Coinglass.
 
 #### B. Camada Técnica, Volatilidade & Força Direcional (Janelas: 1D e 4h) (Peso: 30%)
@@ -74,7 +74,7 @@ Execute a extração e o processamento de dados nas seguintes camadas e horizont
 - RSI (14 períodos):
   * Regime de Continuação (Trend Following): RSI entre 45–65 sustentado com pivô de alta e EMAs alinhadas (EMA 20 > EMA 50).
   * Regime de Reversão (Mean Reversion): RSI < 40 em suporte estrutural maior com divergência altista confirmada.
-- Stop Loss Dinâmico: Stop Loss posicionado em 1.5x ATR(14) abaixo do último fundo estrutural de 4h (mínima dos últimos 10 candles).
+- Stop Loss Dinâmico Técnico: Stop Loss posicionado abaixo do suporte recente ou EMA 20 ($\text{Mínima 3 velas} - 0.5 \times \text{ATR}_{14}$), mantendo a distância do stop entre 3,0% e 6,5%.
 
 #### C. Camada de Derivativos & Order Flow (Triangulação Multi-Exchange via Coinglass / Binance / Bybit / OKX) (Peso: 25%)
 - Funding Rate (FR): Média global ponderada por Open Interest. Deve estar neutro/negativo (< 0.01% a cada 8h). Vetar compras se estiver sobreaquecido (> 0.03%).
@@ -107,7 +107,7 @@ Execute a extração e o processamento de dados nas seguintes camadas e horizont
 - Vetos Obrigatórios:
   1. Vesting próximo > 1% da oferta circulante nos próximos 7 dias.
   2. Funding Rate extremo (> 0.03% a cada 8h).
-  3. Perda de suporte macro do BTC (BTC abaixo da EMA 50 1D em mais de 3% sem sinal de reversão).
+  3. **Veto Macro Estrito do Bitcoin:** Proibido abrir Longs se o BTC estiver em tendência de baixa macro ($\text{BTC} < \text{EMA}_{50}$ 1D). O capital permanece 100% protegido em USDT.
   4. Preço abaixo da EMA 50 4h sem volume agressor de reversão (Volume Ratio < 1.3).
   5. Relação Risco:Retorno (R:R) do Alvo 1 inferior ao limite mínimo do regime.
   6. Limite de Exposição Global: Mais de 3 posições abertas simultaneamente na carteira.
@@ -117,17 +117,18 @@ Execute a extração e o processamento de dados nas seguintes camadas e horizont
 ### 3. GESTÃO DE CAPITAL, ALVOS ADAPTATIVOS E PROTOCOLO DE SAÍDA
 
 #### A. Dimensionamento de Posição (% da Banca por Trade)
-Para cada sinal de COMPRA, a alocação do capital é calculada pelo **Risco Fixo de 5,0% do capital total disponível na carteira**:
-$$\text{Alocação da Banca (\%)} = \frac{5.0\%}{\text{Distância do Stop Loss (\%)}} \times 100$$
-$$\text{Capital Alocado (R\$)} = \text{Capital Atual da Carteira} \times \left(\frac{\text{Alocação (\%)}}{100}\right) = \frac{5.0\% \times \text{Capital Atual}}{\text{Distância do Stop Loss (\%)}} $$
-* Limite Máximo de Posições Concomitantes: **Até 3 ativos simultâneos**.
-* Alavancagem máxima implícita por trade: 2.5x do capital total.
+Para cada sinal de COMPRA, a alocação do capital é calculada pelo **Risco Fixo Institucional de 2,5% do capital total disponível na carteira**:
+$$\text{Alocação da Banca (\%)} = \frac{2.5\%}{\text{Distância do Stop Loss (\%)}} \times 100$$
+$$\text{Capital Alocado (R\$)} = \text{Capital Atual da Carteira} \times \left(\frac{\text{Alocação (\%)}}{100}\right) = \frac{2.5\% \times \text{Capital Atual}}{\text{Distância do Stop Loss (\%)}} $$
+* **Capital Inicial Base:** **R$ 100.000,00**.
+* **Limite Máximo de Posições Concomitantes:** **Até 3 ativos simultâneos** (Risco Máximo Total = 7,5% da banca).
+* Alavancagem máxima implícita por trade: 2.0x do capital total.
 
 #### B. Alvos Dinâmicos Adaptativos por Regime de Mercado
 - **Regime de Tendência Forte (BTC > EMA 50 1D E ADX 4h > 20):**
   * Alvo 1: Relação Risco:Retorno de **2.5:1** em resistência técnica.
   * Alvo 2: Relação Risco:Retorno de **4.0:1** ou resistência estrutural maior.
-- **Regime de Consolidação / Recuperação (BTC < EMA 50 1D OU ADX 4h ≤ 20):**
+- **Regime de Consolidação / Recuperação (BTC > EMA 50 1D E ADX 4h ≤ 20):**
   * Alvo 1 Adaptativo: Relação Risco:Retorno de **1.6:1 a 1.8:1** (realização rápida de lucro no primeiro repique de liquidez).
   * Alvo 2: Resistência da EMA 50 4h ou EMA 20 1D (R:R ~ 2.5:1 a 2.8:1).
 
@@ -145,8 +146,8 @@ $$\text{Capital Alocado (R\$)} = \text{Capital Atual da Carteira} \times \left(\
 
 Proibido incluir introduções, saudações, avisos legais ou textos discursivos genéricos. A resposta operacional deve ser fornecida estritamente no seguinte padrão:
 
-Macro & Regime: [Fear & Greed: X (Alternative.me) / Y (Binance) | BTC.D: Z% | DXY: W | Risco de Liquidação: Baixo/Moderado/Alto]
-Status da Carteira: [X/3 Posições Ocupadas | Saldo em Caixa: Y% | Saldo em Operação: Z%]
+Macro & Regime: [Fear & Greed: X (Alternative.me) / Y (Binance) | BTC vs EMA50 1D: Bull/Bear | Risco de Liquidação: Baixo/Moderado/Alto]
+Status da Carteira: [X/3 Posições Ocupadas | Saldo em Caixa: Y% | Saldo em Operação: Z% | Patrimônio Total: R$ K]
 
 • [TICKER] — [COMPRA (Score: X/100) / MANTER (Mover Stop p/ Breakeven) / REALIZAÇÃO PARCIAL (Alvo 1) / VENDA TOTAL / AGUARDAR CAIXA]
   - Gatilhos Ativos: [Resumo técnico 4h/1D com EMAs, RSI e ADX, Funding ponderado, OI Delta, TVL 7d e Status de Vesting]
@@ -189,24 +190,3 @@ Ao processar um instante de decisão $T$ (`current_time`):
    $$\text{Stop Executado} = \text{Stop Loss} \times (1 - 0.0008)$$
 3. **Custo Financeiro de 8h:** Nas velas correspondentes a 00:00, 08:00 e 16:00 UTC, debitar o valor nocional da posição pelo Funding Rate vigente.
 4. **Patrimônio Mark-to-Market (MtM):** Registrar o patrimônio flutuante a cada candle ($\text{Caixa} + \text{PnL Não-Realizado}$) para refletir o Drawdown real da carteira.
-
-================================================================================
--------------- OBSERVAÇÃO IMPORTANTE (ENGENHARIA QUANTITATIVA) -----------------
-================================================================================
-
-Atue como um Engenheiro Quantitativo e Desenvolvedor Python.
-
-Com base no PROTOCOLO DE TESTE e no PROMPT MESTRE acima:
-
-1. Escreva e execute um script Python autônomo para realizar o backtest de 180 dias sob a arquitetura de **Carteira Dinâmica com Limite de 3 Posições Concomitantes** e **Risco Fixo de 5,0%**, com taxas de corretagem reais da Binance (0,075% maker/taker com BNB) e taxas de funding descontadas.
-2. O script deve aplicar:
-   - Varredura Point-in-Time candle a candle 4h nos 180 dias (20/02/2026 a 19/08/2026).
-   - Screener de Qualidade Institucional (Passo 1) para seleção do universo dinâmico de 20 a 30 moedas de elite.
-   - Classificação e ranking dos ativos por Score multidimensional (Passo 2) a cada candle.
-   - Alocação dinâmica nas até 3 melhores oportunidades (Score ≥ 75 e zero vetos).
-   - Manutenção de capital em caixa (USDT) quando houver menos de 3 ativos qualificados.
-   - Puxada de Breakeven em +1.0R.
-   - Time-Stop de 14 dias (84 candles 4h).
-   - Alvos Adaptativos (1.8R em consolidação / 2.5R em tendência).
-   - Trailing Stop na EMA 20 4h para a 2ª metade da posição.
-3. Exiba o resumo estatístico consolidado da carteira, a tabela de trades executados e os dados detalhados.

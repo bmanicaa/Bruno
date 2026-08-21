@@ -1,19 +1,14 @@
 """
 Motor de Simulação de Carteira Dinâmica Institucional (Até 3 Ativos Simultâneos)
-Varredura Point-in-Time sobre o Mercado Total da Binance (~500+ Moedas USDT)
-Sem Viés de Sobrevivência (Survivorship Bias Free)
+Varredura Point-in-Time sobre o Mercado Total da Binance (~523 Moedas USDT)
+Histórico Completo de 5 Anos (2021 a 2026) com Checkpoints Semestrais (a cada 6 meses)
 
-Funil Institucional em 2 Passos:
-1. PASSO 1 (Screener Dinâmico Point-in-Time):
-   - Maturidade mínima de 90 dias de histórico fechado no timestamp T (540 velas 4h).
-   - Volume médio diário dos últimos 30 dias (T-30d a T) > $25M USD (ou Top 50 por volume naquele dia).
-   - Mercado de Futuros / Funding Rate ativo no momento T.
-2. PASSO 2 (Matriz de Decisão & Score 0-100 do Prompt.md):
-   - Macro BTC (20%) + Técnico 4h/1D (30%) + Derivativos/FR/CVD (25%) + On-Chain/Vesting (25%).
-   - Filtro de Vetos Absolutos (Vesting > 1%, FR > 0.03%, BTC < EMA50 1D -3%, etc.).
-   - Alocação nas TOP 3 Melhores Oportunidades (Score >= 75) com Risco Fixo de 5,0%.
-   - Caixa 100% protegido em USDT quando houver menos de 3 ativos qualificados.
-   - Puxada de Breakeven em +1.0R | Alvos 1.8R/2.5R | Time-Stop 14d | Trailing EMA20.
+Princípios Estruturais Institucionais Aplicados:
+1. Alinhamento Multi-Timeframe (1D/4h): Close 1D >= EMA20 1D >= EMA50 1D.
+2. Volume Institucional Real: Volume 4h >= 1.5x SMA20 com CVD Comprador (> 0).
+3. Rompimento de Pivô Técnico no 4h: Close 4h > máxima recente dos 3 candles anteriores.
+4. Veto Macro do Bitcoin: Proibido Long se BTC < EMA 50 1D (100% Caixa em USDT).
+5. Gestão de Risco: Risco Fixo de 2,5% por trade | Capital Inicial: R$ 100.000,00 | Max 3 Posições.
 """
 
 import argparse
@@ -90,8 +85,9 @@ def compute_indicators_4h(df):
     dx = 100 * (plus_di - minus_di).abs() / (plus_di + minus_di + 1e-9)
     df['adx14'] = dx.ewm(alpha=1/14, min_periods=14, adjust=False).mean()
     
+    df['swing_low_3'] = df['low'].rolling(window=3).min()
+    df['swing_high_3'] = df['high'].rolling(window=3).max()
     df['swing_low_10'] = df['low'].rolling(window=10).min()
-    df['swing_high_10'] = df['high'].rolling(window=10).max()
     df['vol_sma20'] = df['volume'].rolling(window=20).mean()
     df['vol_ratio'] = df['volume'] / (df['vol_sma20'] + 1e-9)
     
@@ -102,7 +98,6 @@ def compute_indicators_4h(df):
     else:
         df['cvd'] = 0.0
         
-    # Screener de Volume Point-in-Time: Soma móvel de 30 dias (180 velas de 4h)
     if 'quote_volume' in df.columns:
         df['vol_quote_30d_sum'] = df['quote_volume'].rolling(window=180).sum()
         df['daily_avg_vol_30d'] = df['vol_quote_30d_sum'] / 30.0
@@ -149,19 +144,14 @@ def is_vesting_cliff(symbol, dt):
         return True, "Desbloqueio de Vesting ILV > 1%"
     return False, ""
 
-def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, risk_pct=0.05, 
+def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.0, risk_pct=0.025, 
                            max_positions=3, min_daily_volume=25_000_000, fee_pct=0.00075):
     start_date = pd.to_datetime(start_date_str)
     end_date = pd.to_datetime(end_date_str)
     
-    print(f"\nCarregando dados macro de referência...")
     btc_4h, btc_1d, fng_df = load_macro_data()
-    
-    # Identificar todas as moedas disponíveis em data/raw/coins/
     available_symbols = [d for d in os.listdir(COINS_DIR) if os.path.isdir(os.path.join(COINS_DIR, d))]
-    print(f"Total de Moedas no Repositório: {len(available_symbols)}")
     
-    print("Pré-carregando e indexando dados históricos para execução ultrarrápida...")
     coins_4h_map = {}
     coins_1d_map = {}
     funding_map = {}
@@ -190,22 +180,31 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
             fr_df.sort_values('fundingTime', inplace=True)
             funding_map[s] = fr_df
             
-    # Obter lista cronológica de timestamps 4h a partir do BTC benchmark
     btc_4h_slice = btc_4h[(btc_4h['open_time'] >= start_date) & (btc_4h['open_time'] <= end_date)]
     all_timestamps = btc_4h_slice['open_time'].tolist()
-    
-    print(f"Período de Simulação: {start_date_str} a {end_date_str} ({len(all_timestamps)} candles 4h / {len(all_timestamps)/6:.1f} dias)")
-    print("Iniciando loop Point-in-Time institucional...\n")
     
     capital = initial_capital
     active_positions = {}
     trades = []
     vetoes = []
     equity_curve = [{'timestamp': start_date, 'capital': capital, 'cash': capital, 'active_count': 0}]
-    screener_stats = []
+    
+    # Checkpoints Semestrais (10 Semestres ao longo de 5 anos)
+    semesters = [
+        pd.to_datetime('2022-05-15'),
+        pd.to_datetime('2022-11-15'),
+        pd.to_datetime('2023-05-15'),
+        pd.to_datetime('2023-11-15'),
+        pd.to_datetime('2024-05-15'),
+        pd.to_datetime('2024-11-15'),
+        pd.to_datetime('2025-05-15'),
+        pd.to_datetime('2025-11-15'),
+        pd.to_datetime('2026-05-15'),
+        pd.to_datetime(end_date_str)
+    ]
+    semester_checkpoints = {}
     
     for current_time in all_timestamps:
-        # Macro BTC Point-in-Time (< current_time)
         btc_sub_1d = btc_1d[btc_1d['open_time'] < current_time]
         btc_sub_4h = btc_4h[btc_4h['open_time'] < current_time]
         if btc_sub_1d.empty or btc_sub_4h.empty:
@@ -213,8 +212,9 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
             
         btc_last_1d = btc_sub_1d.iloc[-1]
         btc_last_4h = btc_sub_4h.iloc[-1]
+        
+        # Macro Bullish: BTC acima da EMA 50 1D
         btc_macro_bullish = btc_last_1d['close'] >= btc_last_1d['ema50_1d']
-        btc_macro_support_lost = btc_last_1d['close'] < btc_last_1d['ema50_1d'] * 0.97
         
         fng_val = 50.0
         if not fng_df.empty:
@@ -236,7 +236,6 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
             c_ema20 = candle['ema20']
             c_rsi = candle['rsi14']
             
-            # Funding Rate 8h
             fr_val = 0.0001
             if s in funding_map and not funding_map[s].empty:
                 fr_sub = funding_map[s][funding_map[s]['fundingTime'] <= current_time]
@@ -385,7 +384,6 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
                         
         # 2. Screener Dinâmico Point-in-Time & Scoring Matrix
         candidates = []
-        eligible_count = 0
         
         for s in available_symbols:
             if s in active_positions or s == 'BTCUSDT':
@@ -399,29 +397,22 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
                 continue
                 
             current_open_candle = df4.loc[current_time]
-            
-            # Localizar dados estritamente anteriores a current_time
-            # Usando slicing rápido no índice ordenado
             loc_idx = df4.index.get_loc(current_time)
-            if loc_idx < 180:  # Requer pelo menos 180 candles 4h (30 dias)
-                continue
-                
-            prev_candle = df4.iloc[loc_idx - 1]  # Vela fechada anterior
-            candle_2ago = df4.iloc[loc_idx - 2]
             
-            # PASSO 1: SCREENER INSTITUCIONAL DINÂMICO POINT-IN-TIME
-            # 1. Maturidade > 90 dias (540 velas)
+            # PASSO 1: SCREENER INSTITUCIONAL DINÂMICO
+            # 1. Maturidade > 90 dias
             if loc_idx < 540:
                 continue
                 
-            # 2. Volume Médio Diário dos Últimos 30 Dias (em USD) > $25M
+            # 2. Volume Médio Diário dos Últimos 30 Dias > $25M
+            prev_candle = df4.iloc[loc_idx - 1]
+            candle_2ago = df4.iloc[loc_idx - 2]
+            candle_3ago = df4.iloc[loc_idx - 3]
+            
             daily_vol_30d = prev_candle['daily_avg_vol_30d']
             if daily_vol_30d < min_daily_volume:
                 continue
                 
-            eligible_count += 1
-            
-            # Obter 1D anterior
             sub1d = df1[df1.index < current_time]
             if sub1d.empty:
                 continue
@@ -429,6 +420,20 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
             
             # PASSO 2: MATRIZ DE DECISÃO & VETOS
             veto_reasons = []
+            
+            # VETO 1: Veto Macro Estrito do BTC (Não operar Long em Bear Market do BTC)
+            if not btc_macro_bullish:
+                veto_reasons.append("BTC < EMA 50 1D (Bear Market BTC / 100% Caixa)")
+                
+            # VETO 2: Alinhamento Estrutural no Gráfico Diário (1D)
+            is_1d_aligned = (candle_1d['close'] >= candle_1d['ema50_1d']) and (candle_1d['close'] >= candle_1d['ema20_1d'])
+            if not is_1d_aligned:
+                veto_reasons.append("Estrutura 1D Fraca (Preço 1D < EMA50 1D)")
+                
+            # VETO 3: Volume Institucional Mínimo (Volume Ratio >= 1.5 e CVD Positivo)
+            if prev_candle['vol_ratio'] < 1.5 or prev_candle['cvd'] <= 0:
+                veto_reasons.append("Falta de Volume Institucional (Ratio < 1.5 ou CVD Vendedor)")
+                
             is_vest, vest_msg = is_vesting_cliff(s, current_time)
             if is_vest:
                 veto_reasons.append(f"Vesting ({vest_msg})")
@@ -441,59 +446,54 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
                     
             if fr_val > 0.0003:
                 veto_reasons.append(f"Funding Rate Alto ({fr_val*100:.4f}% > 0.03%)")
-            if btc_macro_support_lost:
-                veto_reasons.append("Suporte Macro do BTC Perdido (< EMA50 1D -3%)")
-            if prev_candle['close'] < prev_candle['ema50'] and prev_candle['vol_ratio'] < 1.3:
-                veto_reasons.append("Preço < EMA50 4h sem Volume Agressor (Ratio < 1.3)")
                 
             # Score (0-100)
-            macro_score = 12 if btc_macro_bullish else (8 if btc_last_4h['close'] >= btc_last_4h['ema20'] else 0)
-            macro_score += 8 if fng_val >= 40 else (4 if fng_val >= 25 else 0)
+            macro_score = 20 if btc_macro_bullish else 0
             
             ema_aligned = (prev_candle['ema20'] > prev_candle['ema50']) and (prev_candle['close'] > prev_candle['ema20'])
             ema_major_aligned = (prev_candle['ema50'] > prev_candle['ema200']) or (prev_candle['close'] > prev_candle['ema200'])
-            tech_score = 12 if (ema_aligned and ema_major_aligned) else (7 if prev_candle['close'] > prev_candle['ema20'] else 0)
+            tech_score = 15 if (ema_aligned and ema_major_aligned) else (8 if prev_candle['close'] > prev_candle['ema20'] else 0)
             
             rsi_val, adx_val = prev_candle['rsi14'], prev_candle['adx14']
-            if 45 <= rsi_val <= 65:
-                tech_score += 10
-            elif rsi_val < 40 and prev_candle['close'] > prev_candle['open'] and prev_candle['low'] <= prev_candle['swing_low_10'] * 1.01:
+            if 50 <= rsi_val <= 68:
+                tech_score += 15
+            elif 45 <= rsi_val < 50:
                 tech_score += 8
-            elif 65 < rsi_val <= 70:
-                tech_score += 5
-            tech_score += 8 if candle_1d['close'] > candle_1d['ema50_1d'] else (4 if candle_1d['close'] > candle_1d['ema20_1d'] else 0)
-            
+                
             deriv_score = 15 if fr_val <= 0.0001 else (8 if fr_val <= 0.0002 else 0)
-            deriv_score += 10 if (prev_candle['cvd'] > 0 and prev_candle['vol_ratio'] > 1.0) else (6 if prev_candle['cvd'] > 0 else 0)
+            deriv_score += 10 if (prev_candle['cvd'] > 0 and prev_candle['vol_ratio'] >= 1.5) else 0
             
             onchain_score = 25
             total_score = macro_score + tech_score + deriv_score + onchain_score
             
-            entry_price = current_open_candle['open'] * 1.0005  # Entrada na Abertura + 5 bps slippage
-            stop_loss = prev_candle['swing_low_10'] - (1.5 * prev_candle['atr14'])
+            entry_price = current_open_candle['open'] * 1.0005  # Abertura + 5 bps slippage
+            
+            # STOP LOSS TÉCNICO CALIBRADO (2,5% a 6,0%)
+            raw_stop = min(prev_candle['low'], candle_2ago['low']) - (0.3 * prev_candle['atr14'])
+            raw_dist_pct = (entry_price - raw_stop) / entry_price
+            stop_dist_pct = min(max(raw_dist_pct, 0.025), 0.060)
+            stop_loss = entry_price * (1 - stop_dist_pct)
             stop_dist = entry_price - stop_loss
-            if stop_dist <= 0:
-                continue
-            stop_dist_pct = stop_dist / entry_price
-            if stop_dist_pct < 0.012:
-                stop_loss = entry_price * 0.985
-                stop_dist = entry_price - stop_loss
-                stop_dist_pct = 0.015
-                
-            is_strong_trend = btc_macro_bullish and (adx_val > 20)
+            
+            is_strong_trend = btc_macro_bullish and (adx_val > 22)
             rr_target1 = 2.5 if is_strong_trend else 1.8
             rr_target2 = 4.0 if is_strong_trend else 2.8
             be_trigger_price = entry_price + stop_dist
             target_1 = entry_price + (rr_target1 * stop_dist)
             target_2 = entry_price + (rr_target2 * stop_dist)
             
-            trend_trigger = (prev_candle['close'] > prev_candle['ema20']) and (prev_candle['close'] > candle_2ago['high']) and (48 <= rsi_val <= 68) and (prev_candle['close'] > prev_candle['ema50'])
-            reversal_trigger = (candle_2ago['rsi14'] < 40) and (prev_candle['close'] > candle_2ago['high']) and (prev_candle['close'] > prev_candle['open'])
+            # GATILHO DE CONFLUÊNCIA INSTITUCIONAL
+            recent_max_high = max(candle_2ago['high'], candle_3ago['high'])
+            pivot_breakout = (prev_candle['close'] > recent_max_high) and (prev_candle['close'] > prev_candle['open'])
+            trend_active = (prev_candle['close'] > prev_candle['ema20']) and (prev_candle['ema20'] > prev_candle['ema50'])
+            momentum_ok = (50 <= rsi_val <= 68)
+            volume_burst = (prev_candle['vol_ratio'] >= 1.5) and (prev_candle['cvd'] > 0)
             
+            valid_signal = pivot_breakout and trend_active and momentum_ok and volume_burst
             regime_str = "Tendência (2.5R)" if is_strong_trend else "Consolidação (1.8R)"
             
-            if trend_trigger or reversal_trigger:
-                if total_score >= 75 and len(veto_reasons) == 0:
+            if valid_signal:
+                if total_score >= 80 and len(veto_reasons) == 0:
                     candidates.append({
                         'symbol': s, 'score': total_score, 'entry_price': entry_price,
                         'stop_loss': stop_loss, 'stop_dist': stop_dist, 'stop_dist_pct': stop_dist_pct,
@@ -505,7 +505,7 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
                         'date': current_time,
                         'symbol': s.replace('USDT', ''),
                         'score': total_score,
-                        'motivo': " | ".join(veto_reasons) if veto_reasons else f"Score insuficiente ({total_score}/100 < 75)"
+                        'motivo': " | ".join(veto_reasons) if veto_reasons else f"Score insuficiente ({total_score}/100 < 80)"
                     })
                     
         # 3. Alocação Dinâmica nas Melhores Oportunidades (Top 3)
@@ -515,8 +515,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
             selected_candidates = candidates[:available_slots]
             
             for c in selected_candidates:
-                risk_brl = capital * risk_pct
-                allocated_capital = min(risk_brl / c['stop_dist_pct'], capital * 2.5)
+                risk_brl = capital * risk_pct  # 2.5% de risco fixo
+                allocated_capital = min(risk_brl / c['stop_dist_pct'], capital * 2.0)
                 entry_fee = allocated_capital * fee_pct
                 capital -= entry_fee
                 
@@ -550,6 +550,11 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
             'active_count': len(active_positions)
         })
         
+        # Gravar Checkpoints Semestrais
+        for sm in semesters:
+            if current_time == sm or (current_time > sm and sm.strftime('%Y-%m-%d') not in semester_checkpoints):
+                semester_checkpoints[sm.strftime('%Y-%m-%d')] = total_mtm_equity
+                
     # Fechamento de posições restantes no fim da simulação
     for s, pos in list(active_positions.items()):
         df4 = coins_4h_map.get(s)
@@ -608,27 +613,28 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=200.0, 
         'max_drawdown_pct': max_drawdown_pct,
         'total_funding_fees_brl': total_funding_fees,
         'total_vetoes': len(vetoes),
-        'coins_scanned': len(available_symbols)
+        'coins_scanned': len(available_symbols),
+        'semester_checkpoints': semester_checkpoints
     }
     
     return summary, trades, vetoes, equity_df
 
 def main():
-    parser = argparse.ArgumentParser(description="Motor de Simulação de Carteira Dinâmica (Mercado Total / Zero Survivorship Bias)")
-    parser.add_argument('--start', type=str, default="2026-02-20", help="Data de Início (YYYY-MM-DD)")
-    parser.add_argument('--end', type=str, default="2026-08-19", help="Data de Fim (YYYY-MM-DD)")
-    parser.add_argument('--capital', type=float, default=200.0, help="Capital Inicial em R$")
-    parser.add_argument('--risk', type=float, default=0.05, help="Risco Fixo por Trade (Ex: 0.05 = 5%)")
+    parser = argparse.ArgumentParser(description="Simulação Institucional de Carteira Dinâmica (5 Anos / 523 Moedas / R$ 100k)")
+    parser.add_argument('--start', type=str, default="2021-11-15", help="Data de Início (YYYY-MM-DD)")
+    parser.add_argument('--end', type=str, default="2026-08-20", help="Data de Fim (YYYY-MM-DD)")
+    parser.add_argument('--capital', type=float, default=100000.0, help="Capital Inicial em R$")
+    parser.add_argument('--risk', type=float, default=0.025, help="Risco Fixo por Trade (0.025 = 2.5%)")
     parser.add_argument('--max-pos', type=int, default=3, help="Número Máximo de Posições Concomitantes")
     parser.add_argument('--min-vol', type=float, default=25_000_000, help="Volume Médio Diário Mínimo em USD")
     
     args = parser.parse_args()
     
     print("=" * 85)
-    print("BACKTEST INSTITUCIONAL DE CARTEIRA DINÂMICA (MERCADO TOTAL / ZERO SURVIVORSHIP BIAS)")
+    print("BACKTEST INSTITUCIONAL DE 5 ANOS (523 MOEDAS / CHECKPOINTS SEMESTRAIS)")
     print(f"Janela Temporal: {args.start} a {args.end}")
-    print(f"Capital Inicial: R$ {args.capital:.2f} | Risco: {args.risk*100:.1f}% | Max Posições: {args.max_pos}")
-    print(f"Screener: Volume 30d > ${args.min_vol/1e6:.1f}M/dia | Maturidade > 90d")
+    print(f"Capital Inicial: R$ {args.capital:,.2f} | Risco: {args.risk*100:.1f}% | Max Posições: {args.max_pos}")
+    print(f"Screener: Volume 30d > ${args.min_vol/1e6:.1f}M/dia | Filtro 1D + Volume Breakout >= 1.5x")
     print("=" * 85)
     
     summary, trades, vetoes, equity_df = run_portfolio_backtest(
@@ -637,13 +643,13 @@ def main():
     )
     
     print("\n" + "=" * 85)
-    print("RESUMO EXECUTIVO CONSOLIDADO DA CARTEIRA")
+    print("RESUMO EXECUTIVO CONSOLIDADO DA CARTEIRA INSTITUCIONAL (5 ANOS)")
     print("=" * 85)
     print(f"Período Auditado:      {summary['start_date']} a {summary['end_date']}")
     print(f"Universo Monitorado:   {summary['coins_scanned']} moedas")
-    print(f"Capital Inicial:       R$ {summary['initial_capital']:.2f}")
-    print(f"Saldo Final:           R$ {summary['final_capital']:.2f} ({summary['return_pct']:+.2f}%)")
-    print(f"Lucro Líquido:         R$ {summary['net_profit_brl']:+.2f}")
+    print(f"Capital Inicial:       R$ {summary['initial_capital']:,.2f}")
+    print(f"Saldo Final:           R$ {summary['final_capital']:,.2f} ({summary['return_pct']:+.2f}%)")
+    print(f"Lucro Líquido:         R$ {summary['net_profit_brl']:+,.2f}")
     print(f"Total de Trades:       {summary['total_trades']}")
     print(f"Trades Vencedores:     {summary['winning_trades']}")
     print(f"Trades Perdedores:     {summary['losing_trades']}")
@@ -651,9 +657,20 @@ def main():
     print(f"Win Rate:              {summary['win_rate_pct']:.2f}%")
     print(f"Profit Factor:         {summary['profit_factor']:.2f}")
     print(f"Drawdown Máximo (MtM): {summary['max_drawdown_pct']:.2f}%")
-    print(f"Custos Funding Rate:   R$ {summary['total_funding_fees_brl']:.2f}")
+    print(f"Custos Funding Rate:   R$ {summary['total_funding_fees_brl']:,.2f}")
     print(f"Vetos de Proteção:     {summary['total_vetoes']}")
     print("=" * 85)
+    
+    print("\n" + "-" * 75)
+    print("EVOLUÇÃO SEMESTRAL DO SALDO (A CADA 6 MESES NOS 5 ANOS):")
+    print("-" * 75)
+    prev_val = args.capital
+    for date_str, val in summary['semester_checkpoints'].items():
+        ret_sem = ((val - prev_val) / prev_val) * 100
+        ret_cum = ((val - args.capital) / args.capital) * 100
+        print(f"• Data: {date_str} | Saldo: R$ {val:12,.2f} | Semestre: {ret_sem:+7.2f}% | Acumulado: {ret_cum:+7.2f}%")
+        prev_val = val
+    print("-" * 75)
     
     # Salvar Trades CSV
     trades_export = []
@@ -670,18 +687,18 @@ def main():
             'Datas Saída': " | ".join([d.strftime('%Y-%m-%d %H:%M') for d in t['exit_dates']]),
             'Preços Saída': " | ".join([f"${p:.4f}" for p in t['exit_prices']]),
             'Motivo Saída': " | ".join(t['exit_reasons']),
-            'Resultado (R$)': f"R$ {t['pnl_brl']:+.2f}",
-            'Saldo Acumulado (R$)': f"R$ {t['final_capital']:.2f}"
+            'Resultado (R$)': f"R$ {t['pnl_brl']:+,.2f}",
+            'Saldo Acumulado (R$)': f"R$ {t['final_capital']:,.2f}"
         })
     df_trades = pd.DataFrame(trades_export)
-    df_trades.to_csv(os.path.join(DATA_DIR, 'trades_executados_carteira_dinamica.csv'), index=False)
+    df_trades.to_csv(os.path.join(DATA_DIR, 'trades_executados_institucional_5anos.csv'), index=False)
     
-    with open(os.path.join(DATA_DIR, 'resumo_estatistico_carteira_dinamica.json'), 'w') as f:
+    with open(os.path.join(DATA_DIR, 'resumo_estatistico_institucional_5anos.json'), 'w') as f:
         json.dump(summary, f, indent=4)
         
-    print("\nResultados salvos com sucesso em data/:")
-    print(f"- {os.path.join(DATA_DIR, 'trades_executados_carteira_dinamica.csv')}")
-    print(f"- {os.path.join(DATA_DIR, 'resumo_estatistico_carteira_dinamica.json')}")
+    print("\nResultados salvos com sucesso:")
+    print(f"- {os.path.join(DATA_DIR, 'trades_executados_institucional_5anos.csv')}")
+    print(f"- {os.path.join(DATA_DIR, 'resumo_estatistico_institucional_5anos.json')}")
 
 if __name__ == '__main__':
     main()

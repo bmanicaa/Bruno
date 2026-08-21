@@ -1,0 +1,28 @@
+{
+    "start_date": "2023-10-01",
+    "end_date": "2024-10-01",
+    "initial_capital": 100000.0,
+    "final_capital": 67940.46739272392,
+    "net_profit_brl": -32059.53260727608,
+    "return_pct": -32.05953260727608,
+    "total_trades": 50,
+    "winning_trades": 16,
+    "losing_trades": 34,
+    "breakeven_trades": 0,
+    "win_rate_pct": 32.0,
+    "profit_factor": 0.4008248203526751,
+    "max_drawdown_pct": 35.04060303778399,
+    "sharpe_ratio": -1.3041432916753297,
+    "sortino_ratio": -1.2176754899911109,
+    "total_cash_yield_brl": 3655.429127669753,
+    "total_funding_fees_brl": 1867.9030622817831,
+    "coins_scanned": 536,
+    "semester_checkpoints": {
+        "2022-05-15": 100002.7397260274,
+        "2022-11-15": 100002.7397260274,
+        "2023-05-15": 100002.7397260274,
+        "2023-11-15": 99291.94956814543,
+        "2024-05-15": 83208.46977639031,
+        "2024-10-01": 67992.14791833589
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "start_date": "2022-01-01",
+    "end_date": "2022-12-31",
+    "initial_capital": 100000.0,
+    "final_capital": 92921.48744744355,
+    "net_profit_brl": -7078.512552556451,
+    "return_pct": -7.078512552556451,
+    "total_trades": 23,
+    "winning_trades": 7,
+    "losing_trades": 16,
+    "breakeven_trades": 0,
+    "win_rate_pct": 30.434782608695656,
+    "profit_factor": 0.5430334860539933,
+    "max_drawdown_pct": 20.13038269014107,
+    "sharpe_ratio": -0.2220550845532438,
+    "sortino_ratio": -0.1959408645800636,
+    "total_cash_yield_brl": 4570.679143930281,
+    "total_funding_fees_brl": -2243.255786788204,
+    "coins_scanned": 536,
+    "semester_checkpoints": {
+        "2022-05-15": 85880.37089954411,
+        "2022-11-15": 94389.74286462707,
+        "2022-12-31": 93002.01002794325
+    }
+}

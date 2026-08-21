@@ -72,6 +72,8 @@ def compute_indicators_4h(df):
     df['adx14'] = dx.ewm(alpha=1/14, min_periods=14, adjust=False).mean()
     
     df['swing_low_5'] = df['low'].rolling(window=5).min()
+    df['vol_ma20'] = df['volume'].rolling(20).mean()
+    df['highest_20'] = df['high'].rolling(20).max().shift(1)
     df['vol_sma20'] = df['volume'].rolling(window=20).mean()
     df['vol_ratio'] = df['volume'] / (df['vol_sma20'] + 1e-9)
     
@@ -137,12 +139,12 @@ def load_all_data():
     fng_path = os.path.join(MACRO_DIR, 'fear_and_greed.csv')
     
     btc_4h = pd.read_csv(btc_4h_path)
-    btc_4h['open_time'] = pd.to_datetime(btc_4h['open_time_dt'] if 'open_time_dt' in btc_4h.columns else btc_4h['open_time'])
+    btc_4h['open_time'] = pd.to_datetime(btc_4h['open_time_dt'] if 'open_time_dt' in btc_4h.columns else btc_4h['open_time']).astype('datetime64[s]')
     btc_4h = compute_indicators_4h(btc_4h)
     btc_4h.sort_values('open_time', inplace=True)
     
     btc_1d = pd.read_csv(btc_1d_path)
-    btc_1d['open_time'] = pd.to_datetime(btc_1d['open_time_dt'] if 'open_time_dt' in btc_1d.columns else btc_1d['open_time'])
+    btc_1d['open_time'] = pd.to_datetime(btc_1d['open_time_dt'] if 'open_time_dt' in btc_1d.columns else btc_1d['open_time']).astype('datetime64[s]')
     btc_1d = compute_indicators_1d(btc_1d)
     btc_1d.sort_values('open_time', inplace=True)
     
@@ -180,12 +182,12 @@ def load_all_data():
         
         if os.path.exists(k4h_p) and os.path.exists(k1d_p):
             df4 = pd.read_csv(k4h_p)
-            df4['open_time'] = pd.to_datetime(df4['open_time_dt'] if 'open_time_dt' in df4.columns else df4['open_time'])
+            df4['open_time'] = pd.to_datetime(df4['open_time_dt'] if 'open_time_dt' in df4.columns else df4['open_time']).astype('datetime64[s]')
             df4 = compute_indicators_4h(df4)
             df4.sort_values('open_time', inplace=True)
             
             df1 = pd.read_csv(k1d_p)
-            df1['open_time'] = pd.to_datetime(df1['open_time_dt'] if 'open_time_dt' in df1.columns else df1['open_time'])
+            df1['open_time'] = pd.to_datetime(df1['open_time_dt'] if 'open_time_dt' in df1.columns else df1['open_time']).astype('datetime64[s]')
             df1 = compute_indicators_1d(df1)
             df1.sort_values('open_time', inplace=True)
             
@@ -308,19 +310,14 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             if prev_candle['adx14'] < 22:
                 continue
                 
-            # 5. PULLBACK E SUPORTE: Teste da região de médias (EMA20/EMA50) nos últimos 3 candles
-            tested_support = min(prev_candle['low'], candle_2ago['low'], candle_3ago['low']) <= (prev_candle['ema20'] * 1.02)
-            rsi_pullback = (42 <= prev_candle['rsi14'] <= 60)
-            rejection_turn = (prev_candle['close'] > prev_candle['open']) and (prev_candle['close'] >= prev_candle['ema20']) and (prev_candle['cvd'] > 0)
-            vol_active = prev_candle['vol_ratio'] >= 0.9
-            
+            # 5. BREAKOUT INSTITUCIONAL
+            if not (prev_candle['close'] >= prev_candle.get('highest_20', 999999) and prev_candle['volume'] > 3 * prev_candle.get('vol_ma20', 999999)):
+                continue
+                
             # 6. FILTRO ANTI-PAVIO (Anti-Trap de rejeição superior)
             body_size = prev_candle['close'] - prev_candle['open']
             upper_wick = prev_candle['high'] - prev_candle['close']
             if upper_wick > (body_size * 1.5):
-                continue
-                
-            if not (tested_support and rsi_pullback and rejection_turn and vol_active):
                 continue
                 
             is_vest, _ = is_vesting_cliff(s, current_time)

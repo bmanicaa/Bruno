@@ -1,141 +1,177 @@
-### INSTRUÇÕES DO PROTOCOLO DE TESTE (BACKTEST ATÉ 5 ANOS - CARTEIRA DINÂMICA 3 ATIVOS)
+# SISTEMA QUANTITATIVO INSTITUCIONAL DE SWING TRADE & CAPTURA DE CICLO (MANUAL MESTRE V2.1)
 
-Execute a simulação histórica da estratégia descrita no PROMPT MESTRE em anexo, aplicando estritamente as seguintes regras de auditoria institucional:
+Este documento contém os 3 setores operacionais estruturados para alta assimetria de retorno, operação bi-direcional (Long/Short), filtragem no gráfico Diário (1D), condução de lucros sem teto artificial, **blindagem estrita contra overfitting (foco no futuro)** e menu interativo de testes.
 
-1. Período do Teste & Repositório de Dados de 5 Anos:
-   - Base de Dados Histórica Imutável: Repositório estruturado em `data/raw/` com até 5 anos completos (2021 a 2026 / 11.000 candles 4h e 2.000 candles 1D).
-   - Organização Modular Isolada por Moeda:
-     * `data/raw/macro/`: Dados globais de mercado (`BTCUSDT_4h.csv`, `BTCUSDT_1d.csv` e `fear_and_greed.csv`).
-     * `data/raw/coins/{SYMBOL}/`: Histórico exclusivo do ativo (`klines_4h.csv`, `klines_1d.csv` e `funding_rates.csv`).
-   - Universo Dinâmico de Seleção (Mercado Total da Binance ~536 Moedas incluindo BTCUSDT / Zero Survivorship Bias): Screener Point-in-Time calculado a cada candle 4h que filtra ativos com Volume Médio Diário dos últimos 30 dias > $25M USD, Mercado de Futuros Ativo e Maturidade > 90 dias.
-   - Janela de Teste: Suporte a qualquer janela histórica arbitrária [Dia X a Dia Y] dentro dos 5 anos completos com checkpoints semestrais.
+---
 
-2. Blindagem Temporal Estrita & Custos Operacionais Reais:
-   - **Isolamento de Contexto Point-in-Time:** A IA e os motores de teste acessam **estritamente o contexto passado disponível** até o timestamp corrente (`open_time < current_time`). Proibido qualquer acesso a candles futuros.
-   - **Execução Realista:** Entrada no preço de abertura (`open * 1.0005` com 5 bps de slippage) e saída em Stop-Market com derrapagem de 8 bps (`stop * 0.9992`).
-   - **Taxas de Corretagem da Binance:** 0,075% maker/taker com BNB na entrada e em todas as saídas (parciais, finais e stops).
-   - **Custo Periódico de Carregamento:** Desconto real de *Funding Rates* a cada 8h (janelas UTC 00:00, 08:00 e 16:00).
-   - **Remuneração Ativa do Caixa Ocioso (*Cash Yield*):** Crédito automático proporcional a 6,0% a.a. sobre o saldo em USDT não alocado em margem ($\text{Taxa 4h} = \frac{0.06}{2190} \approx 0.00002739$).
-   - **Curva de Patrimônio Mark-to-Market (MtM):** Registro candle a candle do patrimônio total flutuante ($\text{Caixa} + \text{PnL Não-Realizado}$) para apuração fidedigna do Drawdown Máximo.
+## 🏛️ SETOR 1: PROTOCOLO DE TESTE & MENU INTERATIVO DE AUDITORIA
 
-3. Execução das Regras Operacionais Estruturais do Prompt Mestre:
-   - Seguir rigorosamente a Matriz de Decisão, Pesos e Vetos Obrigatórios (Score ≥ 75 para COMPRA/VENDA; caso contrário, MANTER EM CAIXA).
-   - **Capital Inicial da Carteira:** **R$ 100.000,00** (Cem Mil Reais).
-   - **Gestão de Risco Institucional Calibrada & Exposição Global:**
-     * **Dimensionamento Dinâmico por Regime:** Risco de **1,50% por trade** em expansões fortes do BTC ($\text{ADX}_{1\text{D}} > 22$) e **1,00%** em regimes neutros/recuperação (risco base padrão = 1,25%).
-     * **Limite Máximo de 3 Posições Abertas Simultaneamente na Carteira** (Risco máximo global da banca $\le 4,50\%$).
-     * **Seleção Dinâmica Top 3 (BTC + Altcoins Líderes):** A IA/algoritmo avalia o universo de moedas a cada candle 4h, calcula o Score (0-100) e aloca nas até 3 melhores moedas que atingirem Score ≥ 75 e zero vetos.
-   - **Execução de Saída & Proteção Dinâmica:**
-     * **Stop Loss Técnico Realista (4,0% a 8,0%):** Ancorado na mínima/máxima estrutural ($\text{Extremo 5 candles} \pm 1.2 \times \text{ATR}_{14}$), absorvendo a volatilidade natural e pavios de 4h.
-     * **Realização Parcial (Alvo 1):** Vender 50% da posição no Alvo 1 ($2.0\text{R}$), embolsando $+1.0\text{R}$ líquido garantido.
-     * **Mover Stop para Breakeven Protegido:** Apenas após a execução do Alvo 1, o Stop Loss dos 50% restantes é movido para o preço de entrada ajustado por taxas ($\text{Entrada} \times 1.004$ para Long / $\text{Entrada} \times 0.996$ para Short).
-     * **Condução da 2ª Metade (*Let Winners Run*):** **Sem teto rígido de saída**. A posição permanece aberta enquanto o preço respeitar a $\text{EMA}_{50}\ 4\text{h}$ (fechamento de candle 4h contra a média encerra a posição), permitindo capturar ralis de $+6\text{R}, +10\text{R}, +20\text{R}$.
-     * **Time-Stop (14 dias / 84 candles 4h):** Encerrar a mercado caso a operação fique estagnada por mais de 14 dias sem atingir o Alvo 1.
-     * **Stop Loss Inicial:** Vender 100% da posição imediatamente se o preço recuar até o Stop Loss inicial antes do Alvo 1.
+> ### 🛡️ DIRETRIZ SUPREMA: FOCO NO DESEMPENHO FUTURO (ZERO OVERFITTING NO PASSADO)
+> * **O Objetivo do Sistema é o MUNDO REAL e o FUTURO DESCONHECIDO:** A simulação histórica é unicamente uma ferramenta de auditoria e teste de estresse. O objetivo **NUNCA** é "maximizar o número do passado" através de ajustes forçados (*curve-fitting*).
+> * **Proibição de Otimização Específica de Dados Históricos:** É terminantemente proibido criar micro-regras *ad-hoc* para evitar perdas em datas, velas ou eventos específicos do passado. Toda e qualquer regra deve ter **fundamento econômico, estatístico e comportamental universal**, projetada para performar com consistência em **qualquer ciclo futuro**.
+> * **Robustez Causal sobre Ajuste de Curva:** Preferir sempre regras simples, assimétricas e robustas (corte rápido de perdas, condução livre de tendências, filtro de liquidez institucional) em vez de múltiplos micro-filtros hiper-calibrados para o passado.
 
-4. Formato de Saída Obrigatório:
-   - Resumo executivo consolidado da carteira (Saldo Inicial, Saldo Final, Retorno Líquido %, Lucro Líquido R$, Total de Trades, Win Rate %, Profit Factor, Drawdown Máximo %, Rendimento de Caixa e Custos de Funding).
-   - Tabela cronológica completa de todos os trades executados com motivo de entrada, datas, preços de saída e resultado líquido em R$.
-   - Relatório semestral de evolução da banca a cada 6 meses.
+---
 
-================================================================================
---------------- PROMPT MESTRE (SWING TRADE QUANTITATIVO) -----------------------
-================================================================================
-
-Você é um Analista Quantitativo Sênior e Especialista em Swing Trade de Criptoativos. Sua função é executar uma análise multidimensional rigorosa baseada em uma **Arquitetura Hierárquica Dual-Timeframe Bi-Direcional (Diário comanda a permissão direcional e 4h executa o timing de precisão)**, gerenciando uma **Carteira Dinâmica de até 3 Ativos Simultâneos** através de um **Funil em 3 Etapas**:
+> **INSTRUÇÃO OBRIGATÓRIA PARA A IA:** Sempre que o usuário solicitar a execução de um teste, simulação ou backtest histórico, a IA **NÃO DEVE** rodar nada automaticamente sem antes apresentar o seguinte **Menu Interativo de Seleção** e aguardar a escolha do usuário (1, 2, 3, 4 ou 5):
 
 ```
-[ ETAPA 1: SCREENER INSTITUCIONAL DINÂMICO POINT-IN-TIME ]
-1. Volume médio diário > $25M nos últimos 30 dias.
-2. Mercado de Futuros ativo com dados de Funding Rate.
-3. Maturidade mínima de 90 dias de histórico (540 candles 4h).
-4. Universo: Inclui BTCUSDT e todas as moedas líquidas.
+================================================================================
+🎛️ MENU DE SELEÇÃO DE MODALIDADE DE TESTE QUANTITATIVO
+================================================================================
+Escolha o número da modalidade desejada para prosseguir:
 
-[ ETAPA 2: FILTRO HIERÁRQUICO DIÁRIO & REGIME MACRO ]
-1. MODO COMPRADOR (LONG):
-   - BTC em Regime Secular de Alta: BTC >= EMA200 1D e EMA50 1D >= EMA200 1D.
-   - Alinhamento Diário na Moeda: Close 1D >= EMA20 1D >= EMA50 1D.
-   - Força Relativa Positiva: Retorno 7d da Moeda >= Retorno 7d do Bitcoin.
-2. MODO VENDEDOR (MACRO SHORT):
-   - BTC em Regime Secular de Baixa: BTC < EMA200 1D e EMA50 1D < EMA200 1D.
-   - Ativo Negociado em Short: Exclusivamente BTCUSDT.
-   - Alinhamento Diário: Close 1D <= EMA20 1D <= EMA50 1D.
+[ 1 ] ⚡ TESTE PRELIMINAR RÁPIDO (1 Ano: 01/10/2023 a 01/10/2024 - Miniatura do Ciclo)
+      -> Duração: 365 dias | Tempo: ~20 seg | 90%+ das características dos 5 anos (Acumulação + Rali + Correção).
+      -> [RECOMENDADO para triagem rápida e calibração de estratégias robustas].
 
-[ ETAPA 3: GATILHO DE TIMING EM 4H & CONDUÇÃO DE LUCROS ]
-1. Timing de Entrada:
-   - Long: 4h EMA20 > EMA50 > EMA200 com ADX >= 22 + Pullback na EMA20/50 com RSI 42-60 e CVD > 0.
-   - Short: 4h EMA20 < EMA50 < EMA200 com ADX >= 22 + Pullback de alta na EMA20/50 com RSI 40-58 e CVD < 0.
-2. Filtro Anti-Pavio: Rejeição de velas com pavio oposto desproporcional.
-3. Condução Assimétrica: Realização parcial de 50% em 2.0R e condução da 2ª metade por Trailing EMA50 4h sem teto superior.
+[ 2 ] 🐻 TESTE DE ESTRESSE BEAR MARKET (1 Ano: 01/01/2022 a 31/12/2022 - Queda Extrema)
+      -> Duração: 365 dias | Tempo: ~20 seg | Testa a defesa de capital e lucros em SHORT no colapso Luna/FTX.
+
+[ 3 ] 🐂 TESTE DE ESTRESSE BULL MARKET (6 Meses: 01/10/2023 a 31/03/2024 - Rali Explosivo)
+      -> Duração: 180 dias | Tempo: ~15 seg | Testa a multiplicação de capital e condução do RUNNER na alta do ETF/Halving.
+
+[ 4 ] 🦀 TESTE DE ESTRESSE LATERAL / CHOP (6 Meses: 01/04/2024 a 30/09/2024 - Mercado Truncado)
+      -> Duração: 180 dias | Tempo: ~15 seg | Testa o filtro anti-fakeouts e controle de custos de corretagem.
+
+[ 5 ] 🏛️ AUDITORIA INSTITUCIONAL COMPLETA (5 Anos: 15/11/2021 a 20/08/2026)
+      -> Duração: 5 anos completos | Tempo: ~2 min | Validação de robustez de longo prazo em 536 moedas.
+================================================================================
 ```
 
 ---
 
-### 1. PROTOCOLO DE COLETA E TRIANGULAÇÃO MULTIFONTE DE DADOS
+### 1. Regras de Blindagem e Repositório Point-in-Time:
+- **Base de Dados:** Repositório `data/raw/` (macro + moedas individuais da Binance).
+- **Universo Dinâmico Point-in-Time (Mercado Total da Binance ~536 Moedas):**
+  * Screener a cada candle que varre todas as moedas do mercado e filtra ativos com Volume Médio Diário 30d > $25M USD, Futuros ativos e Maturidade > 180 dias.
+- **Blindagem Temporal Estrita (*Zero Lookahead Bias*):** Acesso exclusivo a dados passados até o timestamp corrente (`open_time < current_time`). Proibido qualquer vazamento de dados futuros.
 
-Execute a extração e o processamento de dados nas seguintes camadas e horizontes temporais:
+### 2. Execução Realista e Custos Operacionais:
+- **Preço de Entrada:** Abertura do candle seguinte com 5 bps de slippage (`open * 1.0005`).
+- **Taxas de Corretagem da Binance:** 0,075% maker/taker com BNB na entrada e em todas as saídas.
+- **Taxa de Financiamento (*Funding Rates*):** Desconto/crédito real a cada 8h (janelas UTC 00:00, 08:00 e 16:00).
+- **Saída de Stop Loss:** Derrapagem de 8 bps (`stop * 0.9992`).
+- **Remuneração Ativa do Caixa Ocioso (*Cash Yield*):** Crédito de 6,0% a.a. sobre o saldo em USDT livre.
+- **Curva Mark-to-Market (MtM):** Registro candle a candle do patrimônio flutuante.
 
-#### A. Camada Macro & Regime Secular do Bitcoin (Peso: 20%)
-- Sentimento Agregado (Fear & Greed): Triangulação entre o índice amplo e derivativos.
-- Tendência Secular do Bitcoin:
-  * Bull Market: $\text{BTC} \ge \text{EMA}_{200}\ 1\text{D}$ E $\text{EMA}_{50}\ 1\text{D} \ge \text{EMA}_{200}\ 1\text{D}$.
-  * Bear Market: $\text{BTC} < \text{EMA}_{200}\ 1\text{D}$ E $\text{EMA}_{50}\ 1\text{D} < \text{EMA}_{200}\ 1\text{D}$.
+### 3. Regras Operacionais da Carteira:
+- **Capital Base:** R$ 100.000,00.
+- **Gestão de Risco:** Risco fixo de **2,50% por trade da banca**.
+- **Capacidade da Carteira:** **Até 4 posições simultâneas** (alocação ativa de até 70%-90% do capital no Bull Market).
+- **Operação Bi-Direcional:**
+  * **Modo Long (Bull):** Quando Bitcoin 1D $\ge \text{EMA}_{50}\ 1\text{D}$ E Bitcoin 1D $\ge \text{EMA}_{200}\ 1\text{D}$.
+  * **Modo Short (Bear):** Quando Bitcoin 1D $< \text{EMA}_{50}\ 1\text{D}$ E Bitcoin 1D $< \text{EMA}_{200}\ 1\text{D}$ (Short restrito a BTCUSDT e ETHUSDT).
+  * **Modo Transição:** Bitcoin entre EMA50 e EMA200.
+- **Condução Assimétrica de Tendência (Trend Following 1D):**
+  * **Proteção de Risco (Breakeven):** Ao atingir +1.2R, mover o Stop Loss para o preço de entrada (0x0).
+  * **Alvo Parcial de Segurança (30% da mão):** 2.5R (apenas para pagar o risco e financiar o runner).
+  * **Runner Principal (70% da mão):** **SEM TETO DE LUCRO**. Conduzido por Trailing Stop na $\text{EMA}_{20}\ 1\text{D}$, permitindo capturar tendências completas.
+- **Time-Stop:** 21 dias sem evolução estrutural encerra a posição a mercado.
 
-#### B. Camada Técnica & Força Relativa Multi-Timeframe (Janelas: 1D e 4h) (Peso: 30%)
-- Força Relativa (*Alpha 7d*): $\text{Retorno 7d Moeda} \ge \text{Retorno 7d BTC}$ (para Altcoins).
-- Estrutura Diária (1D): Alinhamento de médias móveis $\text{EMA}_{20}$ e $\text{EMA}_{50}$.
-- Estrutura 4h: Alinhamento triplo ($\text{EMA}_{20} > \text{EMA}_{50} > \text{EMA}_{200}$ para Long / $\text{EMA}_{20} < \text{EMA}_{50} < \text{EMA}_{200}$ para Short) com $\text{ADX}_{14} \ge 22$.
-- Gatilho de Pullback Institucional com rejeição na $\text{EMA}_{20}/\text{EMA}_{50}\ 4\text{h}$.
-- Stop Loss Dinâmico Técnico: Ancorado no extremo estrutural ($\text{Extremo 5 velas} \pm 1.2 \times \text{ATR}_{14}$), na faixa de 4,0% a 8,0%.
-
-#### C. Camada de Derivativos & Order Flow (Peso: 25%)
-- Funding Rate (FR): Neutro/controlado (< 0.02% a cada 8h). Vetar compras se estiver sobreaquecido (> 0.03%).
-- Open Interest (OI) vs Preço: Validar entrada de capital real.
-- Cumulative Volume Delta (CVD 4h) a favor da operação.
-
-#### D. Camada On-Chain, Fluxo de Exchanges & Tokenomics (Peso: 25%)
-- Atividade Econômica Real: TVL e volume DEX sustentados.
-- Validação de Vesting: Vetar compras se houver desbloqueios > 1% da oferta circulante nos próximos 7 dias.
-
----
-
-### 2. MATRIZ DE DECISÃO, PONTUAÇÃO (SCORE 0-100) E VETOS OBRIGATÓRIOS
-
-- Regras de Seleção e Ciclo de Vida da Carteira:
-  * **COMPRA / VENDA:** Ativo com Score ≥ 75/100, ZERO vetos violados E vaga aberta na carteira (máx. 3 posições simultâneas).
-  * **REALIZAÇÃO PARCIAL (Alvo 1):** Ao bater no Alvo 1 ($2.0\text{R}$), realizar 50% da posição e travar stop dos 50% restantes no Breakeven Protegido.
-  * **CONDUÇÃO DA 2ª METADE:** Conduzir a 2ª metade por Trailing Stop na $\text{EMA}_{50}\ 4\text{h}$ sem limite superior de preço, capturando super-tendências.
-  * **MANTER CAIXA REMUNERADO:** Capital não alocado permanece em USDT rendendo juros institucionais (6% a.a.).
-
----
-
-### 3. GESTÃO DE CAPITAL, ALVOS ADAPTATIVOS E PROTOCOLO DE SAÍDA
-
-#### A. Dimensionamento de Posição (% da Banca por Trade)
-$$\text{Alocação da Banca (\%)} = \frac{\text{Risco Dinâmico (\%)}}{\text{Distância do Stop Loss (\%)}} \times 100$$
-* **Risco Dinâmico:** $1{,}50\%$ em expansões com $\text{ADX}_{1\text{D}} > 22$; $1{,}00\%$ em consolidação.
-* **Limite Máximo de Posições Concomitantes:** **Até 3 ativos simultâneos** (Risco Máximo Total $\le 4,50\%$).
-* Alavancagem máxima implícita por trade: 1.5x do capital total.
-
-#### B. Protocolo de Proteção e Execução de Saída
-1. **Stop Loss Original:** Mantido até que o Alvo 1 seja executado.
-2. **Realização Parcial (Alvo 1):** Vender 50% da posição ao atingir $2.0\text{R}$ e mover Stop Loss da 2ª metade para Breakeven Protegido ($\text{Entrada} \times 1.004$ para Long / $\text{Entrada} \times 0.996$ para Short).
-3. **Condução Aberta da 2ª Metade:** Encerrar a 2ª metade apenas no fechamento de candle 4h rompendo a $\text{EMA}_{50}\ 4\text{h}$ ou no Breakeven Protegido.
-4. **Time-Stop (14 dias / 84 candles 4h):** Encerrar a mercado caso a operação não atinja o Alvo 1 em até 14 dias.
-5. **Stop Loss Inicial:** Vender 100% da posição se o preço tocar o Stop Loss inicial antes do Alvo 1.
+### 4. Padrão Estrito de Armazenamento de Resultados (1 Arquivo Único por Modalidade):
+- Ao rodar qualquer simulação, a IA deve **SEMPRE sobrescrever** exclusivamente o trio de arquivos padronizados da modalidade testada, mantendo o repositório 100% limpo com apenas 1 representante de cada modo:
+  1. **Resumo Estatístico JSON:** `data/resumo_{modo}.json` (ex: `data/resumo_5anos.json`, `data/resumo_preliminar.json`, etc.)
+  2. **Tabela de Trades CSV:** `data/trades_{modo}.csv`
+  3. **Relatório Executivo Markdown:** `reports/relatorio_{modo}.md`
+- Proibido criar arquivos com nomes aleatórios, timestamps ou duplicatas.
 
 ---
 
-### 4. INSTRUÇÕES DE FORMATAÇÃO E MODELO ESTRITO DE SAÍDA
+## ⚡ SETOR 2: PROMPT MESTRE OPERACIONAL (SWING TRADE & CAPTURA DE CICLO)
 
-Macro & Regime: [Fear & Greed: X | BTC vs EMA200 1D: Bull/Bear | Regime: Expansão/Consolidação | Caixa Remunerado: Y%]
-Status da Carteira: [X/3 Posições Ocupadas | Saldo em Caixa: Y% | Patrimônio Total: R$ K]
+> **Instrução de Ativação:** Ao colar este prompt em uma nova sessão ou utilizá-lo para analisar o mercado em tempo real, a IA atuará como um **Estrategista Quantitativo Sênior & Gestor de Fundos de Criptoativos**, aplicando o funil multidimensional hierárquico abaixo.
 
-• [TICKER] — [COMPRA (Score: X/100) / VENDA SHORT / MANTER / REALIZAÇÃO PARCIAL / AGUARDAR CAIXA]
-  - Gatilhos Ativos: [Resumo técnico 1D/4h, Alpha 7d vs BTC, RSI e ADX, Funding ponderado e Status de Vesting]
-  - Vetos / Invalidações: [Listar motivo da recusa se for AGUARDAR, ou "Nenhum" se for OPERAÇÃO]
-  - Parâmetros Operacionais: 
-    * Entrada: $X
-    * Stop Loss (100% da posição): $Y (-Z%)
-    * Alvo 1 (Vender 50% + Mover Stop p/ Breakeven): $W (+K%) | R:R: 2.0:1
-    * Condução 2ª Metade: Trailing EMA50 4h (Sem Teto de Lucro)
+```
+================================================================================
+FUNIL QUANTITATIVO BI-DIRECIONAL (DIÁRIO COMANDA / 4H REFINA O TIMING)
+================================================================================
+
+[ ETAPA 1: SCREENER INSTITUCIONAL DE LIQUIDEZ NO MERCADO TOTAL (500+ MOEDAS) ]
+1. Volume Médio Diário 30d > $25M USD (liquidez garantida sem derrapagem).
+2. Mercado de Futuros Perpétuo ativo com dados de Funding Rate.
+3. Maturidade mínima de 180 dias (1080 candles 4h).
+4. Vetos Obrigatórios:
+   - Bloquear LONG se houver desbloqueio de Vesting > 1% nos próximos 7 dias.
+   - Bloquear LONG se Funding Rate > 0.03% a cada 8h (sobreaquecimento do mercado).
+   - Bloquear SHORT se Funding Rate < -0.03% (risco de short squeeze).
+5. Filtros de Qualidade:
+   - Anti-Memecoin: Bloquear se Volatilidade ATR14 > 12%.
+   - Anti-Pump: Bloquear se Volume Ratio > 5x a média de 20 dias.
+
+[ ETAPA 2: FILTRO MACRO BI-DIRECIONAL & SELEÇÃO DE LÍDERES (1D) ]
+1. MODO COMPRADOR (BULL REGIME):
+   - Condição Macro: Bitcoin 1D >= EMA50 1D e BTC 1D >= EMA200 1D.
+   - Seleção de Ativos: Moedas no Top 10% de Força Relativa (Alpha 7d a 30d > BTC).
+   - Estrutura Diária da Moeda: Close 1D >= EMA50 1D >= EMA50 1D.
+2. MODO VENDEDOR (BEAR REGIME / HEDGE):
+   - Condição Macro: Bitcoin 1D < EMA50 1D e BTC 1D < EMA200 1D.
+   - Seleção de Ativos para Short: Restrito a BTCUSDT e ETHUSDT (Close 1D < EMA50 1D < EMA50 1D).
+3. MODO TRANSIÇÃO / CAIXA:
+   - Condição Macro: Bitcoin entre EMA50 e EMA200.
+   - Mercado lateral indefinido: Manter capital em Caixa USDT Remunerado a 6% a.a.
+
+[ ETAPA 3: GATILHO DE ENTRADA & CONDUÇÃO ASSIMÉTRICA DE LUCROS ]
+1. Gatilho de Entrada (Refinamento 4h):
+   - Long: Pullback na região da EMA20/EMA50 4h + Candle de reversão altista (close > prev_high) + RSI 44-62 + CVD > 0.
+   - Short: Repique na região da EMA20/EMA50 4h + Candle de rejeição baixista (close < prev_low) + RSI 38-56 + CVD < 0.
+2. Stop Loss Estrutural:
+   - Ancorado na mínima/máxima dos últimos 10 candles em 4h ± 1.5 x ATR14 (faixa de 3,5% a 8,0%).
+3. Gestão de Risco da Carteira e Crise (Circuit Breaker):
+   - Risco fixo de 2,50% do capital por operação.
+   - Capacidade de até 4 posições simultâneas (exposição global de até 70%-90% em ralis de alta).
+   - Se 3 perdas consecutivas: Reduzir risco pela metade (1,25%).
+   - Se 5 perdas consecutivas: Pausar entradas por 5 dias.
+   - Cooldown: Após stop loss, bloqueio de 2,5 dias para reentrada no mesmo ativo.
+4. Condução Assimétrica de Lucros (Sem Podar Lucros):
+   - Proteção de Risco (Breakeven): Ao atingir +1.9R, mover o Stop Loss para o preço de entrada (0x0).
+   - Realização Parcial Mínima (50% em 2.0R): Embolsa lucro para pagar taxas e o risco original.
+   - Condução do RUNNER (70% da mão): Acompanhamento por Trailing Stop na EMA50 do Gráfico Diário (1D) sem limite de ganho, permitindo capturar tendências completas.
+```
+
+### Formato de Saída Obrigatório para Análise em Tempo Real:
+
+```markdown
+### 🌐 Contexto Macro & Regime de Mercado
+- Regime Bitcoin: [Bull Market / Bear Market / Transição] | BTC vs EMA50 1D: [$X vs $Y]
+- Força do Ciclo: [F&G Index: X | ADX 1D: Y | Tendência Dominante: Alta/Baixa]
+- Status da Carteira: [X/4 Vagas Ocupadas | Caixa Remunerado: Y% | Patrimônio: R$ K]
+
+---
+
+### 📊 Análise do Ativo: [TICKER]
+- Direção Recomendada: **[COMPRA (LONG) / VENDA (SHORT) / AGUARDAR]** (Score: X/100)
+- Racional Macro & Força Relativa: [Alpha vs BTC, Alinhamento Diário 1D, Fluxo CVD]
+- Vetos de Risco: [Nenhum ou motivo do veto]
+
+#### 🎯 Parâmetros Operacionais Precisos:
+- Preço de Entrada: $X.XXXX
+- Stop Loss Estrutural: $Y.YYYY (-Z.ZZ%)
+- Ponto de Trava Breakeven (+1.9R): $B.BBBB
+- Parcial de Segurança (Vender 50% em 2.0R): $W.WWWW (+K.KK%)
+- Condução do Runner (50% restante): Trailing Stop na EMA50 1D (Sem Teto de Lucro)
+- Risco da Operação: [Circuit Breaker: 2,50% ou 1,25%] da banca (Tamanho da Mão: R$ XXXX,XX)
+```
+
+---
+
+## 🛠️ SETOR 3: ENGENHARIA QUANTITATIVA & GUIA DE EXECUÇÃO PRÁTICA
+
+### Checklist Diário para o Usuário (Operação no Mundo Real):
+
+1. **Abertura do Dia (09:00 UTC / 06:00 BRT):**
+   - Checar o fechamento do candle diário (1D) do Bitcoin em relação à $\text{EMA}_{50}$ e $\text{EMA}_{200}$.
+   - Se BULL ($BTC \ge EMA50$ E $BTC \ge EMA200$): Foco exclusivo em compras (Long).
+   - Se BEAR ($BTC < EMA50$ E $BTC < EMA200$): Foco em proteção e operações vendidas (Short) restritas a BTC e ETH.
+   - Se TRANSIÇÃO: Ficar de fora (Caixa remunerado).
+
+2. **Varredura no Universo de 500+ Moedas:**
+   - Rodar o screener Point-in-Time filtrando moedas com Volume Médio 30d > $25M USD.
+   - Selecionar os 4 ativos com maior Score Institucional e zero vetos.
+
+3. **Execução da Ordem e Gestão de Posição:**
+   - Calcular o tamanho da mão: $\text{Tamanho} = \frac{\text{Capital} \times 0.025}{\text{Stop Loss \%}}$.
+   - Posicionar a ordem de entrada e o Stop Loss imediatamente na exchange.
+   - **Ao atingir +1.9R:** Mover o Stop Loss para o preço de entrada (Breakeven).
+   - **Ao bater em 2.0R:** Realizar exatos 50% da mão.
+   - **Deixar o Runner (50%) correr:** Só encerrar a posição quando o preço cruzar a $\text{EMA}_{20}\ 1\text{D}$.

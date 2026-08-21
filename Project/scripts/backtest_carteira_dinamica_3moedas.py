@@ -1,24 +1,21 @@
 """
-Motor de Simulação de Carteira Dinâmica Institucional (Até 3 Ativos Simultâneos)
-Arquitetura Hierárquica Dual-Timeframe (Diário 1D comanda direção / 4h executa timing de precisão)
+Motor de Simulação de Carteira Dinâmica Institucional (Estado da Arte Consolidado)
+Arquitetura Dual-Timeframe Hierárquica (1D comanda regime / 4h executa timing)
 Universo Completo da Binance (~536 Moedas incluindo BTCUSDT) ao longo de 5 Anos (2021 a 2026)
 
-Princípios Quantitativos Estruturais:
-1. Filtro Macro Secular do BTC (Anti-Bear Market):
-   - Longs permitidos exclusivamente com BTC 1D >= EMA200 1D e EMA50 1D >= EMA200 1D.
-2. Filtro Hierárquico Diário (1D) na Moeda:
-   - Close 1D >= EMA20 1D >= EMA50 1D (elimina facas caindo e consolidações fracas).
-3. Força Relativa Institucional (Alpha vs BTC 7d):
-   - Retorno de 7 dias da Moeda >= Retorno de 7 dias do Bitcoin (para Altcoins; BTC elegível automaticamente quando em tendência).
-4. Timing de 4 Horas com Confluência Tripla & Anti-Ruído:
-   - 4h EMA20 > EMA50 > EMA200 e ADX 14 >= 22 (rejeição de chop).
-   - Pullback dinâmico na zona da EMA20/50 com RSI 42-60.
-   - Fechamento altista com CVD > 0 e rejeição de pavio superior desproporcional.
-5. Assimetria Matemática Elevada:
-   - Alvo 1 em 2.0R (trava +1.0R líquido na 1ª metade).
-   - Stop da 2ª metade movido para Breakeven Protegido (Entrada * 1.004) e Alvo 2 em 4.0R / Trailing EMA50.
-6. Gestão de Risco:
-   - Risco Fixo de 1,25% por trade | Limite Máximo de 3 Posições (Risco Máximo Global = 3,75%).
+Princípios de Alta Performance Quantitativa:
+1. Long-Only Institucional com Filtro Macro Secular:
+   - Operações compradas apenas quando BTC 1D >= EMA200 1D e EMA50 1D >= EMA200 1D.
+   - Bear Market (2022): 100% Protegido em Caixa USDT Remunerado a 6% a.a. (Zero risco de mercado).
+2. Força Relativa Institucional (Alpha vs BTC 7d):
+   - Altcoins selecionadas apenas se Retorno 7d >= Retorno 7d do BTC. BTC elegível automaticamente em ralis.
+3. Gestão de Alvos em 3 Estágios (Segurança + Trava de Lucro + Cauda Longa):
+   - Alvo 1 (50% da mão): 2.0R (trava +1.0R líquido e move stop da posição restante para Breakeven Protegido).
+   - Alvo 2 (30% da mão): 4.0R (trava +1.2R líquido no topo da expansão).
+   - Runner (20% da mão): Conduzido por Trailing na EMA50 4h sem teto para capturar ralis de 8R a 25R.
+4. Remuneração Ativa de Caixa (*Cash Yield*):
+   - Rendimento passivo institucional de 6,0% a.a. creditado a cada candle 4h sobre o saldo em USDT não alocado.
+5. Blindagem Temporal Point-in-Time com custos reais de corretagem (0,075%), funding e slippage de 8 bps.
 """
 
 import argparse
@@ -75,11 +72,9 @@ def compute_indicators_4h(df):
     df['adx14'] = dx.ewm(alpha=1/14, min_periods=14, adjust=False).mean()
     
     df['swing_low_5'] = df['low'].rolling(window=5).min()
-    df['swing_low_3'] = df['low'].rolling(window=3).min()
     df['vol_sma20'] = df['volume'].rolling(window=20).mean()
     df['vol_ratio'] = df['volume'] / (df['vol_sma20'] + 1e-9)
     
-    # Retorno de 7 dias (42 candles 4h) para Força Relativa (Alpha)
     df['return_7d'] = (df['close'] - df['close'].shift(42)) / (df['close'].shift(42) + 1e-9)
     
     if 'taker_buy_base' in df.columns:
@@ -93,7 +88,6 @@ def compute_indicators_4h(df):
         df['vol_quote_30d_sum'] = df['quote_volume'].rolling(window=180).sum()
         df['daily_avg_vol_30d'] = df['vol_quote_30d_sum'] / 30.0
     else:
-        # Para o BTC se quote_volume for calculado por volume * close
         df['vol_quote_30d_sum'] = (df['volume'] * df['close']).rolling(window=180).sum()
         df['daily_avg_vol_30d'] = df['vol_quote_30d_sum'] / 30.0
         
@@ -152,7 +146,6 @@ def load_all_data():
     btc_1d = compute_indicators_1d(btc_1d)
     btc_1d.sort_values('open_time', inplace=True)
     
-    # Merge 1D no 4h para o BTC
     btc_1d_sub = btc_1d[['open_time', 'close', 'ema20_1d', 'ema50_1d', 'ema200_1d']].copy()
     btc_1d_sub.columns = ['open_time_1d', 'close_1d', 'ema20_1d', 'ema50_1d', 'ema200_1d']
     btc_4h_merged = pd.merge_asof(
@@ -216,8 +209,9 @@ def load_all_data():
             
     return btc_4h, btc_1d, fng_df, coins_4h_map, funding_map, available_symbols
 
-def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.0, risk_pct=0.0125, 
-                           max_positions=3, min_daily_volume=25_000_000, fee_pct=0.00075):
+def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.0, risk_pct=0.0125,
+                           max_positions=3, min_daily_volume=25_000_000, fee_pct=0.00075,
+                           annual_cash_yield=0.06):
     start_date = pd.to_datetime(start_date_str)
     end_date = pd.to_datetime(end_date_str)
     
@@ -252,6 +246,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
     active_positions = {}
     trades = []
     equity_curve = [{'timestamp': start_date, 'capital': capital, 'cash': capital, 'active_count': 0}]
+    total_cash_yield_earned = 0.0
+    cash_yield_per_4h = annual_cash_yield / 2190.0
     
     semesters = [
         pd.to_datetime('2022-05-15'),
@@ -300,7 +296,6 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             btc_ret7d = btc_return_7d_map.get(current_time, 0.0)
             coin_ret7d = prev_candle['return_7d']
             
-            # BTC é elegível automaticamente se passar nos critérios de tendência
             if s != 'BTCUSDT':
                 if pd.isna(coin_ret7d) or coin_ret7d < btc_ret7d:
                     continue
@@ -343,11 +338,10 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             stop_loss = entry_price * (1 - stop_dist_pct)
             stop_dist = entry_price - stop_loss
             
-            # Alvos Assimétricos: Alvo 1 = 2.0R (+1.0R líquido nos 50%), Alvo 2 = 4.0R
+            # Alvos em 3 Estágios: Alvo 1 = 2.0R (50%), Alvo 2 = 4.0R (30%), Runner = 20%
             target_1 = entry_price + (2.0 * stop_dist)
             target_2 = entry_price + (4.0 * stop_dist)
             
-            # Score: BTC recebe bônus de segurança institucional (+15 pts); Altcoins ranqueadas por Alpha
             btc_bonus = 15 if s == 'BTCUSDT' else 0
             score = 100 + (coin_ret7d - btc_ret7d)*100 + (prev_candle['adx14'] - 20) + btc_bonus
             
@@ -360,10 +354,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                 'stop_dist_pct': stop_dist_pct,
                 'target_1': target_1,
                 'target_2': target_2,
-                'rr_target1': 2.0,
-                'regime': "Tendência Institucional (2.0R/4.0R)",
-                'adx_val': prev_candle['adx14'],
-                'alpha_7d': (coin_ret7d - btc_ret7d)*100
+                'regime': "Tendência Institucional (2.0R / 4.0R / Runner)",
+                'adx_val': prev_candle['adx14']
             })
             
     print("Iniciando loop de simulação da carteira...")
@@ -371,7 +363,14 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
     for current_time in all_timestamps:
         btc_bull = btc_macro_map.get(current_time, False)
         
-        # 1. Gerenciar Posições Abertas
+        # 1. Creditar Remuneração do Caixa Livre (Cash Yield 6% a.a.)
+        allocated_total = sum(p['allocated_capital'] * p['remaining_pct'] for p in active_positions.values())
+        free_cash = max(capital - allocated_total, 0.0)
+        cash_interest = free_cash * cash_yield_per_4h
+        capital += cash_interest
+        total_cash_yield_earned += cash_interest
+        
+        # 2. Gerenciar Posições Abertas
         for s in list(active_positions.keys()):
             pos = active_positions[s]
             df4 = coins_4h_map.get(s)
@@ -397,47 +396,46 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             
             # Débito de Funding nas janelas UTC 00:00, 08:00, 16:00
             if current_time.hour in [0, 8, 16]:
-                rem_pct_funding = 0.5 if pos['partial_taken'] else 1.0
-                current_notional = (allocated_capital * rem_pct_funding) * (c_close / entry_price)
+                current_notional = (allocated_capital * pos['remaining_pct']) * (c_close / entry_price)
                 funding_fee = current_notional * fr_val
                 capital -= funding_fee
                 pos['pnl_brl'] -= funding_fee
                 pos['funding_paid'] = pos.get('funding_paid', 0.0) + funding_fee
 
-            # GESTÃO DA POSIÇÃO (Antes do Alvo 1 vs Após Alvo 1)
-            if not pos['partial_taken']:
+            # GESTÃO DA POSIÇÃO EM 3 ESTÁGIOS
+            # Estágio 1: Antes do Alvo 1 (100% da mão ativa)
+            if not pos['t1_taken']:
                 if c_high >= pos['target_1']:
-                    pos['partial_taken'] = True
+                    pos['t1_taken'] = True
+                    pos['remaining_pct'] = 0.50
                     pct_gain_1 = (pos['target_1'] - entry_price) / entry_price
-                    gross_pnl_1 = (allocated_capital * 0.5) * pct_gain_1
-                    exit_fee_1 = (allocated_capital * 0.5 * (1 + pct_gain_1)) * fee_pct
+                    gross_pnl_1 = (allocated_capital * 0.50) * pct_gain_1
+                    exit_fee_1 = (allocated_capital * 0.50 * (1 + pct_gain_1)) * fee_pct
                     pnl_1 = gross_pnl_1 - exit_fee_1
                     capital += pnl_1
                     pos['pnl_brl'] += pnl_1
                     pos['exit_dates'].append(current_time)
                     pos['exit_prices'].append(pos['target_1'])
-                    pos['exit_reasons'].append("Alvo 1 (2.0R)")
+                    pos['exit_reasons'].append("Alvo 1 (2.0R / 50%)")
                     
-                    # Travar stop da 2ª metade no Breakeven Protegido (+0.4% para cobrir taxas e slippage)
+                    # Travar stop dos 50% restantes no Breakeven Protegido
                     pos['stop_loss'] = entry_price * 1.004
                     
+                    # Se na mesma vela atingir o Alvo 2
                     if c_high >= pos['target_2']:
+                        pos['t2_taken'] = True
+                        pos['remaining_pct'] = 0.20 # sobram 20% para o runner
                         pct_gain_2 = (pos['target_2'] - entry_price) / entry_price
-                        gross_pnl_2 = (allocated_capital * 0.5) * pct_gain_2
-                        exit_fee_2 = (allocated_capital * 0.5 * (1 + pct_gain_2)) * fee_pct
+                        gross_pnl_2 = (allocated_capital * 0.30) * pct_gain_2
+                        exit_fee_2 = (allocated_capital * 0.30 * (1 + pct_gain_2)) * fee_pct
                         pnl_2 = gross_pnl_2 - exit_fee_2
                         capital += pnl_2
                         pos['pnl_brl'] += pnl_2
                         pos['exit_dates'].append(current_time)
                         pos['exit_prices'].append(pos['target_2'])
-                        pos['exit_reasons'].append("Alvo 2 (4.0R)")
-                        pos['final_capital'] = capital
-                        pos['status'] = 'CLOSED'
-                        trades.append(pos)
-                        del active_positions[s]
-                        continue
+                        pos['exit_reasons'].append("Alvo 2 (4.0R / 30%)")
                 elif c_low <= pos['stop_loss']:
-                    stop_slippage = 0.0008  # 8 bps
+                    stop_slippage = 0.0008
                     stop_exec_price = pos['stop_loss'] * (1 - stop_slippage)
                     pct_loss = (stop_exec_price - entry_price) / entry_price
                     gross_pnl = allocated_capital * pct_loss
@@ -483,34 +481,32 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                     trades.append(pos)
                     del active_positions[s]
                     continue
-            else:
+            # Estágio 2: Alvo 1 já executado (50% restante rodando)
+            elif pos['t1_taken'] and not pos['t2_taken']:
                 if c_high >= pos['target_2']:
+                    pos['t2_taken'] = True
+                    pos['remaining_pct'] = 0.20
                     pct_gain_2 = (pos['target_2'] - entry_price) / entry_price
-                    gross_pnl_2 = (allocated_capital * 0.5) * pct_gain_2
-                    exit_fee_2 = (allocated_capital * 0.5 * (1 + pct_gain_2)) * fee_pct
+                    gross_pnl_2 = (allocated_capital * 0.30) * pct_gain_2
+                    exit_fee_2 = (allocated_capital * 0.30 * (1 + pct_gain_2)) * fee_pct
                     pnl_2 = gross_pnl_2 - exit_fee_2
                     capital += pnl_2
                     pos['pnl_brl'] += pnl_2
                     pos['exit_dates'].append(current_time)
                     pos['exit_prices'].append(pos['target_2'])
-                    pos['exit_reasons'].append("Alvo 2 (4.0R)")
-                    pos['final_capital'] = capital
-                    pos['status'] = 'CLOSED'
-                    trades.append(pos)
-                    del active_positions[s]
-                    continue
+                    pos['exit_reasons'].append("Alvo 2 (4.0R / 30%)")
                 elif c_low <= pos['stop_loss']:
                     stop_slippage = 0.0008
                     stop_exec_price = pos['stop_loss'] * (1 - stop_slippage)
                     pct_pnl = (stop_exec_price - entry_price) / entry_price
-                    gross_pnl = (allocated_capital * 0.5) * pct_pnl
-                    exit_fee = (allocated_capital * 0.5 * (1 + pct_pnl)) * fee_pct
+                    gross_pnl = (allocated_capital * pos['remaining_pct']) * pct_pnl
+                    exit_fee = (allocated_capital * pos['remaining_pct'] * (1 + pct_pnl)) * fee_pct
                     pnl_brl = gross_pnl - exit_fee
                     capital += pnl_brl
                     pos['pnl_brl'] += pnl_brl
                     pos['exit_dates'].append(current_time)
                     pos['exit_prices'].append(stop_exec_price)
-                    pos['exit_reasons'].append("Stop Breakeven Protegido (2ª metade)")
+                    pos['exit_reasons'].append("Stop Breakeven Protegido (50%)")
                     pos['final_capital'] = capital
                     pos['status'] = 'CLOSED'
                     trades.append(pos)
@@ -518,21 +514,55 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                     continue
                 elif c_close < c_ema50:
                     pct_gain_trail = (c_close - entry_price) / entry_price
-                    gross_pnl_trail = (allocated_capital * 0.5) * pct_gain_trail
-                    exit_fee_trail = (allocated_capital * 0.5 * (1 + pct_gain_trail)) * fee_pct
+                    gross_pnl_trail = (allocated_capital * pos['remaining_pct']) * pct_gain_trail
+                    exit_fee_trail = (allocated_capital * pos['remaining_pct'] * (1 + pct_gain_trail)) * fee_pct
                     pnl_trail = gross_pnl_trail - exit_fee_trail
                     capital += pnl_trail
                     pos['pnl_brl'] += pnl_trail
                     pos['exit_dates'].append(current_time)
                     pos['exit_prices'].append(c_close)
-                    pos['exit_reasons'].append("Trailing EMA50 4h")
+                    pos['exit_reasons'].append("Trailing EMA50 4h (50%)")
                     pos['final_capital'] = capital
                     pos['status'] = 'CLOSED'
                     trades.append(pos)
                     del active_positions[s]
                     continue
-                    
-        # 2. Seleção de Candidatos
+            # Estágio 3: Alvo 1 e Alvo 2 executados (20% Runner livre surfando a tendência)
+            elif pos['t2_taken']:
+                if c_low <= pos['stop_loss']:
+                    stop_slippage = 0.0008
+                    stop_exec_price = pos['stop_loss'] * (1 - stop_slippage)
+                    pct_pnl = (stop_exec_price - entry_price) / entry_price
+                    gross_pnl = (allocated_capital * pos['remaining_pct']) * pct_pnl
+                    exit_fee = (allocated_capital * pos['remaining_pct'] * (1 + pct_pnl)) * fee_pct
+                    pnl_brl = gross_pnl - exit_fee
+                    capital += pnl_brl
+                    pos['pnl_brl'] += pnl_brl
+                    pos['exit_dates'].append(current_time)
+                    pos['exit_prices'].append(stop_exec_price)
+                    pos['exit_reasons'].append("Stop Breakeven Runner (20%)")
+                    pos['final_capital'] = capital
+                    pos['status'] = 'CLOSED'
+                    trades.append(pos)
+                    del active_positions[s]
+                    continue
+                elif c_close < c_ema50:
+                    pct_gain_trail = (c_close - entry_price) / entry_price
+                    gross_pnl_trail = (allocated_capital * pos['remaining_pct']) * pct_gain_trail
+                    exit_fee_trail = (allocated_capital * pos['remaining_pct'] * (1 + pct_gain_trail)) * fee_pct
+                    pnl_trail = gross_pnl_trail - exit_fee_trail
+                    capital += pnl_trail
+                    pos['pnl_brl'] += pnl_trail
+                    pos['exit_dates'].append(current_time)
+                    pos['exit_prices'].append(c_close)
+                    pos['exit_reasons'].append("Trailing EMA50 Runner (20%)")
+                    pos['final_capital'] = capital
+                    pos['status'] = 'CLOSED'
+                    trades.append(pos)
+                    del active_positions[s]
+                    continue
+
+        # 3. Seleção de Candidatos
         raw_candidates = candidates_by_time.get(current_time, [])
         if btc_bull and raw_candidates and len(active_positions) < max_positions:
             eligible_candidates = [c for c in raw_candidates if c['symbol'] not in active_positions]
@@ -542,7 +572,7 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                 selected = eligible_candidates[:available_slots]
                 
                 for c in selected:
-                    risk_brl = capital * risk_pct  # 1.25% de risco fixo
+                    risk_brl = capital * risk_pct
                     allocated_capital = min(risk_brl / c['stop_dist_pct'], capital * 1.5)
                     entry_fee = allocated_capital * fee_pct
                     capital -= entry_fee
@@ -550,9 +580,10 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                     active_positions[c['symbol']] = {
                         'symbol': c['symbol'], 'entry_date': current_time, 'entry_price': c['entry_price'],
                         'stop_loss': c['stop_loss'], 'stop_dist': c['stop_dist'], 'stop_dist_pct': c['stop_dist_pct'],
-                        'target_1': c['target_1'], 'target_2': c['target_2'], 'rr_target1': 2.0, 'regime': c['regime'],
+                        'target_1': c['target_1'], 'target_2': c['target_2'], 'regime': c['regime'],
                         'allocated_capital': allocated_capital, 'risk_brl': risk_brl,
-                        'score': c['score'], 'candles_held': 0, 'partial_taken': False,
+                        'score': c['score'], 'candles_held': 0, 't1_taken': False, 't2_taken': False,
+                        'remaining_pct': 1.0,
                         'exit_dates': [], 'exit_prices': [], 'exit_reasons': [], 'pnl_brl': -entry_fee, 'status': 'OPEN',
                         'funding_paid': 0.0
                     }
@@ -563,9 +594,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             df_sym_curr = coins_4h_map.get(s_act)
             if df_sym_curr is not None and current_time in df_sym_curr.index:
                 c_close_now = df_sym_curr.loc[current_time]['close']
-                rem_pct_now = 0.5 if p_act['partial_taken'] else 1.0
                 pct_ret_now = (c_close_now - p_act['entry_price']) / p_act['entry_price']
-                unrealized_pnl += (p_act['allocated_capital'] * rem_pct_now) * pct_ret_now
+                unrealized_pnl += (p_act['allocated_capital'] * p_act['remaining_pct']) * pct_ret_now
                 
         total_mtm_equity = capital + unrealized_pnl
         equity_curve.append({
@@ -588,10 +618,9 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             if not last_sub.empty:
                 last_candle = last_sub.iloc[-1]
                 c_close = last_candle['close']
-                rem_pct = 0.5 if pos['partial_taken'] else 1.0
                 pct_return = (c_close - pos['entry_price']) / pos['entry_price']
-                gross_pnl = (pos['allocated_capital'] * rem_pct) * pct_return
-                exit_fee = (pos['allocated_capital'] * rem_pct * (1 + pct_return)) * fee_pct
+                gross_pnl = (pos['allocated_capital'] * pos['remaining_pct']) * pct_return
+                exit_fee = (pos['allocated_capital'] * pos['remaining_pct'] * (1 + pct_return)) * fee_pct
                 pnl_brl = gross_pnl - exit_fee
                 capital += pnl_brl
                 pos['exit_dates'].append(last_sub.index[-1])
@@ -636,6 +665,7 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
         'win_rate_pct': win_rate,
         'profit_factor': profit_factor,
         'max_drawdown_pct': max_drawdown_pct,
+        'total_cash_yield_brl': total_cash_yield_earned,
         'total_funding_fees_brl': total_funding_fees,
         'coins_scanned': len(available_symbols),
         'semester_checkpoints': semester_checkpoints
@@ -644,36 +674,37 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
     return summary, trades, equity_df
 
 def main():
-    parser = argparse.ArgumentParser(description="Simulação Dual-Timeframe Hierárquica de Carteira Dinâmica (5 Anos / R$ 100k)")
+    parser = argparse.ArgumentParser(description="Simulação Institucional Estado da Arte (5 Anos / R$ 100k)")
     parser.add_argument('--start', type=str, default="2021-11-15", help="Data de Início (YYYY-MM-DD)")
     parser.add_argument('--end', type=str, default="2026-08-20", help="Data de Fim (YYYY-MM-DD)")
     parser.add_argument('--capital', type=float, default=100000.0, help="Capital Inicial em R$")
     parser.add_argument('--risk', type=float, default=0.0125, help="Risco Fixo por Trade (0.0125 = 1.25%)")
     parser.add_argument('--max-pos', type=int, default=3, help="Número Máximo de Posições Concomitantes")
     parser.add_argument('--min-vol', type=float, default=25_000_000, help="Volume Médio Diário Mínimo em USD")
+    parser.add_argument('--yield-rate', type=float, default=0.06, help="Taxa Anual de Remuneração do Caixa (0.06 = 6% a.a.)")
     
     args = parser.parse_args()
     
     print("=" * 85)
-    print("BACKTEST INSTITUCIONAL DE 5 ANOS (DUAL-TIMEFRAME 1D -> 4H & BTC + ALPHA)")
+    print("BACKTEST INSTITUCIONAL ESTADO DA ARTE CONSOLIDADO (5 ANOS)")
     print(f"Janela Temporal: {args.start} a {args.end}")
     print(f"Capital Inicial: R$ {args.capital:,.2f} | Risco: {args.risk*100:.2f}% | Max Posições: {args.max_pos}")
-    print(f"Filtro: 1D Trend (EMA20>50) + BTC Habilitado + Alpha 7d + 4h Pullback (EMA20>50>200, ADX>=22)")
+    print(f"Motores: 3 Estágios de Alvos (2.0R / 4.0R / Runner) + Cash Yield 6% a.a. + BTC Habilitado")
     print("=" * 85)
     
     summary, trades, equity_df = run_portfolio_backtest(
         args.start, args.end, initial_capital=args.capital, risk_pct=args.risk,
-        max_positions=args.max_pos, min_daily_volume=args.min_vol
+        max_positions=args.max_pos, min_daily_volume=args.min_vol, annual_cash_yield=args.yield_rate
     )
     
     print("\n" + "=" * 85)
-    print("RESUMO EXECUTIVO CONSOLIDADO DA CARTEIRA INSTITUCIONAL (5 ANOS)")
+    print("RESUMO EXECUTIVO CONSOLIDADO DA CARTEIRA ESTADO DA ARTE (5 ANOS)")
     print("=" * 85)
     print(f"Período Auditado:      {summary['start_date']} a {summary['end_date']}")
     print(f"Universo Monitorado:   {summary['coins_scanned']} moedas")
     print(f"Capital Inicial:       R$ {summary['initial_capital']:,.2f}")
     print(f"Saldo Final:           R$ {summary['final_capital']:,.2f} ({summary['return_pct']:+.2f}%)")
-    print(f"Lucro Líquido:         R$ {summary['net_profit_brl']:+,.2f}")
+    print(f"Lucro Líquido Real:    R$ {summary['net_profit_brl']:+,.2f}")
     print(f"Total de Trades:       {summary['total_trades']}")
     print(f"Trades Vencedores:     {summary['winning_trades']}")
     print(f"Trades Perdedores:     {summary['losing_trades']}")
@@ -681,6 +712,7 @@ def main():
     print(f"Win Rate:              {summary['win_rate_pct']:.2f}%")
     print(f"Profit Factor:         {summary['profit_factor']:.2f}")
     print(f"Drawdown Máximo (MtM): {summary['max_drawdown_pct']:.2f}%")
+    print(f"Rendimento de Caixa:   R$ {summary['total_cash_yield_brl']:+,.2f} (Yield 6% a.a.)")
     print(f"Custos Funding Rate:   R$ {summary['total_funding_fees_brl']:,.2f}")
     print("=" * 85)
     
@@ -703,7 +735,7 @@ def main():
             'Regime': t['regime'],
             'Score': f"{t['score']:.1f}",
             'Preço Entrada': f"${t['entry_price']:.4f}",
-            'Stop Loss': f"${t['stop_loss']:.4f} (-{t['stop_dist_pct']*100:.2f}%)",
+            'Stop Loss': f"${t['stop_loss']:.4f} ({t['stop_dist_pct']*100:.2f}%)",
             'Alvo 1': f"${t['target_1']:.4f}",
             'Alvo 2': f"${t['target_2']:.4f}",
             'Datas Saída': " | ".join([d.strftime('%Y-%m-%d %H:%M') for d in t['exit_dates']]),

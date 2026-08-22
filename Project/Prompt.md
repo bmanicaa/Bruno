@@ -157,6 +157,19 @@ FUNIL QUANTITATIVO BI-DIRECIONAL (DIÁRIO COMANDA / 4H REFINA O TIMING)
 
 ## 🛠️ SETOR 3: ENGENHARIA QUANTITATIVA & GUIA DE EXECUÇÃO PRÁTICA
 
+### Registro de Análises e Diagnóstico (analises.md)
+
+Sempre que o usuário solicitar para registrar uma análise ou uma nova estratégia, você deve documentar no arquivo `analises.md` na raiz do projeto, utilizando rigorosamente o formato abaixo:
+
+```markdown
+## [Data e Hora] - Estratégia: [Nome/Resumo da Estratégia]
+- **Mudança Implementada:** [Descrição detalhada da alteração na estratégia ou parâmetros]
+- **Resultados Obtidos:** [Resumo dos resultados do backtest/operação, ex: Win Rate, PnL, Drawdown]
+- **Análise Diagnóstica:** [Conclusões analíticas da IA: por que funcionou/falhou, pontos fortes e fracos]
+```
+
+---
+
 ### Checklist Diário para o Usuário (Operação no Mundo Real):
 
 1. **Abertura do Dia (09:00 UTC / 06:00 BRT):**

@@ -1,0 +1,99 @@
+{
+    "config": {
+        "ema_span": 252,
+        "check_days": 7,
+        "assets": [
+            "BTCUSDT",
+            "ETHUSDT"
+        ]
+    },
+    "config_hash": "fd9a996d",
+    "leave_one_out": {
+        "base": {
+            "trades": 10,
+            "return_pct_sum": 63.0,
+            "trading_pnl_sum": 69558.33,
+            "pf_mean": 23.64,
+            "sharpe_mean": 0.5,
+            "dd_max": 24.56
+        },
+        "without_OOS1": {
+            "trades": 6,
+            "return_pct_sum": 70.57,
+            "trading_pnl_sum": 79380.13,
+            "pf_mean": 31.48,
+            "sharpe_mean": 0.8,
+            "dd_max": 24.56
+        },
+        "without_OOS2": {
+            "trades": 8,
+            "return_pct_sum": 20.15,
+            "trading_pnl_sum": 18351.5,
+            "pf_mean": 2.77,
+            "sharpe_mean": 0.24,
+            "dd_max": 19.85
+        },
+        "without_OOS3": {
+            "trades": 7,
+            "return_pct_sum": 34.96,
+            "trading_pnl_sum": 39648.74,
+            "pf_mean": 28.8,
+            "sharpe_mean": 0.3,
+            "dd_max": 24.56
+        },
+        "without_OOS4": {
+            "trades": 9,
+            "return_pct_sum": 63.32,
+            "trading_pnl_sum": 71294.62,
+            "pf_mean": 31.52,
+            "sharpe_mean": 0.64,
+            "dd_max": 24.56
+        }
+    },
+    "bootstraps": {
+        "oos_trades": {
+            "n_trades": 10,
+            "n_iter": 4000,
+            "block_len": 8,
+            "total_pnl_ci95": [
+                13656.876500000002,
+                125459.81390000001
+            ],
+            "p_pnl_gt0": 1.0,
+            "expectancy_r_ci95": [
+                0.025210511058874795,
+                0.24909481615358606
+            ],
+            "p_expectancy_gt0": 1.0,
+            "pf_ci95": [
+                1.607316816649576,
+                11.083013602788682
+            ],
+            "p_pf_gt1": 1.0,
+            "pf_mean_boot": 5.290363565704823
+        },
+        "oos_sharpe": {
+            "windows": [
+                "OOS1",
+                "OOS2",
+                "OOS3",
+                "OOS4"
+            ],
+            "sharpe_mean_ci95": [
+                -0.5817486484184949,
+                1.6678764520268845
+            ],
+            "p_sharpe_gt0": 0.81625
+        }
+    },
+    "deflated_sharpe": {
+        "sr_obs": 0.49750000000000005,
+        "sr0": 0.7933012328152732,
+        "n_trials": 42,
+        "n_obs": 7494,
+        "skew": -0.18647678237592735,
+        "kurt": 15.437047581510987,
+        "z": -18.168902873064553,
+        "p_value": 1.0
+    }
+}

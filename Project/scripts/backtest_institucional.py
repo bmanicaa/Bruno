@@ -63,7 +63,7 @@ ANALISES_PATH = os.path.join(BASE_DIR, 'analises.md')
 for d in [REPORTS_DIR, DATA_DIR, EXP_DIR]:
     os.makedirs(d, exist_ok=True)
 
-ENGINE_VERSION = 'V2.2'
+ENGINE_VERSION = 'V2.3.1'
 FEE_PCT = 0.00075
 ENTRY_SLIPPAGE = 0.0005
 STOP_SLIPPAGE = 0.0008
@@ -236,7 +236,8 @@ def load_all_data():
     btc_1d_sub.columns = ['open_time_1d', 'close_1d', 'high_1d', 'low_1d', 'ema20_1d', 'ema50_1d', 'ema200_1d', 'rsi14_1d', 'atr14_1d', 'adx14_1d']
     btc_1d_prev = btc_1d_sub[['open_time_1d', 'close_1d', 'high_1d', 'low_1d']].copy()
     btc_1d_prev.columns = ['open_time_1d_prev', 'close_1d_prev', 'high_1d_prev', 'low_1d_prev']
-    btc_1d_prev['open_time_1d_prev'] = btc_1d_prev['open_time_1d_prev'] + pd.Timedelta(days=1)
+    btc_1d_prev['open_time_1d_prev'] = btc_1d_prev['open_time_1d_prev'] + pd.Timedelta(days=2)
+    btc_1d_sub['open_time_1d'] = btc_1d_sub['open_time_1d'] + pd.Timedelta(days=1)
     btc_4h_merged = pd.merge_asof(
         btc_4h, btc_1d_sub,
         left_on='open_time', right_on='open_time_1d',
@@ -297,10 +298,13 @@ def load_all_data():
                     df1_sub = df1[df1_cols].copy()
                     df1_sub.columns = ['open_time_1d', 'close_1d', 'high_1d', 'low_1d', 'ema20_1d', 'ema50_1d', 'ema200_1d', 'rsi14_1d', 'atr14_1d']
 
-                    # Dia anterior (shift 1) para gatilhos de rompimento/breakout
+                    # Dia anterior ao dia completado (shift 2) para gatilhos de rompimento/breakout
                     df1_prev = df1_sub[['open_time_1d', 'close_1d', 'high_1d', 'low_1d']].copy()
                     df1_prev.columns = ['open_time_1d_prev', 'close_1d_prev', 'high_1d_prev', 'low_1d_prev']
-                    df1_prev['open_time_1d_prev'] = df1_prev['open_time_1d_prev'] + pd.Timedelta(days=1)
+                    df1_prev['open_time_1d_prev'] = df1_prev['open_time_1d_prev'] + pd.Timedelta(days=2)
+
+                    # ZERO LOOKAHEAD: valores diarios deslocados +1d -> apenas o dia COMPLETO anterior
+                    df1_sub['open_time_1d'] = df1_sub['open_time_1d'] + pd.Timedelta(days=1)
 
                     df4 = pd.merge_asof(
                         df4, df1_sub,
@@ -343,6 +347,14 @@ def _asset_class(symbol):
     return 'ALT'
 
 
+def funding_charge(is_long, allocated_capital, remaining_pct, entry_price, c_close, fr_val):
+    if is_long:
+        notional = (allocated_capital * remaining_pct) * (c_close / entry_price)
+        return notional * fr_val
+    notional = (allocated_capital * remaining_pct) * (c_close / entry_price)
+    return -notional * fr_val
+
+
 def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.0, params=None, preloaded=None):
     if params is None:
         params = {}
@@ -355,6 +367,7 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
         'annual_cash_yield': CASH_YIELD_ANNUAL,
         'btc_adx_min': params.get('btc_adx_min', 0.0),
         'entry_tf': params.get('entry_tf', '1d'),
+        'long_mode': params.get('long_mode', 'pullback'),
         'runner_mode': params.get('runner_mode', 'ema20_1d'),
         'short_mode': params.get('short_mode', 'breakout'),
         'universe': params.get('universe', 'alpha'),
@@ -427,6 +440,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
     candidates_by_time = {ts: [] for ts in all_timestamps}
 
     for s in available_symbols:
+        if p['universe'] == 'btceth' and s not in ('BTCUSDT', 'ETHUSDT'):
+            continue
         df4 = coins_4h_map.get(s)
         if df4 is None or len(df4) < MATURITY_CANDLES:
             continue
@@ -470,12 +485,20 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
 
             # 5. GATILHO DE ENTRADA (4h ou 1D conforme experimento)
             if p['entry_tf'] == '1d':
-                tested_support = prev_candle['low_1d'] <= (prev_candle['ema20_1d'] * 1.02)
-                rsi_ok = (RSI_LONG_MIN <= prev_candle['rsi14_1d'] <= RSI_LONG_MAX)
-                close_break = prev_candle['close_1d'] > prev_candle['close_1d_prev']
-                rejection_turn = (prev_candle['close_1d'] > prev_candle['open_1d'] if pd.notna(prev_candle.get('open_1d', np.nan)) else True) and (prev_candle['close_1d'] >= prev_candle['ema20_1d'])
-                cvd_ok = prev_candle['cvd'] > 0
-                vol_active = True
+                if p['long_mode'] == 'breakout':
+                    tested_support = prev_candle['high_1d'] > prev_candle['high_1d_prev']
+                    rsi_ok = (55 <= prev_candle['rsi14_1d'] <= 72)
+                    close_break = prev_candle['close_1d'] > prev_candle['ema20_1d']
+                    rejection_turn = True
+                    cvd_ok = prev_candle['cvd'] > 0
+                    vol_active = True
+                else:
+                    tested_support = prev_candle['low_1d'] <= (prev_candle['ema20_1d'] * 1.02)
+                    rsi_ok = (RSI_LONG_MIN <= prev_candle['rsi14_1d'] <= RSI_LONG_MAX)
+                    close_break = prev_candle['close_1d'] > prev_candle['close_1d_prev']
+                    rejection_turn = (prev_candle['close_1d'] > prev_candle['open_1d'] if pd.notna(prev_candle.get('open_1d', np.nan)) else True) and (prev_candle['close_1d'] >= prev_candle['ema20_1d'])
+                    cvd_ok = prev_candle['cvd'] > 0
+                    vol_active = True
             else:
                 # 4. ESTRUTURA 4H: EMA20 > EMA50 > EMA200 e ADX >= 22
                 if not (prev_candle['ema20'] > prev_candle['ema50'] > prev_candle['ema200']):
@@ -516,6 +539,9 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             btc_bonus = 15 if s == 'BTCUSDT' else 0
             score = 100 + (coin_ret7d - btc_ret7d) * 100 + (prev_candle['adx14'] - 20) + btc_bonus
 
+            btc_macro_now = btc_macro_map.get(current_time)
+            btc_adx_1d = btc_macro_now.get('adx_1d', 0.0) if isinstance(btc_macro_now, dict) else 0.0
+
             candidates_by_time[current_time].append({
                 'symbol': s,
                 'score': score,
@@ -529,7 +555,10 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                 'daily_avg_vol_30d': float(prev_candle['daily_avg_vol_30d']),
                 'regime': "Trend Following (BE/Par. 2.0R / Runner 50%)",
                 'adx_val': prev_candle['adx14'],
-                'direction': 'LONG'
+                'direction': 'LONG',
+                'rsi_1d': float(prev_candle['rsi14_1d']) if pd.notna(prev_candle['rsi14_1d']) else 0.0,
+                'atr_1d_pct': float(prev_candle['atr14_1d'] / (prev_candle['close_1d'] + 1e-9)) if pd.notna(prev_candle.get('atr14_1d', np.nan)) else 0.0,
+                'btc_adx_1d': btc_adx_1d,
             })
 
     # Seleção de Líderes por timestamp: Top 10% Alpha (padrão) ou Top 20 Liquidez (e5)
@@ -553,6 +582,9 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
     # ================================================================
     short_symbols = ['BTCUSDT', 'ETHUSDT']
     short_candidates_by_time = {ts: [] for ts in all_timestamps}
+
+    if p['short_mode'] == 'none':
+        short_symbols = []
 
     for s in short_symbols:
         df4 = coins_4h_map.get(s)
@@ -623,6 +655,9 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
 
             score = 100 + (prev_candle['adx14'] - 20)
 
+            btc_macro_now = btc_macro_map.get(current_time)
+            btc_adx_1d = btc_macro_now.get('adx_1d', 0.0) if isinstance(btc_macro_now, dict) else 0.0
+
             short_candidates_by_time[current_time].append({
                 'symbol': s,
                 'score': score,
@@ -636,7 +671,10 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                 'daily_avg_vol_30d': float(prev_candle['daily_avg_vol_30d']),
                 'regime': "Short Bear (BE/Par. 2.0R / Runner 50%)",
                 'adx_val': prev_candle['adx14'],
-                'direction': 'SHORT'
+                'direction': 'SHORT',
+                'rsi_1d': float(prev_candle['rsi14']) if pd.notna(prev_candle['rsi14']) else 0.0,
+                'atr_1d_pct': float(prev_candle['atr14_1d'] / (prev_candle['close_1d'] + 1e-9)) if pd.notna(prev_candle.get('atr14_1d', np.nan)) else 0.0,
+                'btc_adx_1d': btc_adx_1d,
             })
 
     print(f"Iniciando loop de simulação da carteira (Risco {p['risk_pct']*100:.2f}%, até {p['max_positions']} posições)...")
@@ -702,12 +740,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
 
             if current_time.hour in [0, 8, 16] and current_time > pos['entry_date']:
                 fr_val = _last_funding_before(funding_map, s, current_time)
-                if is_long:
-                    current_notional = (allocated_capital * pos['remaining_pct']) * (c_close / entry_price)
-                    funding_fee = current_notional * fr_val
-                else:
-                    current_notional = (allocated_capital * pos['remaining_pct']) * (entry_price / (c_close + 1e-9))
-                    funding_fee = -current_notional * fr_val
+                funding_fee = funding_charge(is_long, allocated_capital, pos['remaining_pct'],
+                                             entry_price, candle['open'], fr_val)
                 capital -= funding_fee
                 pos['pnl_brl'] -= funding_fee
                 pos['funding_paid'] = pos.get('funding_paid', 0.0) + funding_fee
@@ -829,6 +863,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                         'asset_class': _asset_class(c['symbol']),
                         'allocated_capital': allocated_capital, 'risk_brl': risk_brl,
                         'score': c['score'], 'candles_held': 0,
+                        'rsi_1d': c.get('rsi_1d', 0.0), 'atr_1d_pct': c.get('atr_1d_pct', 0.0),
+                        'btc_adx_1d': c.get('btc_adx_1d', 0.0),
                         'breakeven_set': False, 't1_taken': False,
                         'remaining_pct': 1.0, 'mae_r': 0.0, 'mfe_r': 0.0, 'trail_high': 0.0,
                         'exit_dates': [], 'exit_prices': [], 'exit_reasons': [],
@@ -862,6 +898,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                         'asset_class': _asset_class(c['symbol']),
                         'allocated_capital': allocated_capital, 'risk_brl': risk_brl,
                         'score': c['score'], 'candles_held': 0,
+                        'rsi_1d': c.get('rsi_1d', 0.0), 'atr_1d_pct': c.get('atr_1d_pct', 0.0),
+                        'btc_adx_1d': c.get('btc_adx_1d', 0.0),
                         'breakeven_set': False, 't1_taken': False,
                         'remaining_pct': 1.0, 'mae_r': 0.0, 'mfe_r': 0.0, 'trail_high': 0.0,
                         'exit_dates': [], 'exit_prices': [], 'exit_reasons': [],
@@ -1063,19 +1101,48 @@ def compact_metrics(res):
     }
 
 
+def _trade_record(t):
+    def _iso(d):
+        return d.strftime('%Y-%m-%d %H:%M') if isinstance(d, pd.Timestamp) else str(d)
+
+    return {
+        'entry_date': _iso(t['entry_date']),
+        'symbol': t['symbol'],
+        'direction': t.get('direction', 'LONG'),
+        'pnl_brl': round(t['pnl_brl'], 4),
+        'risk_brl': round(t.get('risk_brl', 0.0), 4),
+        'fees_paid': round(t.get('fees_paid', 0.0), 4),
+        'funding_paid': round(t.get('funding_paid', 0.0), 4),
+        'stop_dist_pct': round(t.get('stop_dist_pct', 0.0), 6),
+        'asset_class': t.get('asset_class', '?'),
+        'regime_macro': t.get('regime_macro', '?'),
+        'rsi_1d': round(t.get('rsi_1d', 0.0), 4),
+        'atr_1d_pct': round(t.get('atr_1d_pct', 0.0), 6),
+        'btc_adx_1d': round(t.get('btc_adx_1d', 0.0), 4),
+        'exit_dates': [_iso(d) for d in t['exit_dates']],
+        'exit_reasons': t['exit_reasons'],
+    }
+
+
 def append_analises_entry(entry_md):
     with open(ANALISES_PATH, 'a', encoding='utf-8') as f:
         f.write("\n" + entry_md)
 
 
-def run_walkforward(params, initial_capital=100000.0):
-    print("Carregando dados uma única vez para todas as janelas...")
-    preloaded = load_all_data()
+def run_walkforward(params, initial_capital=100000.0, append=True, preloaded=None):
+    if preloaded is None:
+        print("Carregando dados uma única vez para todas as janelas...")
+        preloaded = load_all_data()
     wf_results = {}
+    wf_detail = {}
     for name, s, e in WALKFORWARD_WINDOWS:
         print(f"\n>>> Janela {name}: {s} -> {e}")
         res, trades, eq = run_portfolio_backtest(s, e, initial_capital, params=params, preloaded=preloaded)
         wf_results[name] = compact_metrics(res)
+        wf_detail[name] = {
+            'trades': [_trade_record(t) for t in trades],
+            'equity_curve': [round(float(v), 2) for v in eq['capital'].tolist()],
+        }
 
     oos = [wf_results[n] for n in ['OOS1', 'OOS2', 'OOS3', 'OOS4']]
 
@@ -1090,8 +1157,10 @@ def run_walkforward(params, initial_capital=100000.0):
     summary = {
         'config': params,
         'config_hash': config_hash(params),
+        'engine_version': ENGINE_VERSION,
         'generated_at': datetime.datetime.utcnow().isoformat(),
         'windows': wf_results,
+        'windows_detail': wf_detail,
         'oos_aggregate': {
             'trades_total': agg('trades'),
             'return_pct_sum': round(agg('return_pct'), 2),
@@ -1124,6 +1193,9 @@ def run_walkforward(params, initial_capital=100000.0):
           f"tradingPnL={oa['trading_pnl_sum']:,.2f} | PF méd={oa['pf_mean']} (med={oa['pf_median']}) | "
           f"Win%={oa['win_rate_mean']} | DDmáx={oa['dd_max']} | Sharpe={oa['sharpe_mean']} | ExpR={oa['expectancy_r_mean']}")
     print(f"Arquivo: {exp_path}")
+    if not append:
+        print("Registro no analises.md pulado (--no-append)")
+        return summary
 
     entry = f"""## [{datetime.datetime.utcnow().strftime('%d/%m/%Y %H:%M')}] - Experimento Walk-Forward: config {summary['config_hash']}
 - **Mudança Implementada:** Parâmetros testados: {json.dumps(params, ensure_ascii=False)}
@@ -1317,10 +1389,12 @@ if __name__ == '__main__':
     parser.add_argument('--walkforward', action='store_true', help='Roda avaliação walk-forward deslizante')
     parser.add_argument('--btc-adx-min', type=float, default=0.0, help='e1: ADX 1D BTC mínimo para longs (0=off)')
     parser.add_argument('--entry-tf', type=str, default='1d', choices=['4h', '1d'], help='e2: timeframe do gatilho')
+    parser.add_argument('--long-mode', type=str, default='pullback', choices=['pullback', 'breakout'], help='e9: gatilho LONG (pullback na EMA20 ou rompimento diario)')
     parser.add_argument('--runner-mode', type=str, default='ema20_1d', choices=['ema20_1d', 'prev_low_1d', 'atr_chandelier'], help='e3: modo do runner')
-    parser.add_argument('--short-mode', type=str, default='breakout', choices=['revert', 'breakout'], help='e4: modo do short')
-    parser.add_argument('--universe', type=str, default='alpha', choices=['alpha', 'top20'], help='e5: seleção de líderes')
+    parser.add_argument('--short-mode', type=str, default='breakout', choices=['revert', 'breakout', 'none'], help='e4: modo do short')
+    parser.add_argument('--universe', type=str, default='alpha', choices=['alpha', 'top20', 'btceth'], help='e5: seleção de líderes')
     parser.add_argument('--fee', type=float, default=0.00075, help='e6: taxa de corretagem')
+    parser.add_argument('--no-append', action='store_true', help='Nao registra a execucao no analises.md (re-runs de validacao)')
     args = parser.parse_args()
 
     modes_dates = {
@@ -1344,7 +1418,7 @@ if __name__ == '__main__':
     }
 
     if args.walkforward:
-        run_walkforward(params, args.capital)
+        run_walkforward(params, args.capital, append=not args.no_append)
         sys.exit(0)
 
     modes_to_run = list(modes_dates.keys()) if args.mode == 'all' else [args.mode]

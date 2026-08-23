@@ -61,31 +61,46 @@ Cada execução sobrescreve o trio padrão: `data/resumo_{modo}.json`, `data/tra
 
 ---
 
-## 📊 Resultados Atuais (V2.2 — validada por walk-forward OOS)
+## 📊 Resultados Atuais (V2.3.1 — motor corrigido, zero lookahead)
 
-*Última auditoria: 22/08/2026 | 552 moedas | R$100k | custos reais Binance*
+*Última auditoria: 23/08/2026 | 552 moedas | R$100k | custos reais Binance*
 
-### Validação Out-of-Sample (4 blocos deslizantes, 2022-09 → 2026-02)
+> **Para o seu dinheiro real:** o documento [**`PLANO_OPERACIONAL_REAL.md`**](PLANO_OPERACIONAL_REAL.md) contém o passo a passo simples (núcleo Bitcoin + airbag EMA200) baseado na evidência desta auditoria.
 
-| Config | Trading PnL OOS | PF | Sharpe | DD Máx |
-| :--- | :---: | :---: | :---: | :---: |
-| V2.1 (antiga) | -R$4.145 | 0.90 | -0.02 | 18.4% |
-| **V2.2 (adotada)** | **+R$73.098** | **1.18** | **0.63** | 24.4% |
+### Auditoria de integridade (achado crítico da Fase 0)
 
-*Holdout final intocado (2026-02→08): V2.2 -1.2% vs B&H BTC -12.2% (preservação confirmada).*
+A auditoria estatística (bootstrap + testes de regressão) descobriu que a V2.2 usava o fechamento diário do **mesmo dia** (lookahead intra-diário) no gatilho de entrada. A correção (V2.3, merge diário usa apenas o dia completo anterior + notional do short corrigido) **eliminou o edge OOS**:
 
-### Modalidades Oficiais
+| Métrica OOS (4 blocos) | V2.2 (bug) | V2.3 (corrigido) |
+| :--- | :---: | :---: |
+| Trading PnL | +R$73.098 | **-R$12.064** |
+| PF / Sharpe | 1.18 / 0.63 | **0.99 / 0.11** |
+| P(PF>1) bootstrap | 93,6% | **38,0%** |
+
+### Modalidades Oficiais (motor V2.3.1 limpo)
 
 | Modalidade | Período | Retorno | Win Rate | PF | DD Máx | B&H BTC |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| Full (7 anos) | 2019-09 → 2026-08 | **+555.2%** | 43.4% | 1.47 | 34.0% | +569.1% |
-| 5 anos | 2021-11 → 2026-08 | **+101.5%** | 39.5% | 1.28 | 34.0% | +5.2% |
-| Preliminar (1 ano) | 2023-10 → 2024-10 | **+35.2%** | 44.2% | 1.43 | 16.8% | +135.7% |
-| Bull (6m) | 2023-10 → 2024-03 | **+38.9%** | 50.0% | 1.92 | 16.8% | +158.9% |
-| Bear (1 ano) | 2022 | **+19.7%** | 44.4% | 1.75 | 10.9% | -64.6% |
-| Chop (6m) | 2024-04 → 2024-09 | **-2.3%** | 33.3% | 0.78 | 13.7% | -8.7% |
+| Full (7 anos) | 2019-09 → 2026-08 | +92.7% | 37.2% | 1.06 | 34.3% | +569.1% |
+| 5 anos | 2021-11 → 2026-08 | +1.9% | 35.4% | 0.92 | 32.5% | +5.2% |
+| Preliminar (1 ano) | 2023-10 → 2024-10 | +7.8% | 33.7% | 1.03 | 29.5% | +135.7% |
+| Bull (6m) | 2023-10 → 2024-03 | +39.6% | 43.9% | 1.79 | 18.4% | +158.9% |
+| Bear (1 ano) | 2022 | +4.1% | 35.7% | 0.94 | 11.7% | -64.6% |
+| Chop (6m) | 2024-04 → 2024-09 | -20.6% | 16.7% | 0.17 | 21.4% | -8.7% |
 
-**Leitura honesta:** o sistema iguala o B&H BTC em 7 anos (+555% vs +569%) com ~1/3 do drawdown, vence nas janelas adversas (bear 2022: +19.7% vs -64.6%; 5 anos: +101% vs +5%) e cede upside apenas nos janelões de alta (Bull: +39% vs +159%). Nos 5 anos o trading líquido é de +R$73,2k (vs -R$9,5k da V2.1). Recomendação de alocação padrão: **75% sistema + 25% B&H BTC** (a tabela de híbridos está em cada relatório) e buscar tier VIP de taxas (meta: 0.02%).
+**Leitura honesta:** após 42 configurações em 4 famílias de sinal (swing pullback, meta-labeling ML, momentum cross-sectional, trend time-series), **nenhuma tem edge OOS estatisticamente significativo** sob o protocolo rigoroso (walk-forward + bootstrap + Deflated Sharpe). O B&H BTC não foi batido em retorno total; o valor demonstrável dos sistemas é **redução de risco** (trend-timing BTC EMA200/252 corta o DD pela metade; a config conservadora g3 — BTC/ETH, sem shorts, risco 0,75%, taxa VIP — tem DD ~5%). Recomendação: núcleo B&H BTC + camada opcional de trend-timing + sistemas de swing apenas como satélite de observação, até nova validação.
+
+### Infraestrutura de validação (entregável principal desta fase)
+
+- `tests/` — 15 testes unitários de regressão (sizing, stops, BE/parcial, funding, breakers, identidade contábil).
+- `scripts/statistical_validation.py` — bootstrap em blocos, leave-one-out, Deflated Sharpe Ratio.
+- `scripts/meta_label.py` — screening de filtro ML (AUC IS = 0.48: sem sinal aprendível).
+- `scripts/batch_experiments.py` — baterias de experimentos com 1 carga de dados.
+- `scripts/backtest_cs_momentum.py` e `scripts/backtest_trend_bh.py` — famílias de sinal alternativas no mesmo protocolo.
+- `PLANO_OPERACIONAL_REAL.md` — plano de carteira real baseado na evidência (núcleo B&H BTC + airbag EMA200).
+- Baseline contaminado preservado em `data/experimentos/exp_9ea2dff4_v22_lookahead_baseline.json`.
+
+*Nota V2.3.1:* auditoria externa de mecânica foi avaliada — a ordem funding/stop do motor está correta (velas Binance usam open_time = início; o settlement ocorre na abertura da vela). Único refinamento: notional do funding passou a usar a abertura da vela (delta OOS ≈ 0,08%, cosmético).
 
 ---
 

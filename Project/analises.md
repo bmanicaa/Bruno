@@ -108,7 +108,14 @@ Ranking pelo **Sharpe de trading** (a coluna que importa). Note o abismo entre a
 - **32 configs limpas | 6 com Sharpe de trading > 0 | 0 passam nos critérios endurecidos** (Sharpe trading > 0 **e** ≥3/4 blocos positivos **e** ≥30 trades).
 - **Nenhuma config tem ≥3/4 blocos OOS positivos** — a melhor marca é 3/4 (`ad61cd70`), e essa tem Sharpe de trading -0,12. O padrão é universal: quase tudo lucra só no OOS2 (alta do ETF 2023-09→2024-09) e sangra nos outros três.
 - **DSR na base de trading, 32 tentativas** (piso de ruído SR0 = 0,63): db8f33f6 p=0,736 | 12616cbc p=0,816 | g3 p=0,980. Todos REPROVAM.
-- **A blindagem de amostra pequena provou seu valor na prática:** `12616cbc` marca **P(PF>1) = 97,4%**, o que passaria no filtro de ≥90% — mas dispara `insufficient_sample` (20 trades) e o DSR o reprova com p=0,82. Sem a blindagem da Fase A, esta config seria anunciada como "achamos algo".
+- **O protocolo antigo acertava por sorte, não por desenho.** Reconstituindo os vereditos antigos das duas configs mais perigosas:
+
+  | config | DSR antigo | bootstrap | verdicto antigo |
+  | :--- | :--- | :--- | :--- |
+  | g3 `45c0eb3c` | p=0,0000 **PASSA** | 60,5% **reprova** | barrada pelo bootstrap |
+  | trend `12616cbc` | p=1,0000 **reprova** | 97,4% **passa** | barrada pelo DSR |
+
+  Ou seja: **nenhuma das duas foi aprovada indevidamente** — mas só porque os dois filtros estavam desalinhados em direções opostas e um cobriu o buraco do outro. Um teste que discorda do outro por 10 ordens de grandeza na mesma config (p=1e-12 vs 60%) acerta por acidente, não por medir corretamente. Depois da Fase A os dois concordam (g3: DSR p=0,98 e bootstrap 60,7%; ambos reprovam), e a `12616cbc` passa a ser barrada por **três** motivos independentes — amostra (20 trades), concentração (2/4 blocos) e DSR (p=0,82) — em vez de um acaso.
 - **Efeito colateral da correção A5 (ETH):** com o ETH realmente entrando, a família trend melhorou no PnL bruto (`12616cbc`: +R$64k → +R$116k; `fd9a996d`: +R$70k → +R$94k) e ganhou trades (11→20, 10→19). Continua reprovando por amostra e por Sharpe de trading, mas agora os números são reais. As 4 configs trend deixaram de ser 2 duplicatas.
 
 #### Efeito nas modalidades oficiais (re-rodadas com a métrica nova)

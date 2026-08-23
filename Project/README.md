@@ -116,7 +116,16 @@ Antes de gastar mais orçamento de múltiplos testes, os instrumentos de valida�
 
 Também corrigido: `backtest_trend_bh.py` descartava o ETH em silêncio (procurava só em `raw/macro/`), tornando as configs "BTC+ETH" duplicatas das BTC-only. Com o ETH entrando de fato, a família trend melhorou no bruto (+R$64k → +R$116k) — e continua reprovando por amostra insuficiente.
 
-**As 32 configs limpas foram reprocessadas com a métrica correta.** Resultado: **6 têm Sharpe de trading > 0, zero passam** nos critérios endurecidos, e **nenhuma tem ≥3/4 blocos OOS positivos** — quase tudo lucra só na alta do ETF (2023-09→2024-09) e sangra nos outros três blocos. O caso mais instrutivo é `12616cbc`: marca **P(PF>1) = 97,4%** (passaria no filtro de ≥90%) mas dispara `insufficient_sample` com 20 trades e leva DSR p=0,82. Sem a blindagem da Fase A, teria sido anunciada como descoberta.
+**As 32 configs limpas foram reprocessadas com a métrica correta.** Resultado: **6 têm Sharpe de trading > 0, zero passam** nos critérios endurecidos, e **nenhuma tem ≥3/4 blocos OOS positivos** — quase tudo lucra só na alta do ETF (2023-09→2024-09) e sangra nos outros três blocos.
+
+**Nada foi aprovado indevidamente pelo protocolo antigo — mas por sorte, não por desenho.** Reconstituindo os vereditos antigos das duas configs mais perigosas:
+
+| config | DSR antigo | bootstrap | o que a barrou |
+| :--- | :--- | :--- | :--- |
+| g3 `45c0eb3c` | p=0,0000 **PASSA** | 60,5% reprova | o bootstrap |
+| trend `12616cbc` | p=1,0000 reprova | 97,4% **passa** | o DSR |
+
+Os dois filtros estavam desalinhados em direções opostas e cada um cobriu o buraco do outro. Um teste que discorda do outro por 10 ordens de grandeza na mesma config acerta por acidente. Depois da Fase A os dois **concordam**, e a `12616cbc` passa a ser barrada por três motivos independentes (amostra de 20 trades, concentração em 2/4 blocos, DSR p=0,82) em vez de um acaso.
 
 ### Infraestrutura de validação (entregável principal desta fase)
 

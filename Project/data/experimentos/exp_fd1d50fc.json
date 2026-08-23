@@ -83,5 +83,7 @@
         "dd_max": 18.37,
         "sharpe_mean": -0.02,
         "expectancy_r_mean": -0.04
-    }
+    },
+    "invalid_lookahead": true,
+    "invalid_reason": "Rodado antes da correcao V2.3 do lookahead intra-diario (o gatilho usava o fechamento do PROPRIO dia). Resultados invalidos — preservado apenas como evidencia historica. NAO usar como baseline nem contar como tentativa no DSR."
 }

@@ -307,3 +307,103 @@ class TestMiniBacktest:
         r5 = mine[4]['risk_brl'] / mine[3]['risk_brl']
         assert 0.9 < r1 < 1.05 and 0.9 < r2 < 1.05
         assert 0.4 < r5 < 0.6
+
+
+class TestValidationIntegrity:
+    """Blindagens da regua estatistica (Fase A, 24/08/2026).
+
+    Estes testes cobrem a camada que decide se uma estrategia pode receber
+    dinheiro real. Um bug aqui nao quebra nada visivelmente — apenas aprova o
+    que deveria reprovar, que e o modo de falha mais caro do projeto.
+    """
+
+    def test_sharpe_trading_exclui_cash_yield(self):
+        """Uma carteira 100% parada no caixa tem Sharpe alto e Sharpe de trading ~0."""
+        import statistical_validation as sv
+
+        n = 2000
+        # Equity crescendo exatamente ao cash yield: zero trades, zero risco.
+        equity = 100000.0 * (1 + sv.CASH_YIELD_PER_BAR) ** np.arange(n)
+
+        bruto = sv._window_returns(equity.tolist(), excess=False)
+        liquido = sv._window_returns(equity.tolist(), excess=True)
+
+        sharpe_bruto = bruto.mean() / (bruto.std() + 1e-12) * np.sqrt(sv.ANNUAL_FACTOR)
+        assert sharpe_bruto > 100, 'poupanca pura deve exibir Sharpe absurdo na base bruta'
+        assert abs(liquido.mean()) < 1e-12, 'o excesso sobre o cash yield deve ser ~zero'
+
+    def test_dsr_nao_confunde_escala_anual_com_barras(self):
+        """O Z do DSR nao pode escalar com sqrt(2190) por erro de unidade.
+
+        Era este o bug: sr_obs chegava anualizado e n_obs contava barras de 4h,
+        multiplicando o Z por ~46.8 e devolvendo p=1e-12 para configs sem edge.
+        """
+        import statistical_validation as sv
+
+        rng = np.random.default_rng(7)
+        rets = rng.normal(0.0, 0.01, 7500)
+        # Sharpe anualizado modesto, tipico do projeto.
+        sr_obs = 1.2
+        sr_trials = [0.3, 0.5, 0.8, 1.0, 1.2, 0.4, 0.9, 1.1]
+
+        ds = sv.deflated_sharpe(sr_obs, sr_trials, rets)
+        assert ds is not None
+        # Com Sharpe anualizado 1.2 e um piso de ruido da mesma ordem, o resultado
+        # tem de ser inconclusivo — nao "certeza de 12 casas decimais".
+        assert ds['p_value'] > 0.01, f"p={ds['p_value']:.2e} — escala do DSR voltou a quebrar"
+        assert abs(ds['sr_obs_per_bar'] * np.sqrt(sv.ANNUAL_FACTOR) - sr_obs) < 1e-9
+
+    def test_dsr_ainda_detecta_edge_real(self):
+        """A correcao nao pode cegar o teste: um Sharpe genuinamente alto passa."""
+        import statistical_validation as sv
+
+        rng = np.random.default_rng(11)
+        rets = rng.normal(0.0, 0.01, 7500)
+        ds = sv.deflated_sharpe(4.0, [0.3, 0.5, 0.8, 1.0, 1.2, 0.4, 0.9, 1.1], rets)
+        assert ds['p_value'] < 0.10, 'Sharpe anualizado 4.0 deveria passar no DSR'
+
+    def test_bootstrap_sinaliza_amostra_insuficiente(self):
+        """10 trades nao podem devolver p-valor confiante sem aviso."""
+        import statistical_validation as sv
+
+        trades = [{'pnl_brl': 1000.0 * (1 if i % 3 else -1), 'risk_brl': 750.0}
+                  for i in range(10)]
+        bt = sv.bootstrap_trade_stats(trades, n_iter=500, block_len=8)
+        assert bt['insufficient_sample'] is True
+        assert bt['block_len'] <= max(1, len(trades) // 3), 'bloco maior que n/3 colapsa a variancia'
+
+    def test_experimentos_contaminados_saem_do_universo_dsr(self):
+        """Configs pre-V2.3 nao podem contar como tentativa nem virar baseline."""
+        import statistical_validation as sv
+
+        trials = sv.collect_all_experiments()
+        hashes = [t['hash'] for t in trials]
+        assert len(hashes) == len(set(hashes)), 'config_hash duplicado inflaria n_trials'
+        # b415fc06 e o pre-V2.3 de maior PnL (+R$80k) — o exato falso positivo que
+        # uma sessao futura escolheria ao ordenar experimentos por resultado.
+        assert 'b415fc06' not in hashes
+        assert '9ea2dff4' in hashes, 'a versao corrigida da baseline deve permanecer'
+
+    def test_trend_bh_falha_alto_com_ativo_ausente(self):
+        """Ativo sem dados deve estourar, nunca ser descartado em silencio."""
+        import backtest_trend_bh as tb
+
+        with pytest.raises(FileNotFoundError, match='MOEDAINEXISTENTE'):
+            tb.run_trend('2023-01-01', '2023-06-01',
+                         {'assets': ['MOEDAINEXISTENTE']},
+                         preloaded=(pd.DataFrame(), {}, {}, []))
+
+    def test_cash_yield_nao_diverge_entre_motor_e_validador(self):
+        """A taxa livre de risco esta escrita em dois lugares — travar o par.
+
+        Se alguem mudar o cash yield do motor sem mudar o validador, o Sharpe de
+        trading passa a subtrair a taxa errada e volta a medir parte da poupanca
+        como se fosse edge. O teste falha antes que isso aconteca em silencio.
+        """
+        import statistical_validation as sv
+
+        esperado = bi.CASH_YIELD_ANNUAL / 2190.0
+        assert abs(sv.CASH_YIELD_PER_BAR - esperado) < 1e-15, (
+            f'motor usa {bi.CASH_YIELD_ANNUAL:.4f} a.a., validador usa '
+            f'{sv.CASH_YIELD_PER_BAR * 2190.0:.4f} a.a.')
+        assert sv.ANNUAL_FACTOR == 2190.0

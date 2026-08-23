@@ -1,6 +1,6 @@
 # Plano Operacional Real — Núcleo Bitcoin + Airbag de Proteção
 
-> Versão: 23/08/2026 | Baseado nos testes honestos do motor V2.3.1 (42 configurações, 4 famílias de estratégia)
+> Versão: 24/08/2026 | Baseado nos testes honestos do motor V2.3.1 (32 configurações limpas, 4 famílias de estratégia)
 > Objetivo: instruções simples para você investir seu dinheiro em cripto com a melhor relação retorno/risco que a evidência permite hoje — sem depender de promessas de "segredo do mercado".
 
 ---
@@ -81,8 +81,15 @@ Tradução: você abre mão de um pouco do ganho máximo, mas **dorme muito melh
 
 ## 7. Estado do laboratório (para você saber onde estamos)
 
-- O motor de testes está **matematicamente íntegro** (V2.3.1): zero trapaças, 15 testes automáticos, validação estatística com bootstrap e correção de múltiplos testes.
-- **42 configurações** de 4 famílias de estratégia foram testadas: **nenhuma provou lucro real** acima do "comprar e segurar".
+> **Atualização de 24/08/2026:** este plano **não mudou** — e agora está mais bem sustentado do que antes.
+
+- O motor de testes está **matematicamente íntegro** (V2.3.1): zero trapaças, **22 testes automáticos**, validação estatística com bootstrap e correção de múltiplos testes.
+- **32 configurações** de 4 famílias de estratégia foram testadas: **nenhuma provou lucro real** acima do "comprar e segurar".
+- **A candidata que estava mais perto de servir foi reprovada.** Havia uma configuração de swing (apelidada "g3") que parecia ótima: ganho pequeno mas consistente, com quedas de apenas 5%. Ao auditarmos os próprios instrumentos de medição, descobrimos que:
+  - **82% do "ganho" dela era só o rendimento do dinheiro parado** (a stablecoin rendendo 6% a.a.), não a operação. Operando, ela perdia.
+  - Ela **perdia em 3 dos 4 períodos de teste** — todo o resultado vinha de um único ano (a alta do ETF em 2024).
+  - Um dos testes estatísticos tinha um erro de unidade que a **aprovava indevidamente**. Corrigido, ela reprova.
+- Tradução prática: **nada mudou para o seu dinheiro.** Continuamos com Bitcoin + airbag, que é o que a evidência sustenta. O que mudou foi a qualidade do "detector de mentiras" do laboratório — ele acabou de pegar um falso positivo que passaria despercebido.
 - O engine de swing segue testando novas ideias em `scripts/` — se alguma passar em TODOS os filtros, o plano será atualizado.
 - Limitações conhecidas e honestas: datas de desbloqueio de moedas (vesting) ainda manuais, derrapagem estimada fixa (adequada para o seu tamanho de capital), e granularidade de 4 horas nos testes.
 

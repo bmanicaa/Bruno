@@ -11,7 +11,7 @@
     },
     "config_hash": "9ea2dff4",
     "engine_version": "V2.3.1",
-    "generated_at": "2026-08-23T19:23:11.254156",
+    "generated_at": "2026-08-23T20:46:59.768299",
     "windows": {
         "IS": {
             "window": "2019-09-01 -> 2022-09-01",
@@ -22,6 +22,8 @@
             "win_rate": 43.2,
             "dd_pct": 20.98,
             "sharpe": 1.2,
+            "sharpe_trading": 0.93,
+            "cash_yield_brl": 24302.92,
             "expectancy_r": 0.572,
             "bnh_btc_pct": 93.58
         },
@@ -34,6 +36,8 @@
             "win_rate": 29.4,
             "dd_pct": 25.83,
             "sharpe": -1.26,
+            "sharpe_trading": -1.56,
+            "cash_yield_brl": 3993.78,
             "expectancy_r": -0.333,
             "bnh_btc_pct": 30.25
         },
@@ -46,6 +50,8 @@
             "win_rate": 34.4,
             "dd_pct": 28.37,
             "sharpe": 0.24,
+            "sharpe_trading": -0.01,
+            "cash_yield_brl": 4769.42,
             "expectancy_r": 0.005,
             "bnh_btc_pct": 124.39
         },
@@ -58,6 +64,8 @@
             "win_rate": 41.8,
             "dd_pct": 26.29,
             "sharpe": 0.62,
+            "sharpe_trading": 0.43,
+            "cash_yield_brl": 4249.71,
             "expectancy_r": 0.123,
             "bnh_btc_pct": 83.96
         },
@@ -70,6 +78,8 @@
             "win_rate": 38.1,
             "dd_pct": 13.58,
             "sharpe": 0.83,
+            "sharpe_trading": 0.62,
+            "cash_yield_brl": 1808.06,
             "expectancy_r": 0.246,
             "bnh_btc_pct": -26.75
         }
@@ -22215,6 +22225,9 @@
         "win_rate_mean": 35.9,
         "dd_max": 28.37,
         "sharpe_mean": 0.11,
+        "sharpe_trading_mean": -0.13,
+        "cash_yield_sum": 14820.97,
+        "trading_share_of_return_pct": -436.7,
         "expectancy_r_mean": 0.01
     }
 }

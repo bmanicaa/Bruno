@@ -32,6 +32,8 @@
     "max_drawdown_pct": 11.700978383417306,
     "sharpe_ratio": 0.42939316412602735,
     "sortino_ratio": 0.415684976194396,
+    "sharpe_trading": -0.1168265779492031,
+    "sortino_trading": -0.11353007549175011,
     "expectancy_r": 0.03475273567411104,
     "avg_mae_r": -0.63688198416415,
     "avg_mfe_r": 0.9765705799335632,

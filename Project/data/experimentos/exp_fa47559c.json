@@ -19,6 +19,8 @@
             "win_rate": 50.0,
             "dd_pct": 48.39,
             "sharpe": 0.8,
+            "sharpe_trading": 0.65,
+            "cash_yield_brl": 19451.57,
             "expectancy_r": 0.805,
             "bnh_btc_pct": 93.58
         },
@@ -31,6 +33,8 @@
             "win_rate": 25.0,
             "dd_pct": 17.98,
             "sharpe": -0.42,
+            "sharpe_trading": -0.8,
+            "cash_yield_brl": 4407.96,
             "expectancy_r": -0.049,
             "bnh_btc_pct": 30.25
         },
@@ -43,6 +47,8 @@
             "win_rate": 25.0,
             "dd_pct": 26.57,
             "sharpe": 1.1,
+            "sharpe_trading": 0.9,
+            "cash_yield_brl": 3573.51,
             "expectancy_r": 0.212,
             "bnh_btc_pct": 124.39
         },
@@ -55,6 +61,8 @@
             "win_rate": 100.0,
             "dd_pct": 18.02,
             "sharpe": 1.29,
+            "sharpe_trading": 1.06,
+            "cash_yield_brl": 3625.3,
             "expectancy_r": 0.332,
             "bnh_btc_pct": 83.96
         },
@@ -67,6 +75,8 @@
             "win_rate": 0.0,
             "dd_pct": 10.6,
             "sharpe": 0.07,
+            "sharpe_trading": -0.41,
+            "cash_yield_brl": 1928.67,
             "expectancy_r": -0.035,
             "bnh_btc_pct": -26.75
         }
@@ -14456,6 +14466,8 @@
         "win_rate_mean": 37.5,
         "dd_max": 26.57,
         "sharpe_mean": 0.51,
+        "sharpe_trading_mean": 0.19,
+        "cash_yield_sum": 13535.44,
         "expectancy_r_mean": 0.115
     }
 }

@@ -982,6 +982,17 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
     downside = period_rets[period_rets < 0]
     sortino = (period_rets.mean() / (downside.std() + 1e-9)) * np.sqrt(2190) if len(downside) > 0 else 0.0
 
+    # Sharpe de TRADING (excesso sobre o cash yield modelado).
+    # O `sharpe` acima inclui o rendimento do caixa, que é quase sem risco: numa
+    # estratégia que fica majoritariamente fora do mercado ele domina o numerador
+    # e produz um Sharpe alto sem qualquer habilidade de operar. O Sharpe correto
+    # para julgar edge é o excesso sobre a taxa livre de risco — aqui, o próprio
+    # cash yield de 6% a.a. que o motor credita no caixa livre.
+    excess_rets = period_rets - cash_yield_per_4h
+    sharpe_trading = (excess_rets.mean() / (excess_rets.std() + 1e-9)) * np.sqrt(2190) if len(excess_rets) > 0 else 0.0
+    downside_ex = excess_rets[excess_rets < 0]
+    sortino_trading = (excess_rets.mean() / (downside_ex.std() + 1e-9)) * np.sqrt(2190) if len(downside_ex) > 0 else 0.0
+
     total_fees_brl = sum(t.get('fees_paid', 0.0) for t in trades)
     total_funding_brl = sum(t.get('funding_paid', 0.0) for t in trades)
     trading_pnl_net_brl = sum(t['pnl_brl'] for t in trades)
@@ -1061,6 +1072,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
         'max_drawdown_pct': max_drawdown_pct,
         'sharpe_ratio': sharpe,
         'sortino_ratio': sortino,
+        'sharpe_trading': sharpe_trading,
+        'sortino_trading': sortino_trading,
         'expectancy_r': expectancy_r,
         'avg_mae_r': avg_mae_r,
         'avg_mfe_r': avg_mfe_r,
@@ -1096,6 +1109,8 @@ def compact_metrics(res):
         'win_rate': round(res['win_rate_pct'], 1),
         'dd_pct': round(res['max_drawdown_pct'], 2),
         'sharpe': round(res['sharpe_ratio'], 2),
+        'sharpe_trading': round(res['sharpe_trading'], 2),
+        'cash_yield_brl': round(res['total_cash_yield_brl'], 2),
         'expectancy_r': round(res['expectancy_r'], 3),
         'bnh_btc_pct': round(res['bnh_btc_return_pct'], 2)
     }
@@ -1170,6 +1185,11 @@ def run_walkforward(params, initial_capital=100000.0, append=True, preloaded=Non
             'win_rate_mean': round(np.mean([w['win_rate'] for w in oos]), 1),
             'dd_max': round(max(w['dd_pct'] for w in oos), 2),
             'sharpe_mean': round(np.mean([w['sharpe'] for w in oos]), 2),
+            'sharpe_trading_mean': round(np.mean([w['sharpe_trading'] for w in oos]), 2),
+            'cash_yield_sum': round(agg('cash_yield_brl'), 2),
+            'trading_share_of_return_pct': round(
+                100.0 * agg('trading_pnl') / (initial_capital * agg('return_pct') / 100.0), 1
+            ) if abs(agg('return_pct')) > 1e-9 else None,
             'expectancy_r_mean': round(np.mean([w['expectancy_r'] for w in oos]), 3)
         }
     }
@@ -1182,16 +1202,21 @@ def run_walkforward(params, initial_capital=100000.0, append=True, preloaded=Non
     print(f"WALK-FORWARD | config hash: {summary['config_hash']}")
     print(f"params: {json.dumps(params, ensure_ascii=False)}")
     print("=" * 100)
-    hdr = f"{'Janela':<6} {'Trades':>7} {'Ret%':>9} {'TradingPnL':>12} {'PF':>6} {'Win%':>7} {'DD%':>7} {'Sharpe':>8} {'ExpR':>8} {'B&H BTC%':>9}"
+    hdr = (f"{'Janela':<6} {'Trades':>7} {'Ret%':>9} {'TradingPnL':>12} {'PF':>6} {'Win%':>7} {'DD%':>7} "
+           f"{'Sharpe':>8} {'ShrpTrd':>8} {'ExpR':>8} {'B&H BTC%':>9}")
     print(hdr)
     for name, m in wf_results.items():
         print(f"{name:<6} {m['trades']:>7} {m['return_pct']:>9.2f} {m['trading_pnl']:>12,.2f} {m['pf']:>6.2f} "
-              f"{m['win_rate']:>7.1f} {m['dd_pct']:>7.2f} {m['sharpe']:>8.2f} {m['expectancy_r']:>8.3f} {m['bnh_btc_pct']:>9.2f}")
+              f"{m['win_rate']:>7.1f} {m['dd_pct']:>7.2f} {m['sharpe']:>8.2f} {m['sharpe_trading']:>8.2f} "
+              f"{m['expectancy_r']:>8.3f} {m['bnh_btc_pct']:>9.2f}")
     oa = summary['oos_aggregate']
     print("-" * 100)
     print(f"OOS AGREGADO (4 blocos): trades={oa['trades_total']} | ret%={oa['return_pct_sum']} | "
           f"tradingPnL={oa['trading_pnl_sum']:,.2f} | PF méd={oa['pf_mean']} (med={oa['pf_median']}) | "
-          f"Win%={oa['win_rate_mean']} | DDmáx={oa['dd_max']} | Sharpe={oa['sharpe_mean']} | ExpR={oa['expectancy_r_mean']}")
+          f"Win%={oa['win_rate_mean']} | DDmáx={oa['dd_max']} | ExpR={oa['expectancy_r_mean']}")
+    print(f"  Sharpe c/ caixa={oa['sharpe_mean']} | Sharpe de TRADING (excesso s/ cash yield)={oa['sharpe_trading_mean']}")
+    print(f"  Cash yield acumulado=R$ {oa['cash_yield_sum']:,.2f} | parcela do retorno vinda de TRADING="
+          f"{oa['trading_share_of_return_pct']}%")
     print(f"Arquivo: {exp_path}")
     if not append:
         print("Registro no analises.md pulado (--no-append)")
@@ -1224,6 +1249,8 @@ def save_outputs(args, res, trades, initial_capital):
     print(f"Profit Factor: {res['profit_factor']:.2f} | Expectância: {res['expectancy_r']:+.3f}R")
     print(f"Drawdown Máximo MtM: {res['max_drawdown_pct']:.2f}%")
     print(f"Sharpe Ratio: {res['sharpe_ratio']:.2f} | Sortino Ratio: {res['sortino_ratio']:.2f}")
+    print(f"  (excluindo o cash yield) Sharpe de TRADING: {res['sharpe_trading']:.2f} | "
+          f"Sortino de TRADING: {res['sortino_trading']:.2f}")
     print("-" * 80)
     print("DECOMPOSIÇÃO DO RESULTADO:")
     print(f"  PnL de Trading (líquido): R$ {res['trading_pnl_net_brl']:,.2f} | (bruto): R$ {res['trading_pnl_gross_brl']:,.2f}")
@@ -1314,6 +1341,7 @@ def save_outputs(args, res, trades, initial_capital):
 - **Expectância por Trade:** {res['expectancy_r']:+.3f}R | MAE médio {res['avg_mae_r']:.2f}R | MFE médio {res['avg_mfe_r']:+.2f}R
 - **Drawdown Máximo (MtM):** {res['max_drawdown_pct']:.2f}%
 - **Sharpe Ratio:** {res['sharpe_ratio']:.2f} | **Sortino Ratio:** {res['sortino_ratio']:.2f}
+- **Sharpe de TRADING** (excesso sobre o cash yield — mede edge, não o rendimento do caixa)**:** {res['sharpe_trading']:.2f} | **Sortino de TRADING:** {res['sortino_trading']:.2f}
 
 ---
 

@@ -16,6 +16,7 @@
 - **Expectância por Trade:** +0.496R | MAE médio -0.66R | MFE médio +1.60R
 - **Drawdown Máximo (MtM):** 18.43%
 - **Sharpe Ratio:** 2.17 | **Sortino Ratio:** 2.54
+- **Sharpe de TRADING** (excesso sobre o cash yield — mede edge, não o rendimento do caixa)**:** 1.99 | **Sortino de TRADING:** 2.33
 
 ---
 

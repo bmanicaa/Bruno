@@ -63,7 +63,7 @@ Cada execução sobrescreve o trio padrão: `data/resumo_{modo}.json`, `data/tra
 
 ## 📊 Resultados Atuais (V2.3.1 — motor corrigido, zero lookahead)
 
-*Última auditoria: 23/08/2026 | 552 moedas | R$100k | custos reais Binance*
+*Última auditoria: 24/08/2026 | 552 moedas | R$100k | custos reais Binance*
 
 > **Para o seu dinheiro real:** o documento [**`PLANO_OPERACIONAL_REAL.md`**](PLANO_OPERACIONAL_REAL.md) contém o passo a passo simples (núcleo Bitcoin + airbag EMA200) baseado na evidência desta auditoria.
 
@@ -79,26 +79,55 @@ A auditoria estatística (bootstrap + testes de regressão) descobriu que a V2.2
 
 ### Modalidades Oficiais (motor V2.3.1 limpo)
 
-| Modalidade | Período | Retorno | Win Rate | PF | DD Máx | B&H BTC |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| Full (7 anos) | 2019-09 → 2026-08 | +92.7% | 37.2% | 1.06 | 34.3% | +569.1% |
-| 5 anos | 2021-11 → 2026-08 | +1.9% | 35.4% | 0.92 | 32.5% | +5.2% |
-| Preliminar (1 ano) | 2023-10 → 2024-10 | +7.8% | 33.7% | 1.03 | 29.5% | +135.7% |
-| Bull (6m) | 2023-10 → 2024-03 | +39.6% | 43.9% | 1.79 | 18.4% | +158.9% |
-| Bear (1 ano) | 2022 | +4.1% | 35.7% | 0.94 | 11.7% | -64.6% |
-| Chop (6m) | 2024-04 → 2024-09 | -20.6% | 16.7% | 0.17 | 21.4% | -8.7% |
+As duas últimas colunas separam o que veio de **operar** do que veio de **dinheiro parado rendendo 6% a.a.** — sem essa separação, três das seis linhas se leem ao contrário do que realmente aconteceram.
 
-**Leitura honesta:** após 42 configurações em 4 famílias de sinal (swing pullback, meta-labeling ML, momentum cross-sectional, trend time-series), **nenhuma tem edge OOS estatisticamente significativo** sob o protocolo rigoroso (walk-forward + bootstrap + Deflated Sharpe). O B&H BTC não foi batido em retorno total; o valor demonstrável dos sistemas é **redução de risco** (trend-timing BTC EMA200/252 corta o DD pela metade; a config conservadora g3 — BTC/ETH, sem shorts, risco 0,75%, taxa VIP — tem DD ~5%). Recomendação: núcleo B&H BTC + camada opcional de trend-timing + sistemas de swing apenas como satélite de observação, até nova validação.
+| Modalidade | Período | Retorno | PF | DD Máx | B&H BTC | PnL de trading | Cash yield | **Sharpe de trading** |
+| :--- | :--- | :---: | :---: | :---: | :---: | ---: | ---: | :---: |
+| Full (7 anos) | 2019-09 → 2026-08 | +92.8% | 1.06 | 34.3% | +569.1% | +R$36.776 | +R$56.025 | **+0.26** |
+| 5 anos | 2021-11 → 2026-08 | +1.9% | 0.92 | 32.5% | +5.2% | **-R$19.405** | +R$21.294 | **-0.14** |
+| Preliminar (1 ano) | 2023-10 → 2024-10 | +7.8% | 1.03 | 29.5% | +135.7% | +R$2.755 | +R$5.029 | **+0.19** |
+| Bull (6m) | 2023-10 → 2024-03 | +39.6% | 1.79 | 18.4% | +158.9% | +R$37.493 | +R$2.112 | **+1.99** |
+| Bear (1 ano) | 2022 | +4.1% | 0.94 | 11.7% | -64.6% | **-R$1.399** | +R$5.541 | **-0.12** |
+| Chop (6m) | 2024-04 → 2024-09 | -20.6% | 0.17 | 21.4% | -8.7% | -R$22.713 | +R$2.142 | **-3.70** |
+
+**Como ler esta tabela (revisão da Fase A):**
+
+- **Bull é o único resultado genuíno.** +R$37,5k de trading contra R$2,1k de caixa, Sharpe de trading +1,99. Em alta confirmada o sistema funciona.
+- **"Bear +4,1%" não foi defesa por habilidade.** O trading *perdeu* R$1.399; os +4,1% são o rendimento do caixa. A proteção contra os -64,6% do BTC é real — mas vem de **ficar fora do mercado**, não de operar bem. Isso é o filtro de regime funcionando, não edge.
+- **"5 anos +1,9%" esconde uma perda.** O trading queimou R$19.405; o caixa cobriu.
+- **Nos 7 anos, 60% do retorno é o caixa** (R$56k de R$92,8k).
+
+**Conclusão de uma linha:** o sistema só ganha dinheiro em bull confirmado; em todo o resto, o "lucro" é o juro do dinheiro parado.
+
+**Leitura honesta:** após 32 configurações limpas e distintas em 4 famílias de sinal (swing pullback, meta-labeling ML, momentum cross-sectional, trend time-series), **nenhuma tem edge OOS estatisticamente significativo** sob o protocolo (walk-forward + bootstrap + Deflated Sharpe). O B&H BTC não foi batido em retorno total; o valor demonstrável dos sistemas é **redução de risco** (trend-timing BTC EMA200/252 corta o DD pela metade). Recomendação: núcleo B&H BTC + camada opcional de trend-timing + sistemas de swing apenas como satélite de observação, até nova validação.
+
+### Fase A (24/08/2026) — auditoria da régua estatística
+
+Antes de gastar mais orçamento de múltiplos testes, os instrumentos de validação foram auditados. Quatro defeitos, todos no sentido de **aprovar demais**:
+
+| Defeito | Efeito medido | Correção |
+| :--- | :--- | :--- |
+| DSR misturava Sharpe **anualizado** com `n_obs` em **barras de 4h** | Z inflado ~46,8× → g3 marcava **p=1e-12 (PASSA)** contra 60,7% no bootstrap | Desanualiza para a escala por barra → g3 marca **p=0,229 (REPROVA)** |
+| Sharpe calculado sobre a curva **com o cash yield dentro** | g3: Sharpe **1,20 → -0,47** ao medir só o trading | `sharpe_trading` (excesso sobre o cash yield) em todo o pipeline |
+| Block bootstrap com bloco > n/3 | Família trend marcava **P(PF>1)=100%** com 10 trades | Bloco limitado a n/3 + flag `insufficient_sample` (< 30 trades) |
+| 9 experimentos pré-V2.3 sem marcação | Ordenando por PnL, o 1º lugar era contaminado (`b415fc06`, +R$80k) | `invalid_lookahead: true` + exclusão do universo do DSR + dedup por hash |
+
+**A config g3 (`45c0eb3c`) foi reprovada e deixou de ser candidata.** Com a régua corrigida: Sharpe de trading **-0,47**, expectância **-0,049R**, PF mediano **0,64**, perde em **3 dos 4 blocos OOS**, e **82% do retorno era o rendimento do caixa** (R$20,3k de cash yield vs R$4,5k de trading). Não foi uma estratégia que piorou — foi uma medição que ficou honesta.
+
+Também corrigido: `backtest_trend_bh.py` descartava o ETH em silêncio (procurava só em `raw/macro/`), tornando as configs "BTC+ETH" duplicatas das BTC-only. Com o ETH entrando de fato, a família trend melhorou no bruto (+R$64k → +R$116k) — e continua reprovando por amostra insuficiente.
+
+**As 32 configs limpas foram reprocessadas com a métrica correta.** Resultado: **6 têm Sharpe de trading > 0, zero passam** nos critérios endurecidos, e **nenhuma tem ≥3/4 blocos OOS positivos** — quase tudo lucra só na alta do ETF (2023-09→2024-09) e sangra nos outros três blocos. O caso mais instrutivo é `12616cbc`: marca **P(PF>1) = 97,4%** (passaria no filtro de ≥90%) mas dispara `insufficient_sample` com 20 trades e leva DSR p=0,82. Sem a blindagem da Fase A, teria sido anunciada como descoberta.
 
 ### Infraestrutura de validação (entregável principal desta fase)
 
-- `tests/` — 15 testes unitários de regressão (sizing, stops, BE/parcial, funding, breakers, identidade contábil).
-- `scripts/statistical_validation.py` — bootstrap em blocos, leave-one-out, Deflated Sharpe Ratio.
+- `tests/` — **22 testes** unitários de regressão (sizing, stops, BE/parcial, funding, breakers, identidade contábil, merge point-in-time + 7 blindagens da régua estatística da Fase A).
+- `scripts/statistical_validation.py` — bootstrap em blocos, leave-one-out, Deflated Sharpe Ratio (escala corrigida).
 - `scripts/meta_label.py` — screening de filtro ML (AUC IS = 0.48: sem sinal aprendível).
 - `scripts/batch_experiments.py` — baterias de experimentos com 1 carga de dados.
+- `scripts/reprocess_experiments.py` — re-roda todas as configs limpas quando as métricas do motor mudam (mantém o universo do DSR na mesma escala).
 - `scripts/backtest_cs_momentum.py` e `scripts/backtest_trend_bh.py` — famílias de sinal alternativas no mesmo protocolo.
 - `PLANO_OPERACIONAL_REAL.md` — plano de carteira real baseado na evidência (núcleo B&H BTC + airbag EMA200).
-- Baseline contaminado preservado em `data/experimentos/exp_9ea2dff4_v22_lookahead_baseline.json`.
+- Experimentos pré-V2.3 preservados e marcados com `invalid_lookahead: true` (excluídos do universo de múltiplos testes).
 
 *Nota V2.3.1:* auditoria externa de mecânica foi avaliada — a ordem funding/stop do motor está correta (velas Binance usam open_time = início; o settlement ocorre na abertura da vela). Único refinamento: notional do funding passou a usar a abertura da vela (delta OOS ≈ 0,08%, cosmético).
 

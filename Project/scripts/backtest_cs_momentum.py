@@ -264,6 +264,11 @@ def run_cs_momentum(start_str, end_str, params, preloaded=None):
     eq_df['ret'] = eq_df['capital'].pct_change()
     rets = eq_df['ret'].dropna()
     sharpe = (rets.mean() / (rets.std() + 1e-9)) * np.sqrt(2190) if len(rets) else 0.0
+    # Sharpe de trading: excesso sobre o cash yield modelado. Sem descontar essa
+    # taxa livre de risco, uma estrategia que fica muito tempo em caixa exibe
+    # Sharpe alto sem edge nenhum. Ver nota em backtest_institucional.py.
+    ex_rets = rets - p.get('annual_cash_yield', 0.06) / 2190.0
+    sharpe_trading = (ex_rets.mean() / (ex_rets.std() + 1e-9)) * np.sqrt(2190) if len(ex_rets) else 0.0
 
     trading_pnl = sum(t['pnl_brl'] for t in trades)
     net = capital - 100000.0
@@ -301,6 +306,7 @@ def run_cs_momentum(start_str, end_str, params, preloaded=None):
         'profit_factor': pf,
         'max_drawdown_pct': max_dd,
         'sharpe_ratio': sharpe,
+        'sharpe_trading': sharpe_trading,
         'sortino_ratio': 0.0,
         'expectancy_r': exp_r,
         'avg_mae_r': 0.0,
@@ -331,15 +337,22 @@ def compact(res):
         'win_rate': round(res['win_rate_pct'], 1),
         'dd_pct': round(res['max_drawdown_pct'], 2),
         'sharpe': round(res['sharpe_ratio'], 2),
+        'sharpe_trading': round(res['sharpe_trading'], 2),
+        'cash_yield_brl': round(res['total_cash_yield_brl'], 2),
         'expectancy_r': round(res['expectancy_r'], 3),
         'bnh_btc_pct': round(res['bnh_btc_return_pct'], 2),
     }
 
 
-def run_wf(params):
+def load_preloaded():
+    """Carga unica de dados, reutilizavel entre configs (ver run_wf)."""
     btc_4h, btc_1d, fng_df, coins_4h_map, funding_map, available_symbols = bi.load_all_data()
-    daily_map = load_daily_map()
-    preloaded = (btc_4h, daily_map, funding_map, coins_4h_map, available_symbols)
+    return (btc_4h, load_daily_map(), funding_map, coins_4h_map, available_symbols)
+
+
+def run_wf(params, preloaded=None):
+    if preloaded is None:
+        preloaded = load_preloaded()
     wf_results, wf_detail = {}, {}
     for name, s, e in bi.WALKFORWARD_WINDOWS:
         print(f'>>> {name}: {s} -> {e}')
@@ -366,6 +379,8 @@ def run_wf(params):
             'win_rate_mean': round(np.mean([w['win_rate'] for w in oos]), 1),
             'dd_max': round(max(w['dd_pct'] for w in oos), 2),
             'sharpe_mean': round(np.mean([w['sharpe'] for w in oos]), 2),
+            'sharpe_trading_mean': round(np.mean([w['sharpe_trading'] for w in oos]), 2),
+            'cash_yield_sum': round(sum(w['cash_yield_brl'] for w in oos), 2),
             'expectancy_r_mean': round(np.mean([w['expectancy_r'] for w in oos]), 3),
         },
     }

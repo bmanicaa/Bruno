@@ -1,16 +1,35 @@
 {
-    "download_timestamp": "2026-08-21T01:23:26.653175",
-    "period_years": 5,
-    "target_candles_4h": 11000,
-    "target_candles_1d": 2000,
-    "total_found": 525,
-    "coins_count": 523,
+    "download_timestamp": "2026-08-22T20:38:41.548120",
+    "period_start": "2019-09-01",
+    "period_years": 7,
+    "target_candles_4h": 15300,
+    "target_candles_1d": 2600,
+    "target_funding": 7700,
+    "total_found": 541,
+    "coins_count": 538,
+    "delisted_included": [
+        "LUNAUSDT",
+        "FTTUSDT",
+        "ANCUSDT",
+        "MIRUSDT",
+        "SRMUSDT",
+        "DODOUSDT",
+        "EOSUSDT",
+        "YFIIUSDT",
+        "BZRXUSDT",
+        "BTSUSDT",
+        "COCOSUSDT",
+        "GTOUSDT",
+        "TORNUSDT",
+        "VGXUSDT",
+        "TCTUSDT",
+        "REPUSDT"
+    ],
     "symbols": [
         "0GUSDT",
         "1000000BOBUSDT",
         "1000000MOGUSDT",
         "1000BONKUSDT",
-        "1000CATUSDT",
         "1000CHEEMSUSDT",
         "1000FLOKIUSDT",
         "1000LUNCUSDT",
@@ -48,6 +67,7 @@
         "ALLUSDT",
         "ALPINEUSDT",
         "ALTUSDT",
+        "ANCUSDT",
         "ANIMEUSDT",
         "ANKRUSDT",
         "APEUSDT",
@@ -117,9 +137,11 @@
         "BTCDOMUSDT",
         "BTCUSDT",
         "BTRUSDT",
+        "BTSUSDT",
         "BTWUSDT",
         "BULLAUSDT",
         "BUSDT",
+        "BZRXUSDT",
         "C98USDT",
         "CAKEUSDT",
         "CAPUSDT",
@@ -132,7 +154,6 @@
         "CFGUSDT",
         "CFXUSDT",
         "CGPTUSDT",
-        "CHILLGUYUSDT",
         "CHIPUSDT",
         "CHRUSDT",
         "CHZUSDT",
@@ -140,6 +161,7 @@
         "CLANKERUSDT",
         "CLOUSDT",
         "COAIUSDT",
+        "COCOSUSDT",
         "COLLECTUSDT",
         "COMPUSDT",
         "COOKIEUSDT",
@@ -160,6 +182,7 @@
         "DEEPUSDT",
         "DEXEUSDT",
         "DIAUSDT",
+        "DODOUSDT",
         "DODOXUSDT",
         "DOGEUSDT",
         "DOGSUSDT",
@@ -181,6 +204,7 @@
         "ENJUSDT",
         "ENSOUSDT",
         "ENSUSDT",
+        "EOSUSDT",
         "EPICUSDT",
         "ERAUSDT",
         "ESPORTSUSDT",
@@ -198,7 +222,6 @@
         "FIDAUSDT",
         "FIGHTUSDT",
         "FILUSDT",
-        "FLOCKUSDT",
         "FLOWUSDT",
         "FLUIDUSDT",
         "FLUXUSDT",
@@ -206,6 +229,7 @@
         "FOLKSUSDT",
         "FORMUSDT",
         "FRAXUSDT",
+        "FTTUSDT",
         "FUSDT",
         "GALAUSDT",
         "GASUSDT",
@@ -222,6 +246,7 @@
         "GRTUSDT",
         "GRVTUSDT",
         "GTCUSDT",
+        "GTOUSDT",
         "GUAUSDT",
         "GUNUSDT",
         "GUSDT",
@@ -289,6 +314,8 @@
         "LSKUSDT",
         "LTCUSDT",
         "LUMIAUSDT",
+        "LUNA2USDT",
+        "LUNAUSDT",
         "LYNUSDT",
         "MAGICUSDT",
         "MAGMAUSDT",
@@ -305,8 +332,10 @@
         "METISUSDT",
         "METUSDT",
         "MEUSDT",
+        "MEWUSDT",
         "MINAUSDT",
         "MIRAUSDT",
+        "MIRUSDT",
         "MITOUSDT",
         "MMTUSDT",
         "MOCAUSDT",
@@ -381,6 +410,7 @@
         "RECALLUSDT",
         "REDUSDT",
         "RENDERUSDT",
+        "REPUSDT",
         "RESOLVUSDT",
         "REUSDT",
         "REZUSDT",
@@ -427,6 +457,7 @@
         "SPORTFUNUSDT",
         "SPXUSDT",
         "SQDUSDT",
+        "SRMUSDT",
         "SSVUSDT",
         "STABLEUSDT",
         "STARUSDT",
@@ -452,11 +483,13 @@
         "TAKEUSDT",
         "TAOUSDT",
         "TAUSDT",
+        "TCTUSDT",
         "THETAUSDT",
         "THEUSDT",
         "TIAUSDT",
         "TLMUSDT",
         "TNSRUSDT",
+        "TORNUSDT",
         "TOSHIUSDT",
         "TOWNSUSDT",
         "TRADOORUSDT",
@@ -485,6 +518,7 @@
         "VELODROMEUSDT",
         "VELVETUSDT",
         "VETUSDT",
+        "VGXUSDT",
         "VIRTUALUSDT",
         "VTHOUSDT",
         "VVVUSDT",
@@ -510,6 +544,7 @@
         "XVGUSDT",
         "XVSUSDT",
         "YBUSDT",
+        "YFIIUSDT",
         "YFIUSDT",
         "YGGUSDT",
         "ZAMAUSDT",
@@ -531,7 +566,3776 @@
         "\u9f99\u867eUSDT"
     ],
     "failed_symbols": [
-        "LUNA2USDT",
-        "MEWUSDT"
-    ]
+        "1000CATUSDT",
+        "CHILLGUYUSDT",
+        "FLOCKUSDT"
+    ],
+    "coverage": {
+        "ADAUSDT": {
+            "first_4h": "2020-01-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14374,
+            "candles_1d": 2396,
+            "funding_count": 500
+        },
+        "ETHUSDT": {
+            "first_4h": "2019-11-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14765,
+            "candles_1d": 2461,
+            "funding_count": 500
+        },
+        "LTCUSDT": {
+            "first_4h": "2020-01-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14506,
+            "candles_1d": 2418,
+            "funding_count": 500
+        },
+        "XRPUSDT": {
+            "first_4h": "2020-01-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14524,
+            "candles_1d": 2421,
+            "funding_count": 500
+        },
+        "XLMUSDT": {
+            "first_4h": "2020-01-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14440,
+            "candles_1d": 2407,
+            "funding_count": 500
+        },
+        "TRXUSDT": {
+            "first_4h": "2020-01-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14470,
+            "candles_1d": 2412,
+            "funding_count": 500
+        },
+        "ETCUSDT": {
+            "first_4h": "2020-01-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14464,
+            "candles_1d": 2411,
+            "funding_count": 500
+        },
+        "ZECUSDT": {
+            "first_4h": "2020-02-05",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14344,
+            "candles_1d": 2391,
+            "funding_count": 500
+        },
+        "LINKUSDT": {
+            "first_4h": "2020-01-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14458,
+            "candles_1d": 2410,
+            "funding_count": 500
+        },
+        "BCHUSDT": {
+            "first_4h": "2019-12-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14632,
+            "candles_1d": 2439,
+            "funding_count": 500
+        },
+        "BTCUSDT": {
+            "first_4h": "2019-09-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 15242,
+            "candles_1d": 2541,
+            "funding_count": 500
+        },
+        "XMRUSDT": {
+            "first_4h": "2020-02-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14356,
+            "candles_1d": 2393,
+            "funding_count": 500
+        },
+        "XTZUSDT": {
+            "first_4h": "2020-02-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14338,
+            "candles_1d": 2390,
+            "funding_count": 500
+        },
+        "BNBUSDT": {
+            "first_4h": "2020-02-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14314,
+            "candles_1d": 2386,
+            "funding_count": 500
+        },
+        "DASHUSDT": {
+            "first_4h": "2020-02-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14350,
+            "candles_1d": 2392,
+            "funding_count": 500
+        },
+        "IOTAUSDT": {
+            "first_4h": "2020-02-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14302,
+            "candles_1d": 2384,
+            "funding_count": 500
+        },
+        "BATUSDT": {
+            "first_4h": "2020-02-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14296,
+            "candles_1d": 2383,
+            "funding_count": 500
+        },
+        "ALGOUSDT": {
+            "first_4h": "2020-06-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13552,
+            "candles_1d": 2259,
+            "funding_count": 500
+        },
+        "ATOMUSDT": {
+            "first_4h": "2020-02-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14331,
+            "candles_1d": 2389,
+            "funding_count": 500
+        },
+        "ZRXUSDT": {
+            "first_4h": "2020-06-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13504,
+            "candles_1d": 2251,
+            "funding_count": 500
+        },
+        "NEOUSDT": {
+            "first_4h": "2020-02-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14272,
+            "candles_1d": 2379,
+            "funding_count": 500
+        },
+        "ZILUSDT": {
+            "first_4h": "2020-06-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13540,
+            "candles_1d": 2257,
+            "funding_count": 500
+        },
+        "COMPUSDT": {
+            "first_4h": "2020-06-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13468,
+            "candles_1d": 2245,
+            "funding_count": 500
+        },
+        "VETUSDT": {
+            "first_4h": "2020-02-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14290,
+            "candles_1d": 2382,
+            "funding_count": 500
+        },
+        "DOGEUSDT": {
+            "first_4h": "2020-07-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13408,
+            "candles_1d": 2235,
+            "funding_count": 500
+        },
+        "IOSTUSDT": {
+            "first_4h": "2020-02-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14248,
+            "candles_1d": 2375,
+            "funding_count": 500
+        },
+        "THETAUSDT": {
+            "first_4h": "2020-05-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13672,
+            "candles_1d": 2279,
+            "funding_count": 500
+        },
+        "QTUMUSDT": {
+            "first_4h": "2020-02-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14254,
+            "candles_1d": 2376,
+            "funding_count": 500
+        },
+        "KNCUSDT": {
+            "first_4h": "2020-06-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13516,
+            "candles_1d": 2253,
+            "funding_count": 500
+        },
+        "ONTUSDT": {
+            "first_4h": "2020-02-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 14308,
+            "candles_1d": 2385,
+            "funding_count": 500
+        },
+        "KAVAUSDT": {
+            "first_4h": "2020-07-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13301,
+            "candles_1d": 2217,
+            "funding_count": 500
+        },
+        "BANDUSDT": {
+            "first_4h": "2020-07-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13295,
+            "candles_1d": 2216,
+            "funding_count": 500
+        },
+        "DOTUSDT": {
+            "first_4h": "2020-08-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13151,
+            "candles_1d": 2192,
+            "funding_count": 500
+        },
+        "YFIUSDT": {
+            "first_4h": "2020-08-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13097,
+            "candles_1d": 2183,
+            "funding_count": 500
+        },
+        "SNXUSDT": {
+            "first_4h": "2020-08-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13199,
+            "candles_1d": 2200,
+            "funding_count": 500
+        },
+        "TRBUSDT": {
+            "first_4h": "2020-09-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13079,
+            "candles_1d": 2180,
+            "funding_count": 500
+        },
+        "RLCUSDT": {
+            "first_4h": "2020-07-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13283,
+            "candles_1d": 2214,
+            "funding_count": 500
+        },
+        "SOLUSDT": {
+            "first_4h": "2020-09-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13013,
+            "candles_1d": 2169,
+            "funding_count": 500
+        },
+        "RUNEUSDT": {
+            "first_4h": "2020-09-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13073,
+            "candles_1d": 2179,
+            "funding_count": 500
+        },
+        "CRVUSDT": {
+            "first_4h": "2020-09-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13091,
+            "candles_1d": 2182,
+            "funding_count": 500
+        },
+        "ICXUSDT": {
+            "first_4h": "2020-09-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13007,
+            "candles_1d": 2168,
+            "funding_count": 500
+        },
+        "SUSHIUSDT": {
+            "first_4h": "2020-09-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13073,
+            "candles_1d": 2179,
+            "funding_count": 500
+        },
+        "UNIUSDT": {
+            "first_4h": "2020-09-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12989,
+            "candles_1d": 2165,
+            "funding_count": 500
+        },
+        "EGLDUSDT": {
+            "first_4h": "2020-09-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13013,
+            "candles_1d": 2169,
+            "funding_count": 500
+        },
+        "STORJUSDT": {
+            "first_4h": "2020-09-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13001,
+            "candles_1d": 2167,
+            "funding_count": 500
+        },
+        "ENJUSDT": {
+            "first_4h": "2020-09-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12923,
+            "candles_1d": 2154,
+            "funding_count": 500
+        },
+        "AVAXUSDT": {
+            "first_4h": "2020-09-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12959,
+            "candles_1d": 2160,
+            "funding_count": 500
+        },
+        "GRTUSDT": {
+            "first_4h": "2020-12-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12437,
+            "candles_1d": 2073,
+            "funding_count": 500
+        },
+        "NEARUSDT": {
+            "first_4h": "2020-10-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12826,
+            "candles_1d": 2138,
+            "funding_count": 500
+        },
+        "ZENUSDT": {
+            "first_4h": "2020-11-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12587,
+            "candles_1d": 2098,
+            "funding_count": 500
+        },
+        "BELUSDT": {
+            "first_4h": "2020-11-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12623,
+            "candles_1d": 2104,
+            "funding_count": 500
+        },
+        "KSMUSDT": {
+            "first_4h": "2020-09-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13072,
+            "candles_1d": 2139,
+            "funding_count": 500
+        },
+        "RSRUSDT": {
+            "first_4h": "2020-10-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12803,
+            "candles_1d": 2134,
+            "funding_count": 500
+        },
+        "AAVEUSDT": {
+            "first_4h": "2020-10-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12821,
+            "candles_1d": 2137,
+            "funding_count": 500
+        },
+        "SKLUSDT": {
+            "first_4h": "2020-12-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12503,
+            "candles_1d": 2084,
+            "funding_count": 500
+        },
+        "1INCHUSDT": {
+            "first_4h": "2020-12-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12400,
+            "candles_1d": 2067,
+            "funding_count": 500
+        },
+        "AXSUSDT": {
+            "first_4h": "2020-11-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12611,
+            "candles_1d": 2102,
+            "funding_count": 500
+        },
+        "SANDUSDT": {
+            "first_4h": "2021-01-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12215,
+            "candles_1d": 2036,
+            "funding_count": 500
+        },
+        "FILUSDT": {
+            "first_4h": "2020-10-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12821,
+            "candles_1d": 2137,
+            "funding_count": 500
+        },
+        "CHZUSDT": {
+            "first_4h": "2021-01-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12239,
+            "candles_1d": 2040,
+            "funding_count": 500
+        },
+        "RVNUSDT": {
+            "first_4h": "2021-02-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12041,
+            "candles_1d": 2007,
+            "funding_count": 500
+        },
+        "ANKRUSDT": {
+            "first_4h": "2021-01-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12209,
+            "candles_1d": 2035,
+            "funding_count": 500
+        },
+        "SFPUSDT": {
+            "first_4h": "2021-02-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12035,
+            "candles_1d": 2006,
+            "funding_count": 500
+        },
+        "MANAUSDT": {
+            "first_4h": "2021-03-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11921,
+            "candles_1d": 1987,
+            "funding_count": 500
+        },
+        "COTIUSDT": {
+            "first_4h": "2021-03-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11951,
+            "candles_1d": 1992,
+            "funding_count": 500
+        },
+        "ONEUSDT": {
+            "first_4h": "2021-03-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11903,
+            "candles_1d": 1984,
+            "funding_count": 500
+        },
+        "CHRUSDT": {
+            "first_4h": "2021-03-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11939,
+            "candles_1d": 1990,
+            "funding_count": 500
+        },
+        "MTLUSDT": {
+            "first_4h": "2021-03-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11825,
+            "candles_1d": 1971,
+            "funding_count": 500
+        },
+        "HBARUSDT": {
+            "first_4h": "2021-03-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11909,
+            "candles_1d": 1985,
+            "funding_count": 500
+        },
+        "ALICEUSDT": {
+            "first_4h": "2021-03-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11916,
+            "candles_1d": 1986,
+            "funding_count": 500
+        },
+        "HOTUSDT": {
+            "first_4h": "2021-03-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11831,
+            "candles_1d": 1972,
+            "funding_count": 500
+        },
+        "CELRUSDT": {
+            "first_4h": "2021-03-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11837,
+            "candles_1d": 1973,
+            "funding_count": 500
+        },
+        "OGNUSDT": {
+            "first_4h": "2021-04-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11819,
+            "candles_1d": 1970,
+            "funding_count": 500
+        },
+        "GTCUSDT": {
+            "first_4h": "2021-06-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11394,
+            "candles_1d": 1899,
+            "funding_count": 500
+        },
+        "1000SHIBUSDT": {
+            "first_4h": "2021-05-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11582,
+            "candles_1d": 1931,
+            "funding_count": 500
+        },
+        "BTCDOMUSDT": {
+            "first_4h": "2021-06-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11334,
+            "candles_1d": 1889,
+            "funding_count": 500
+        },
+        "IOTXUSDT": {
+            "first_4h": "2021-08-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11022,
+            "candles_1d": 1837,
+            "funding_count": 500
+        },
+        "DYDXUSDT": {
+            "first_4h": "2021-09-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10848,
+            "candles_1d": 1808,
+            "funding_count": 500
+        },
+        "MASKUSDT": {
+            "first_4h": "2021-08-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10932,
+            "candles_1d": 1822,
+            "funding_count": 500
+        },
+        "1000XECUSDT": {
+            "first_4h": "2021-09-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10806,
+            "candles_1d": 1801,
+            "funding_count": 500
+        },
+        "C98USDT": {
+            "first_4h": "2021-08-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10950,
+            "candles_1d": 1825,
+            "funding_count": 500
+        },
+        "GALAUSDT": {
+            "first_4h": "2021-09-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10800,
+            "candles_1d": 1800,
+            "funding_count": 500
+        },
+        "LPTUSDT": {
+            "first_4h": "2021-11-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10476,
+            "candles_1d": 1913,
+            "funding_count": 500
+        },
+        "ARUSDT": {
+            "first_4h": "2021-09-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10740,
+            "candles_1d": 1927,
+            "funding_count": 500
+        },
+        "ARPAUSDT": {
+            "first_4h": "2021-10-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10614,
+            "candles_1d": 2482,
+            "funding_count": 500
+        },
+        "PEOPLEUSDT": {
+            "first_4h": "2021-12-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10223,
+            "candles_1d": 1703,
+            "funding_count": 500
+        },
+        "CELOUSDT": {
+            "first_4h": "2021-09-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10746,
+            "candles_1d": 2056,
+            "funding_count": 500
+        },
+        "ENSUSDT": {
+            "first_4h": "2021-11-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10362,
+            "candles_1d": 1747,
+            "funding_count": 500
+        },
+        "ROSEUSDT": {
+            "first_4h": "2021-12-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10176,
+            "candles_1d": 1696,
+            "funding_count": 500
+        },
+        "GMTUSDT": {
+            "first_4h": "2022-03-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 9731,
+            "candles_1d": 1622,
+            "funding_count": 500
+        },
+        "API3USDT": {
+            "first_4h": "2022-02-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 9858,
+            "candles_1d": 1643,
+            "funding_count": 500
+        },
+        "OPUSDT": {
+            "first_4h": "2022-06-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 9261,
+            "candles_1d": 1544,
+            "funding_count": 500
+        },
+        "DUSKUSDT": {
+            "first_4h": "2022-01-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10134,
+            "candles_1d": 1689,
+            "funding_count": 500
+        },
+        "IMXUSDT": {
+            "first_4h": "2022-02-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 9924,
+            "candles_1d": 1654,
+            "funding_count": 500
+        },
+        "APEUSDT": {
+            "first_4h": "2022-03-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 9717,
+            "candles_1d": 1620,
+            "funding_count": 500
+        },
+        "CTSIUSDT": {
+            "first_4h": "2020-04-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13878,
+            "candles_1d": 2313,
+            "funding_count": 500
+        },
+        "FLOWUSDT": {
+            "first_4h": "2022-02-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 9930,
+            "candles_1d": 1655,
+            "funding_count": 500
+        },
+        "JASMYUSDT": {
+            "first_4h": "2021-11-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 10407,
+            "candles_1d": 1586,
+            "funding_count": 500
+        },
+        "SPELLUSDT": {
+            "first_4h": "2022-09-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 8679,
+            "candles_1d": 1447,
+            "funding_count": 500
+        },
+        "WOOUSDT": {
+            "first_4h": "2022-04-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 9588,
+            "candles_1d": 1598,
+            "funding_count": 500
+        },
+        "STGUSDT": {
+            "first_4h": "2022-08-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 8751,
+            "candles_1d": 1459,
+            "funding_count": 500
+        },
+        "MAGICUSDT": {
+            "first_4h": "2023-01-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7836,
+            "candles_1d": 1306,
+            "funding_count": 500
+        },
+        "LUNA2USDT": {
+            "first_4h": "2023-11-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6000,
+            "candles_1d": 1443,
+            "funding_count": 500
+        },
+        "MINAUSDT": {
+            "first_4h": "2023-02-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7756,
+            "candles_1d": 1293,
+            "funding_count": 500
+        },
+        "FETUSDT": {
+            "first_4h": "2023-01-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7884,
+            "candles_1d": 1314,
+            "funding_count": 500
+        },
+        "APTUSDT": {
+            "first_4h": "2022-10-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 8424,
+            "candles_1d": 1404,
+            "funding_count": 500
+        },
+        "1000LUNCUSDT": {
+            "first_4h": "2022-09-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 8661,
+            "candles_1d": 1444,
+            "funding_count": 500
+        },
+        "LDOUSDT": {
+            "first_4h": "2022-09-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 8583,
+            "candles_1d": 1431,
+            "funding_count": 500
+        },
+        "QNTUSDT": {
+            "first_4h": "2022-10-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 8418,
+            "candles_1d": 1851,
+            "funding_count": 500
+        },
+        "SSVUSDT": {
+            "first_4h": "2023-02-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7653,
+            "candles_1d": 1276,
+            "funding_count": 500
+        },
+        "GMXUSDT": {
+            "first_4h": "2023-02-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7695,
+            "candles_1d": 1283,
+            "funding_count": 500
+        },
+        "ASTRUSDT": {
+            "first_4h": "2023-02-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7716,
+            "candles_1d": 1286,
+            "funding_count": 500
+        },
+        "ACHUSDT": {
+            "first_4h": "2023-02-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7665,
+            "candles_1d": 1278,
+            "funding_count": 500
+        },
+        "TUSDT": {
+            "first_4h": "2023-02-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7791,
+            "candles_1d": 1299,
+            "funding_count": 500
+        },
+        "ICPUSDT": {
+            "first_4h": "2022-09-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 8556,
+            "candles_1d": 1426,
+            "funding_count": 500
+        },
+        "IDUSDT": {
+            "first_4h": "2023-03-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7491,
+            "candles_1d": 1249,
+            "funding_count": 500
+        },
+        "ARBUSDT": {
+            "first_4h": "2023-03-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7491,
+            "candles_1d": 1249,
+            "funding_count": 500
+        },
+        "CKBUSDT": {
+            "first_4h": "2023-02-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7629,
+            "candles_1d": 1272,
+            "funding_count": 500
+        },
+        "CFXUSDT": {
+            "first_4h": "2021-03-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 11836,
+            "candles_1d": 1280,
+            "funding_count": 500
+        },
+        "1000PEPEUSDT": {
+            "first_4h": "2023-05-05",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7232,
+            "candles_1d": 1206,
+            "funding_count": 500
+        },
+        "LQTYUSDT": {
+            "first_4h": "2023-03-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7569,
+            "candles_1d": 1262,
+            "funding_count": 500
+        },
+        "STXUSDT": {
+            "first_4h": "2023-02-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7671,
+            "candles_1d": 1279,
+            "funding_count": 500
+        },
+        "BLURUSDT": {
+            "first_4h": "2023-04-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7275,
+            "candles_1d": 1213,
+            "funding_count": 500
+        },
+        "XVSUSDT": {
+            "first_4h": "2023-04-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7368,
+            "candles_1d": 1228,
+            "funding_count": 500
+        },
+        "EDUUSDT": {
+            "first_4h": "2023-04-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7263,
+            "candles_1d": 1211,
+            "funding_count": 500
+        },
+        "TLMUSDT": {
+            "first_4h": "2023-03-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7449,
+            "candles_1d": 1242,
+            "funding_count": 500
+        },
+        "SUIUSDT": {
+            "first_4h": "2023-05-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7244,
+            "candles_1d": 1208,
+            "funding_count": 500
+        },
+        "JOEUSDT": {
+            "first_4h": "2023-03-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7455,
+            "candles_1d": 1243,
+            "funding_count": 500
+        },
+        "INJUSDT": {
+            "first_4h": "2020-10-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 12791,
+            "candles_1d": 1467,
+            "funding_count": 500
+        },
+        "ARKMUSDT": {
+            "first_4h": "2023-07-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6732,
+            "candles_1d": 1122,
+            "funding_count": 500
+        },
+        "1000FLOKIUSDT": {
+            "first_4h": "2023-05-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 7226,
+            "candles_1d": 1205,
+            "funding_count": 500
+        },
+        "MAVUSDT": {
+            "first_4h": "2023-06-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6903,
+            "candles_1d": 1151,
+            "funding_count": 500
+        },
+        "DODOXUSDT": {
+            "first_4h": "2023-08-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6663,
+            "candles_1d": 1111,
+            "funding_count": 500
+        },
+        "AGLDUSDT": {
+            "first_4h": "2023-07-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6726,
+            "candles_1d": 1121,
+            "funding_count": 500
+        },
+        "XVGUSDT": {
+            "first_4h": "2023-07-05",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6867,
+            "candles_1d": 1904,
+            "funding_count": 500
+        },
+        "NMRUSDT": {
+            "first_4h": "2023-06-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6945,
+            "candles_1d": 1158,
+            "funding_count": 500
+        },
+        "BSVUSDT": {
+            "first_4h": "2023-10-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6225,
+            "candles_1d": 1038,
+            "funding_count": 500
+        },
+        "BNTUSDT": {
+            "first_4h": "2023-08-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6651,
+            "candles_1d": 1109,
+            "funding_count": 500
+        },
+        "SEIUSDT": {
+            "first_4h": "2023-08-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6612,
+            "candles_1d": 1102,
+            "funding_count": 500
+        },
+        "CYBERUSDT": {
+            "first_4h": "2023-08-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6585,
+            "candles_1d": 1098,
+            "funding_count": 500
+        },
+        "RIFUSDT": {
+            "first_4h": "2023-10-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6219,
+            "candles_1d": 1037,
+            "funding_count": 500
+        },
+        "YGGUSDT": {
+            "first_4h": "2023-08-05",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6684,
+            "candles_1d": 1114,
+            "funding_count": 500
+        },
+        "ARKUSDT": {
+            "first_4h": "2023-09-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6411,
+            "candles_1d": 1069,
+            "funding_count": 500
+        },
+        "UMAUSDT": {
+            "first_4h": "2020-09-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13042,
+            "candles_1d": 1201,
+            "funding_count": 500
+        },
+        "BIGTIMEUSDT": {
+            "first_4h": "2023-10-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6273,
+            "candles_1d": 1046,
+            "funding_count": 500
+        },
+        "POLYXUSDT": {
+            "first_4h": "2023-10-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6198,
+            "candles_1d": 1033,
+            "funding_count": 500
+        },
+        "BICOUSDT": {
+            "first_4h": "2023-09-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6357,
+            "candles_1d": 1060,
+            "funding_count": 500
+        },
+        "WLDUSDT": {
+            "first_4h": "2023-07-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6753,
+            "candles_1d": 1126,
+            "funding_count": 500
+        },
+        "PENDLEUSDT": {
+            "first_4h": "2023-07-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6732,
+            "candles_1d": 1122,
+            "funding_count": 500
+        },
+        "TIAUSDT": {
+            "first_4h": "2023-10-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6158,
+            "candles_1d": 1027,
+            "funding_count": 500
+        },
+        "WAXPUSDT": {
+            "first_4h": "2023-10-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6237,
+            "candles_1d": 1040,
+            "funding_count": 500
+        },
+        "KASUSDT": {
+            "first_4h": "2023-11-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6060,
+            "candles_1d": 1010,
+            "funding_count": 500
+        },
+        "CAKEUSDT": {
+            "first_4h": "2023-11-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6147,
+            "candles_1d": 1025,
+            "funding_count": 500
+        },
+        "GASUSDT": {
+            "first_4h": "2023-10-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6198,
+            "candles_1d": 1255,
+            "funding_count": 500
+        },
+        "SUPERUSDT": {
+            "first_4h": "2023-11-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6003,
+            "candles_1d": 1001,
+            "funding_count": 500
+        },
+        "STEEMUSDT": {
+            "first_4h": "2023-11-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6111,
+            "candles_1d": 1019,
+            "funding_count": 500
+        },
+        "TWTUSDT": {
+            "first_4h": "2023-11-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6141,
+            "candles_1d": 1024,
+            "funding_count": 500
+        },
+        "USTCUSDT": {
+            "first_4h": "2023-11-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5997,
+            "candles_1d": 1262,
+            "funding_count": 500
+        },
+        "MEMEUSDT": {
+            "first_4h": "2023-11-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6141,
+            "candles_1d": 1024,
+            "funding_count": 500
+        },
+        "1000BONKUSDT": {
+            "first_4h": "2023-11-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6027,
+            "candles_1d": 1005,
+            "funding_count": 500
+        },
+        "PYTHUSDT": {
+            "first_4h": "2023-11-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6027,
+            "candles_1d": 1005,
+            "funding_count": 500
+        },
+        "POWRUSDT": {
+            "first_4h": "2023-10-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6186,
+            "candles_1d": 1031,
+            "funding_count": 500
+        },
+        "ILVUSDT": {
+            "first_4h": "2023-11-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6098,
+            "candles_1d": 1017,
+            "funding_count": 500
+        },
+        "ORDIUSDT": {
+            "first_4h": "2023-11-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6117,
+            "candles_1d": 1020,
+            "funding_count": 500
+        },
+        "BEAMXUSDT": {
+            "first_4h": "2023-11-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 6057,
+            "candles_1d": 1010,
+            "funding_count": 500
+        },
+        "1000SATSUSDT": {
+            "first_4h": "2023-12-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5907,
+            "candles_1d": 985,
+            "funding_count": 500
+        },
+        "ETHWUSDT": {
+            "first_4h": "2023-11-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5991,
+            "candles_1d": 999,
+            "funding_count": 500
+        },
+        "JTOUSDT": {
+            "first_4h": "2023-12-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5932,
+            "candles_1d": 989,
+            "funding_count": 500
+        },
+        "ACEUSDT": {
+            "first_4h": "2023-12-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5872,
+            "candles_1d": 979,
+            "funding_count": 500
+        },
+        "WIFUSDT": {
+            "first_4h": "2024-01-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5685,
+            "candles_1d": 948,
+            "funding_count": 500
+        },
+        "ONDOUSDT": {
+            "first_4h": "2024-01-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5673,
+            "candles_1d": 946,
+            "funding_count": 500
+        },
+        "LSKUSDT": {
+            "first_4h": "2024-01-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5643,
+            "candles_1d": 941,
+            "funding_count": 500
+        },
+        "MOVRUSDT": {
+            "first_4h": "2023-12-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5823,
+            "candles_1d": 971,
+            "funding_count": 500
+        },
+        "1000RATSUSDT": {
+            "first_4h": "2023-12-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5889,
+            "candles_1d": 982,
+            "funding_count": 500
+        },
+        "AUCTIONUSDT": {
+            "first_4h": "2023-12-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5889,
+            "candles_1d": 982,
+            "funding_count": 500
+        },
+        "ALTUSDT": {
+            "first_4h": "2024-01-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5643,
+            "candles_1d": 941,
+            "funding_count": 500
+        },
+        "MANTAUSDT": {
+            "first_4h": "2024-01-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5685,
+            "candles_1d": 948,
+            "funding_count": 500
+        },
+        "ZETAUSDT": {
+            "first_4h": "2024-02-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5596,
+            "candles_1d": 933,
+            "funding_count": 500
+        },
+        "XAIUSDT": {
+            "first_4h": "2024-01-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5739,
+            "candles_1d": 957,
+            "funding_count": 500
+        },
+        "RONINUSDT": {
+            "first_4h": "2024-02-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5573,
+            "candles_1d": 929,
+            "funding_count": 500
+        },
+        "JUPUSDT": {
+            "first_4h": "2024-01-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5606,
+            "candles_1d": 935,
+            "funding_count": 500
+        },
+        "PORTALUSDT": {
+            "first_4h": "2024-02-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5433,
+            "candles_1d": 906,
+            "funding_count": 500
+        },
+        "BOMEUSDT": {
+            "first_4h": "2024-03-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5337,
+            "candles_1d": 890,
+            "funding_count": 500
+        },
+        "AXLUSDT": {
+            "first_4h": "2024-03-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5427,
+            "candles_1d": 905,
+            "funding_count": 500
+        },
+        "ENAUSDT": {
+            "first_4h": "2024-04-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5235,
+            "candles_1d": 873,
+            "funding_count": 500
+        },
+        "ETHFIUSDT": {
+            "first_4h": "2024-03-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5325,
+            "candles_1d": 888,
+            "funding_count": 500
+        },
+        "DYMUSDT": {
+            "first_4h": "2024-02-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5567,
+            "candles_1d": 928,
+            "funding_count": 500
+        },
+        "PIXELUSDT": {
+            "first_4h": "2024-02-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5493,
+            "candles_1d": 916,
+            "funding_count": 500
+        },
+        "STRKUSDT": {
+            "first_4h": "2024-02-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5486,
+            "candles_1d": 915,
+            "funding_count": 500
+        },
+        "ONGUSDT": {
+            "first_4h": "2023-11-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5997,
+            "candles_1d": 2600,
+            "funding_count": 500
+        },
+        "AEVOUSDT": {
+            "first_4h": "2024-03-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5355,
+            "candles_1d": 893,
+            "funding_count": 500
+        },
+        "SAGAUSDT": {
+            "first_4h": "2024-04-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5194,
+            "candles_1d": 866,
+            "funding_count": 500
+        },
+        "METISUSDT": {
+            "first_4h": "2024-03-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5362,
+            "candles_1d": 894,
+            "funding_count": 500
+        },
+        "GLMUSDT": {
+            "first_4h": "2024-02-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5476,
+            "candles_1d": 913,
+            "funding_count": 500
+        },
+        "NOTUSDT": {
+            "first_4h": "2024-05-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4971,
+            "candles_1d": 829,
+            "funding_count": 500
+        },
+        "WUSDT": {
+            "first_4h": "2024-04-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5229,
+            "candles_1d": 872,
+            "funding_count": 500
+        },
+        "TAOUSDT": {
+            "first_4h": "2024-04-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5181,
+            "candles_1d": 864,
+            "funding_count": 500
+        },
+        "REZUSDT": {
+            "first_4h": "2024-04-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5067,
+            "candles_1d": 845,
+            "funding_count": 500
+        },
+        "TNSRUSDT": {
+            "first_4h": "2024-04-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 5198,
+            "candles_1d": 867,
+            "funding_count": 500
+        },
+        "MEWUSDT": {
+            "first_4h": "2024-06-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4779,
+            "candles_1d": 797,
+            "funding_count": 500
+        },
+        "IOUSDT": {
+            "first_4h": "2024-06-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4815,
+            "candles_1d": 803,
+            "funding_count": 500
+        },
+        "BBUSDT": {
+            "first_4h": "2024-05-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4989,
+            "candles_1d": 832,
+            "funding_count": 500
+        },
+        "RENDERUSDT": {
+            "first_4h": "2024-07-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4546,
+            "candles_1d": 758,
+            "funding_count": 500
+        },
+        "BANANAUSDT": {
+            "first_4h": "2024-08-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4428,
+            "candles_1d": 738,
+            "funding_count": 500
+        },
+        "TURBOUSDT": {
+            "first_4h": "2024-05-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4887,
+            "candles_1d": 815,
+            "funding_count": 500
+        },
+        "GUSDT": {
+            "first_4h": "2024-08-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4425,
+            "candles_1d": 738,
+            "funding_count": 500
+        },
+        "POPCATUSDT": {
+            "first_4h": "2024-08-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4383,
+            "candles_1d": 731,
+            "funding_count": 500
+        },
+        "ZKUSDT": {
+            "first_4h": "2024-06-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4780,
+            "candles_1d": 797,
+            "funding_count": 500
+        },
+        "ZROUSDT": {
+            "first_4h": "2024-06-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4761,
+            "candles_1d": 794,
+            "funding_count": 500
+        },
+        "RPLUSDT": {
+            "first_4h": "2024-09-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4275,
+            "candles_1d": 713,
+            "funding_count": 500
+        },
+        "BRETTUSDT": {
+            "first_4h": "2024-08-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4396,
+            "candles_1d": 733,
+            "funding_count": 500
+        },
+        "1MBABYDOGEUSDT": {
+            "first_4h": "2024-09-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4234,
+            "candles_1d": 706,
+            "funding_count": 500
+        },
+        "LISTAUSDT": {
+            "first_4h": "2024-06-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4761,
+            "candles_1d": 794,
+            "funding_count": 500
+        },
+        "FLUXUSDT": {
+            "first_4h": "2024-09-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4313,
+            "candles_1d": 719,
+            "funding_count": 500
+        },
+        "DOGSUSDT": {
+            "first_4h": "2024-08-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4359,
+            "candles_1d": 727,
+            "funding_count": 500
+        },
+        "SCRUSDT": {
+            "first_4h": "2024-10-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4018,
+            "candles_1d": 670,
+            "funding_count": 500
+        },
+        "SUNUSDT": {
+            "first_4h": "2024-08-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4383,
+            "candles_1d": 731,
+            "funding_count": 500
+        },
+        "NEIROUSDT": {
+            "first_4h": "2024-09-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4234,
+            "candles_1d": 706,
+            "funding_count": 500
+        },
+        "SYNUSDT": {
+            "first_4h": "2024-08-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4419,
+            "candles_1d": 737,
+            "funding_count": 500
+        },
+        "RAREUSDT": {
+            "first_4h": "2024-08-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4425,
+            "candles_1d": 738,
+            "funding_count": 500
+        },
+        "POLUSDT": {
+            "first_4h": "2024-09-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4251,
+            "candles_1d": 709,
+            "funding_count": 500
+        },
+        "SAFEUSDT": {
+            "first_4h": "2024-10-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3999,
+            "candles_1d": 667,
+            "funding_count": 500
+        },
+        "CATIUSDT": {
+            "first_4h": "2024-09-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4210,
+            "candles_1d": 702,
+            "funding_count": 500
+        },
+        "MOODENGUSDT": {
+            "first_4h": "2024-10-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4000,
+            "candles_1d": 667,
+            "funding_count": 500
+        },
+        "HMSTRUSDT": {
+            "first_4h": "2024-09-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4173,
+            "candles_1d": 696,
+            "funding_count": 500
+        },
+        "EIGENUSDT": {
+            "first_4h": "2024-10-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4145,
+            "candles_1d": 691,
+            "funding_count": 500
+        },
+        "GOATUSDT": {
+            "first_4h": "2024-10-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4005,
+            "candles_1d": 668,
+            "funding_count": 500
+        },
+        "COWUSDT": {
+            "first_4h": "2024-11-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3927,
+            "candles_1d": 655,
+            "funding_count": 500
+        },
+        "DRIFTUSDT": {
+            "first_4h": "2024-11-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3915,
+            "candles_1d": 653,
+            "funding_count": 500
+        },
+        "FIDAUSDT": {
+            "first_4h": "2024-09-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4215,
+            "candles_1d": 703,
+            "funding_count": 500
+        },
+        "DIAUSDT": {
+            "first_4h": "2024-10-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 4137,
+            "candles_1d": 690,
+            "funding_count": 500
+        },
+        "BANUSDT": {
+            "first_4h": "2025-04-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3000,
+            "candles_1d": 643,
+            "funding_count": 500
+        },
+        "1000000MOGUSDT": {
+            "first_4h": "2026-03-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1000,
+            "candles_1d": 654,
+            "funding_count": 500
+        },
+        "SANTOSUSDT": {
+            "first_4h": "2024-10-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3981,
+            "candles_1d": 664,
+            "funding_count": 500
+        },
+        "AKTUSDT": {
+            "first_4h": "2024-11-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3856,
+            "candles_1d": 643,
+            "funding_count": 500
+        },
+        "KAIAUSDT": {
+            "first_4h": "2024-12-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3759,
+            "candles_1d": 627,
+            "funding_count": 500
+        },
+        "CETUSUSDT": {
+            "first_4h": "2024-11-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3927,
+            "candles_1d": 655,
+            "funding_count": 500
+        },
+        "THEUSDT": {
+            "first_4h": "2024-11-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3801,
+            "candles_1d": 634,
+            "funding_count": 500
+        },
+        "SCRTUSDT": {
+            "first_4h": "2024-11-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3838,
+            "candles_1d": 640,
+            "funding_count": 500
+        },
+        "1000CHEEMSUSDT": {
+            "first_4h": "2024-11-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3814,
+            "candles_1d": 0,
+            "funding_count": 500
+        },
+        "ACTUSDT": {
+            "first_4h": "2024-11-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3897,
+            "candles_1d": 650,
+            "funding_count": 500
+        },
+        "PNUTUSDT": {
+            "first_4h": "2024-11-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3897,
+            "candles_1d": 650,
+            "funding_count": 500
+        },
+        "RAYSOLUSDT": {
+            "first_4h": "2024-12-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3723,
+            "candles_1d": 621,
+            "funding_count": 500
+        },
+        "VELODROMEUSDT": {
+            "first_4h": "2024-12-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3704,
+            "candles_1d": 618,
+            "funding_count": 500
+        },
+        "AEROUSDT": {
+            "first_4h": "2024-12-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3759,
+            "candles_1d": 627,
+            "funding_count": 500
+        },
+        "MOCAUSDT": {
+            "first_4h": "2024-12-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3688,
+            "candles_1d": 615,
+            "funding_count": 500
+        },
+        "MEUSDT": {
+            "first_4h": "2024-12-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3722,
+            "candles_1d": 621,
+            "funding_count": 500
+        },
+        "MOVEUSDT": {
+            "first_4h": "2024-12-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3729,
+            "candles_1d": 622,
+            "funding_count": 500
+        },
+        "AVAUSDT": {
+            "first_4h": "2024-12-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3705,
+            "candles_1d": 618,
+            "funding_count": 500
+        },
+        "VANAUSDT": {
+            "first_4h": "2024-12-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3687,
+            "candles_1d": 615,
+            "funding_count": 500
+        },
+        "CGPTUSDT": {
+            "first_4h": "2024-12-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3662,
+            "candles_1d": 611,
+            "funding_count": 500
+        },
+        "MORPHOUSDT": {
+            "first_4h": "2025-09-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2000,
+            "candles_1d": 634,
+            "funding_count": 500
+        },
+        "ORCAUSDT": {
+            "first_4h": "2024-12-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3747,
+            "candles_1d": 625,
+            "funding_count": 500
+        },
+        "PENGUUSDT": {
+            "first_4h": "2024-12-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3680,
+            "candles_1d": 614,
+            "funding_count": 500
+        },
+        "VIRTUALUSDT": {
+            "first_4h": "2024-12-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3723,
+            "candles_1d": 621,
+            "funding_count": 500
+        },
+        "KOMAUSDT": {
+            "first_4h": "2024-12-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3723,
+            "candles_1d": 621,
+            "funding_count": 500
+        },
+        "GRASSUSDT": {
+            "first_4h": "2024-11-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3915,
+            "candles_1d": 653,
+            "funding_count": 500
+        },
+        "PHAUSDT": {
+            "first_4h": "2024-12-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3604,
+            "candles_1d": 601,
+            "funding_count": 500
+        },
+        "FARTCOINUSDT": {
+            "first_4h": "2024-12-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3662,
+            "candles_1d": 611,
+            "funding_count": 500
+        },
+        "HIVEUSDT": {
+            "first_4h": "2024-12-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3646,
+            "candles_1d": 608,
+            "funding_count": 500
+        },
+        "LUMIAUSDT": {
+            "first_4h": "2024-12-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3676,
+            "candles_1d": 613,
+            "funding_count": 500
+        },
+        "ALCHUSDT": {
+            "first_4h": "2025-01-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3556,
+            "candles_1d": 593,
+            "funding_count": 500
+        },
+        "COOKIEUSDT": {
+            "first_4h": "2025-01-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3556,
+            "candles_1d": 593,
+            "funding_count": 500
+        },
+        "SWARMSUSDT": {
+            "first_4h": "2025-01-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3555,
+            "candles_1d": 593,
+            "funding_count": 500
+        },
+        "SPXUSDT": {
+            "first_4h": "2024-12-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3723,
+            "candles_1d": 0,
+            "funding_count": 500
+        },
+        "ARCUSDT": {
+            "first_4h": "2025-01-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3495,
+            "candles_1d": 583,
+            "funding_count": 500
+        },
+        "GRIFFAINUSDT": {
+            "first_4h": "2025-01-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3585,
+            "candles_1d": 598,
+            "funding_count": 500
+        },
+        "USUALUSDT": {
+            "first_4h": "2024-12-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3675,
+            "candles_1d": 613,
+            "funding_count": 500
+        },
+        "AIXBTUSDT": {
+            "first_4h": "2024-12-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3662,
+            "candles_1d": 611,
+            "funding_count": 500
+        },
+        "KMNOUSDT": {
+            "first_4h": "2024-12-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3662,
+            "candles_1d": 611,
+            "funding_count": 500
+        },
+        "ZEREBROUSDT": {
+            "first_4h": "2025-01-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3585,
+            "candles_1d": 598,
+            "funding_count": 500
+        },
+        "SONICUSDT": {
+            "first_4h": "2025-01-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3551,
+            "candles_1d": 592,
+            "funding_count": 500
+        },
+        "AVAAIUSDT": {
+            "first_4h": "2025-01-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3495,
+            "candles_1d": 583,
+            "funding_count": 500
+        },
+        "ANIMEUSDT": {
+            "first_4h": "2025-01-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3458,
+            "candles_1d": 577,
+            "funding_count": 500
+        },
+        "LAYERUSDT": {
+            "first_4h": "2025-02-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3345,
+            "candles_1d": 558,
+            "funding_count": 500
+        },
+        "TRUMPUSDT": {
+            "first_4h": "2025-01-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3489,
+            "candles_1d": 582,
+            "funding_count": 500
+        },
+        "VVVUSDT": {
+            "first_4h": "2025-01-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3424,
+            "candles_1d": 571,
+            "funding_count": 500
+        },
+        "PROMUSDT": {
+            "first_4h": "2025-01-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3507,
+            "candles_1d": 585,
+            "funding_count": 500
+        },
+        "DEXEUSDT": {
+            "first_4h": "2024-12-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3640,
+            "candles_1d": 1857,
+            "funding_count": 500
+        },
+        "SUSDT": {
+            "first_4h": "2025-01-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3502,
+            "candles_1d": 584,
+            "funding_count": 500
+        },
+        "BIOUSDT": {
+            "first_4h": "2025-01-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3579,
+            "candles_1d": 597,
+            "funding_count": 500
+        },
+        "VTHOUSDT": {
+            "first_4h": "2025-01-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3466,
+            "candles_1d": 578,
+            "funding_count": 500
+        },
+        "BERAUSDT": {
+            "first_4h": "2025-02-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3375,
+            "candles_1d": 563,
+            "funding_count": 500
+        },
+        "PIPPINUSDT": {
+            "first_4h": "2025-01-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3454,
+            "candles_1d": 576,
+            "funding_count": 500
+        },
+        "REDUSDT": {
+            "first_4h": "2025-03-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3206,
+            "candles_1d": 535,
+            "funding_count": 500
+        },
+        "TSTUSDT": {
+            "first_4h": "2025-02-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3357,
+            "candles_1d": 560,
+            "funding_count": 500
+        },
+        "SHELLUSDT": {
+            "first_4h": "2025-02-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3308,
+            "candles_1d": 552,
+            "funding_count": 500
+        },
+        "MELANIAUSDT": {
+            "first_4h": "2025-01-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3478,
+            "candles_1d": 580,
+            "funding_count": 500
+        },
+        "GPSUSDT": {
+            "first_4h": "2025-02-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3308,
+            "candles_1d": 552,
+            "funding_count": 500
+        },
+        "KAITOUSDT": {
+            "first_4h": "2025-02-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3291,
+            "candles_1d": 549,
+            "funding_count": 500
+        },
+        "BMTUSDT": {
+            "first_4h": "2025-03-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3141,
+            "candles_1d": 524,
+            "funding_count": 500
+        },
+        "TUTUSDT": {
+            "first_4h": "2025-03-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3124,
+            "candles_1d": 521,
+            "funding_count": 500
+        },
+        "BANANAS31USDT": {
+            "first_4h": "2025-03-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3112,
+            "candles_1d": 519,
+            "funding_count": 500
+        },
+        "SIRENUSDT": {
+            "first_4h": "2025-03-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3112,
+            "candles_1d": 519,
+            "funding_count": 500
+        },
+        "BROCCOLI714USDT": {
+            "first_4h": "2025-03-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3118,
+            "candles_1d": 520,
+            "funding_count": 500
+        },
+        "SOLVUSDT": {
+            "first_4h": "2025-01-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3495,
+            "candles_1d": 583,
+            "funding_count": 500
+        },
+        "NILUSDT": {
+            "first_4h": "2025-03-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3099,
+            "candles_1d": 517,
+            "funding_count": 500
+        },
+        "EPICUSDT": {
+            "first_4h": "2025-03-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3166,
+            "candles_1d": 528,
+            "funding_count": 500
+        },
+        "BROCCOLIF3BUSDT": {
+            "first_4h": "2025-03-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3118,
+            "candles_1d": 520,
+            "funding_count": 500
+        },
+        "BRUSDT": {
+            "first_4h": "2025-03-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3117,
+            "candles_1d": 520,
+            "funding_count": 500
+        },
+        "FORMUSDT": {
+            "first_4h": "2025-03-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3130,
+            "candles_1d": 522,
+            "funding_count": 500
+        },
+        "JELLYJELLYUSDT": {
+            "first_4h": "2025-03-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3086,
+            "candles_1d": 515,
+            "funding_count": 500
+        },
+        "WALUSDT": {
+            "first_4h": "2025-03-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3081,
+            "candles_1d": 514,
+            "funding_count": 500
+        },
+        "MUBARAKUSDT": {
+            "first_4h": "2025-03-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3079,
+            "candles_1d": 524,
+            "funding_count": 500
+        },
+        "ATHUSDT": {
+            "first_4h": "2025-04-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3045,
+            "candles_1d": 508,
+            "funding_count": 500
+        },
+        "PARTIUSDT": {
+            "first_4h": "2025-03-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3093,
+            "candles_1d": 516,
+            "funding_count": 500
+        },
+        "PROMPTUSDT": {
+            "first_4h": "2025-04-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2993,
+            "candles_1d": 499,
+            "funding_count": 500
+        },
+        "KERNELUSDT": {
+            "first_4h": "2025-04-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2973,
+            "candles_1d": 496,
+            "funding_count": 500
+        },
+        "MAVIAUSDT": {
+            "first_4h": "2025-03-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3086,
+            "candles_1d": 515,
+            "funding_count": 500
+        },
+        "STOUSDT": {
+            "first_4h": "2025-04-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2985,
+            "candles_1d": 498,
+            "funding_count": 500
+        },
+        "GUNUSDT": {
+            "first_4h": "2025-03-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3057,
+            "candles_1d": 510,
+            "funding_count": 500
+        },
+        "PLUMEUSDT": {
+            "first_4h": "2025-03-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3117,
+            "candles_1d": 520,
+            "funding_count": 500
+        },
+        "HEIUSDT": {
+            "first_4h": "2025-02-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3334,
+            "candles_1d": 556,
+            "funding_count": 500
+        },
+        "FHEUSDT": {
+            "first_4h": "2025-04-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2985,
+            "candles_1d": 498,
+            "funding_count": 500
+        },
+        "HYPERUSDT": {
+            "first_4h": "2025-04-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2925,
+            "candles_1d": 488,
+            "funding_count": 500
+        },
+        "SIGNUSDT": {
+            "first_4h": "2025-04-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2890,
+            "candles_1d": 482,
+            "funding_count": 500
+        },
+        "INITUSDT": {
+            "first_4h": "2025-04-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2963,
+            "candles_1d": 494,
+            "funding_count": 500
+        },
+        "DOLOUSDT": {
+            "first_4h": "2025-05-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2874,
+            "candles_1d": 479,
+            "funding_count": 500
+        },
+        "DEEPUSDT": {
+            "first_4h": "2025-04-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2926,
+            "candles_1d": 488,
+            "funding_count": 500
+        },
+        "BABYUSDT": {
+            "first_4h": "2025-04-05",
+            "last_4h": "2026-08-22",
+            "candles_4h": 3027,
+            "candles_1d": 505,
+            "funding_count": 500
+        },
+        "PUNDIXUSDT": {
+            "first_4h": "2025-04-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2878,
+            "candles_1d": 480,
+            "funding_count": 500
+        },
+        "WCTUSDT": {
+            "first_4h": "2025-04-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2968,
+            "candles_1d": 495,
+            "funding_count": 500
+        },
+        "ASRUSDT": {
+            "first_4h": "2025-05-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2842,
+            "candles_1d": 474,
+            "funding_count": 500
+        },
+        "CTKUSDT": {
+            "first_4h": "2025-04-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2878,
+            "candles_1d": 480,
+            "funding_count": 500
+        },
+        "BANKUSDT": {
+            "first_4h": "2025-11-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1695,
+            "candles_1d": 492,
+            "funding_count": 500
+        },
+        "SYRUPUSDT": {
+            "first_4h": "2025-05-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2836,
+            "candles_1d": 473,
+            "funding_count": 500
+        },
+        "DOODUSDT": {
+            "first_4h": "2025-05-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2823,
+            "candles_1d": 471,
+            "funding_count": 500
+        },
+        "AGTUSDT": {
+            "first_4h": "2025-05-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2758,
+            "candles_1d": 460,
+            "funding_count": 500
+        },
+        "OGUSDT": {
+            "first_4h": "2025-05-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2806,
+            "candles_1d": 468,
+            "funding_count": 500
+        },
+        "B2USDT": {
+            "first_4h": "2025-05-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2841,
+            "candles_1d": 474,
+            "funding_count": 500
+        },
+        "HAEDALUSDT": {
+            "first_4h": "2025-05-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2874,
+            "candles_1d": 479,
+            "funding_count": 500
+        },
+        "SOONUSDT": {
+            "first_4h": "2025-05-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2740,
+            "candles_1d": 457,
+            "funding_count": 500
+        },
+        "NXPCUSDT": {
+            "first_4h": "2025-05-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2789,
+            "candles_1d": 465,
+            "funding_count": 500
+        },
+        "AUSDT": {
+            "first_4h": "2025-05-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2710,
+            "candles_1d": 452,
+            "funding_count": 500
+        },
+        "SXTUSDT": {
+            "first_4h": "2025-05-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2866,
+            "candles_1d": 478,
+            "funding_count": 500
+        },
+        "SKYAIUSDT": {
+            "first_4h": "2025-05-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2800,
+            "candles_1d": 467,
+            "funding_count": 500
+        },
+        "CVCUSDT": {
+            "first_4h": "2025-05-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2782,
+            "candles_1d": 464,
+            "funding_count": 500
+        },
+        "AWEUSDT": {
+            "first_4h": "2025-05-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2752,
+            "candles_1d": 459,
+            "funding_count": 500
+        },
+        "ALPINEUSDT": {
+            "first_4h": "2025-05-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2842,
+            "candles_1d": 474,
+            "funding_count": 500
+        },
+        "LAUSDT": {
+            "first_4h": "2025-06-05",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2662,
+            "candles_1d": 444,
+            "funding_count": 500
+        },
+        "AIOTUSDT": {
+            "first_4h": "2025-09-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2000,
+            "candles_1d": 480,
+            "funding_count": 500
+        },
+        "MERLUSDT": {
+            "first_4h": "2025-05-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2704,
+            "candles_1d": 451,
+            "funding_count": 500
+        },
+        "MYXUSDT": {
+            "first_4h": "2025-06-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2583,
+            "candles_1d": 431,
+            "funding_count": 500
+        },
+        "HOMEUSDT": {
+            "first_4h": "2025-06-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2632,
+            "candles_1d": 439,
+            "funding_count": 500
+        },
+        "PUMPBTCUSDT": {
+            "first_4h": "2025-06-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2614,
+            "candles_1d": 436,
+            "funding_count": 500
+        },
+        "RESOLVUSDT": {
+            "first_4h": "2025-06-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2631,
+            "candles_1d": 439,
+            "funding_count": 500
+        },
+        "1000000BOBUSDT": {
+            "first_4h": "2025-06-05",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2662,
+            "candles_1d": 444,
+            "funding_count": 500
+        },
+        "SQDUSDT": {
+            "first_4h": "2025-06-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2625,
+            "candles_1d": 438,
+            "funding_count": 500
+        },
+        "HYPEUSDT": {
+            "first_4h": "2025-05-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2698,
+            "candles_1d": 450,
+            "funding_count": 500
+        },
+        "SPKUSDT": {
+            "first_4h": "2025-06-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2590,
+            "candles_1d": 432,
+            "funding_count": 500
+        },
+        "HUMAUSDT": {
+            "first_4h": "2025-05-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2721,
+            "candles_1d": 454,
+            "funding_count": 500
+        },
+        "BUSDT": {
+            "first_4h": "2025-05-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2744,
+            "candles_1d": 458,
+            "funding_count": 500
+        },
+        "PUMPUSDT": {
+            "first_4h": "2025-07-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2453,
+            "candles_1d": 409,
+            "funding_count": 500
+        },
+        "BULLAUSDT": {
+            "first_4h": "2025-07-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2488,
+            "candles_1d": 415,
+            "funding_count": 500
+        },
+        "HUSDT": {
+            "first_4h": "2025-06-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2542,
+            "candles_1d": 424,
+            "funding_count": 500
+        },
+        "CUSDT": {
+            "first_4h": "2025-07-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2422,
+            "candles_1d": 404,
+            "funding_count": 500
+        },
+        "CROSSUSDT": {
+            "first_4h": "2025-07-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2452,
+            "candles_1d": 409,
+            "funding_count": 500
+        },
+        "IDOLUSDT": {
+            "first_4h": "2025-07-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2488,
+            "candles_1d": 415,
+            "funding_count": 500
+        },
+        "TAIKOUSDT": {
+            "first_4h": "2025-06-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2625,
+            "candles_1d": 438,
+            "funding_count": 500
+        },
+        "NEWTUSDT": {
+            "first_4h": "2025-06-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2577,
+            "candles_1d": 430,
+            "funding_count": 500
+        },
+        "SOPHUSDT": {
+            "first_4h": "2025-05-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2709,
+            "candles_1d": 452,
+            "funding_count": 500
+        },
+        "ICNTUSDT": {
+            "first_4h": "2025-07-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2493,
+            "candles_1d": 416,
+            "funding_count": 500
+        },
+        "JSTUSDT": {
+            "first_4h": "2020-08-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 13217,
+            "candles_1d": 482,
+            "funding_count": 500
+        },
+        "MUSDT": {
+            "first_4h": "2025-07-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2470,
+            "candles_1d": 412,
+            "funding_count": 500
+        },
+        "AINUSDT": {
+            "first_4h": "2025-07-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2452,
+            "candles_1d": 409,
+            "funding_count": 500
+        },
+        "CVXUSDT": {
+            "first_4h": "2025-07-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2374,
+            "candles_1d": 396,
+            "funding_count": 500
+        },
+        "TAUSDT": {
+            "first_4h": "2025-07-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2387,
+            "candles_1d": 398,
+            "funding_count": 500
+        },
+        "SLPUSDT": {
+            "first_4h": "2025-07-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2374,
+            "candles_1d": 396,
+            "funding_count": 500
+        },
+        "PLAYUSDT": {
+            "first_4h": "2025-07-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2326,
+            "candles_1d": 388,
+            "funding_count": 500
+        },
+        "NAORISUSDT": {
+            "first_4h": "2025-07-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2325,
+            "candles_1d": 388,
+            "funding_count": 500
+        },
+        "SAHARAUSDT": {
+            "first_4h": "2025-06-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2535,
+            "candles_1d": 423,
+            "funding_count": 500
+        },
+        "TREEUSDT": {
+            "first_4h": "2025-07-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2337,
+            "candles_1d": 390,
+            "funding_count": 500
+        },
+        "ERAUSDT": {
+            "first_4h": "2025-07-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2409,
+            "candles_1d": 402,
+            "funding_count": 500
+        },
+        "FUSDT": {
+            "first_4h": "2025-10-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1811,
+            "candles_1d": 431,
+            "funding_count": 500
+        },
+        "ESPORTSUSDT": {
+            "first_4h": "2025-07-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2338,
+            "candles_1d": 390,
+            "funding_count": 500
+        },
+        "TACUSDT": {
+            "first_4h": "2025-07-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2422,
+            "candles_1d": 404,
+            "funding_count": 500
+        },
+        "PROVEUSDT": {
+            "first_4h": "2025-08-05",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2294,
+            "candles_1d": 383,
+            "funding_count": 500
+        },
+        "VELVETUSDT": {
+            "first_4h": "2025-07-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2422,
+            "candles_1d": 404,
+            "funding_count": 500
+        },
+        "INUSDT": {
+            "first_4h": "2025-08-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2284,
+            "candles_1d": 381,
+            "funding_count": 500
+        },
+        "ALLUSDT": {
+            "first_4h": "2025-08-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2290,
+            "candles_1d": 382,
+            "funding_count": 500
+        },
+        "AIOUSDT": {
+            "first_4h": "2025-08-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2248,
+            "candles_1d": 375,
+            "funding_count": 500
+        },
+        "TOWNSUSDT": {
+            "first_4h": "2025-08-05",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2295,
+            "candles_1d": 383,
+            "funding_count": 500
+        },
+        "TAGUSDT": {
+            "first_4h": "2025-07-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2362,
+            "candles_1d": 394,
+            "funding_count": 500
+        },
+        "CARVUSDT": {
+            "first_4h": "2025-08-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2282,
+            "candles_1d": 381,
+            "funding_count": 500
+        },
+        "USELESSUSDT": {
+            "first_4h": "2025-08-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2235,
+            "candles_1d": 373,
+            "funding_count": 500
+        },
+        "ZORAUSDT": {
+            "first_4h": "2025-07-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2362,
+            "candles_1d": 394,
+            "funding_count": 500
+        },
+        "SAPIENUSDT": {
+            "first_4h": "2025-08-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2204,
+            "candles_1d": 368,
+            "funding_count": 500
+        },
+        "BASUSDT": {
+            "first_4h": "2025-08-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2169,
+            "candles_1d": 362,
+            "funding_count": 500
+        },
+        "TAKEUSDT": {
+            "first_4h": "2025-09-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2122,
+            "candles_1d": 354,
+            "funding_count": 500
+        },
+        "XNYUSDT": {
+            "first_4h": "2025-08-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2248,
+            "candles_1d": 375,
+            "funding_count": 500
+        },
+        "MITOUSDT": {
+            "first_4h": "2025-08-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2156,
+            "candles_1d": 360,
+            "funding_count": 500
+        },
+        "XPLUSDT": {
+            "first_4h": "2025-08-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2194,
+            "candles_1d": 366,
+            "funding_count": 500
+        },
+        "QUSDT": {
+            "first_4h": "2025-09-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2129,
+            "candles_1d": 355,
+            "funding_count": 500
+        },
+        "AVNTUSDT": {
+            "first_4h": "2025-09-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2085,
+            "candles_1d": 348,
+            "funding_count": 500
+        },
+        "HEMIUSDT": {
+            "first_4h": "2025-08-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2153,
+            "candles_1d": 359,
+            "funding_count": 500
+        },
+        "BTRUSDT": {
+            "first_4h": "2025-08-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2164,
+            "candles_1d": 361,
+            "funding_count": 500
+        },
+        "PTBUSDT": {
+            "first_4h": "2025-09-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2121,
+            "candles_1d": 354,
+            "funding_count": 500
+        },
+        "HOLOUSDT": {
+            "first_4h": "2025-09-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2073,
+            "candles_1d": 346,
+            "funding_count": 500
+        },
+        "UBUSDT": {
+            "first_4h": "2025-09-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2068,
+            "candles_1d": 345,
+            "funding_count": 500
+        },
+        "XPINUSDT": {
+            "first_4h": "2025-09-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2068,
+            "candles_1d": 345,
+            "funding_count": 500
+        },
+        "ARIAUSDT": {
+            "first_4h": "2025-09-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2122,
+            "candles_1d": 354,
+            "funding_count": 500
+        },
+        "0GUSDT": {
+            "first_4h": "2025-09-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2037,
+            "candles_1d": 340,
+            "funding_count": 500
+        },
+        "SOMIUSDT": {
+            "first_4h": "2025-08-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2176,
+            "candles_1d": 355,
+            "funding_count": 500
+        },
+        "STBLUSDT": {
+            "first_4h": "2025-09-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2039,
+            "candles_1d": 340,
+            "funding_count": 500
+        },
+        "OPENUSDT": {
+            "first_4h": "2025-09-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2091,
+            "candles_1d": 349,
+            "funding_count": 500
+        },
+        "LINEAUSDT": {
+            "first_4h": "2025-09-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2134,
+            "candles_1d": 356,
+            "funding_count": 500
+        },
+        "SKYUSDT": {
+            "first_4h": "2025-09-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2087,
+            "candles_1d": 348,
+            "funding_count": 500
+        },
+        "ZKCUSDT": {
+            "first_4h": "2025-09-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2049,
+            "candles_1d": 342,
+            "funding_count": 500
+        },
+        "ORDERUSDT": {
+            "first_4h": "2025-09-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1983,
+            "candles_1d": 331,
+            "funding_count": 500
+        },
+        "BLESSUSDT": {
+            "first_4h": "2025-09-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2002,
+            "candles_1d": 334,
+            "funding_count": 500
+        },
+        "HANAUSDT": {
+            "first_4h": "2025-09-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1984,
+            "candles_1d": 331,
+            "funding_count": 500
+        },
+        "AKEUSDT": {
+            "first_4h": "2025-09-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1983,
+            "candles_1d": 331,
+            "funding_count": 500
+        },
+        "MIRAUSDT": {
+            "first_4h": "2025-09-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1983,
+            "candles_1d": 331,
+            "funding_count": 500
+        },
+        "NOMUSDT": {
+            "first_4h": "2025-10-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1954,
+            "candles_1d": 326,
+            "funding_count": 500
+        },
+        "LIGHTUSDT": {
+            "first_4h": "2025-09-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1978,
+            "candles_1d": 330,
+            "funding_count": 500
+        },
+        "TRADOORUSDT": {
+            "first_4h": "2025-09-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2025,
+            "candles_1d": 338,
+            "funding_count": 500
+        },
+        "TOSHIUSDT": {
+            "first_4h": "2025-09-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2039,
+            "candles_1d": 340,
+            "funding_count": 500
+        },
+        "BARDUSDT": {
+            "first_4h": "2025-09-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2032,
+            "candles_1d": 339,
+            "funding_count": 500
+        },
+        "EDENUSDT": {
+            "first_4h": "2025-09-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1960,
+            "candles_1d": 327,
+            "funding_count": 500
+        },
+        "FFUSDT": {
+            "first_4h": "2025-09-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1965,
+            "candles_1d": 328,
+            "funding_count": 500
+        },
+        "LYNUSDT": {
+            "first_4h": "2025-10-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1925,
+            "candles_1d": 321,
+            "funding_count": 500
+        },
+        "FLUIDUSDT": {
+            "first_4h": "2025-09-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1996,
+            "candles_1d": 333,
+            "funding_count": 500
+        },
+        "COAIUSDT": {
+            "first_4h": "2025-09-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1991,
+            "candles_1d": 332,
+            "funding_count": 500
+        },
+        "KGENUSDT": {
+            "first_4h": "2025-10-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1917,
+            "candles_1d": 320,
+            "funding_count": 500
+        },
+        "TRUTHUSDT": {
+            "first_4h": "2025-10-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1953,
+            "candles_1d": 326,
+            "funding_count": 500
+        },
+        "GIGGLEUSDT": {
+            "first_4h": "2025-10-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1906,
+            "candles_1d": 318,
+            "funding_count": 500
+        },
+        "EVAAUSDT": {
+            "first_4h": "2025-10-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1942,
+            "candles_1d": 324,
+            "funding_count": 500
+        },
+        "MONUSDT": {
+            "first_4h": "2025-10-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1901,
+            "candles_1d": 317,
+            "funding_count": 500
+        },
+        "CLOUSDT": {
+            "first_4h": "2025-10-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1876,
+            "candles_1d": 313,
+            "funding_count": 500
+        },
+        "ASTERUSDT": {
+            "first_4h": "2025-09-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2025,
+            "candles_1d": 338,
+            "funding_count": 500
+        },
+        "4USDT": {
+            "first_4h": "2025-10-08",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1912,
+            "candles_1d": 319,
+            "funding_count": 500
+        },
+        "LABUSDT": {
+            "first_4h": "2025-10-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1857,
+            "candles_1d": 310,
+            "funding_count": 500
+        },
+        "YBUSDT": {
+            "first_4h": "2025-10-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1899,
+            "candles_1d": 317,
+            "funding_count": 500
+        },
+        "ENSOUSDT": {
+            "first_4h": "2025-10-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1876,
+            "candles_1d": 313,
+            "funding_count": 500
+        },
+        "EULUSDT": {
+            "first_4h": "2025-10-13",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1881,
+            "candles_1d": 314,
+            "funding_count": 500
+        },
+        "2ZUSDT": {
+            "first_4h": "2025-10-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1947,
+            "candles_1d": 325,
+            "funding_count": 500
+        },
+        "METUSDT": {
+            "first_4h": "2025-10-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1893,
+            "candles_1d": 316,
+            "funding_count": 500
+        },
+        "ONUSDT": {
+            "first_4h": "2025-10-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1816,
+            "candles_1d": 303,
+            "funding_count": 500
+        },
+        "RIVERUSDT": {
+            "first_4h": "2025-10-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1857,
+            "candles_1d": 310,
+            "funding_count": 500
+        },
+        "ZBTUSDT": {
+            "first_4h": "2025-10-17",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1858,
+            "candles_1d": 310,
+            "funding_count": 500
+        },
+        "WLFIUSDT": {
+            "first_4h": "2025-09-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 2133,
+            "candles_1d": 365,
+            "funding_count": 500
+        },
+        "MMTUSDT": {
+            "first_4h": "2025-11-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1749,
+            "candles_1d": 292,
+            "funding_count": 500
+        },
+        "XANUSDT": {
+            "first_4h": "2025-09-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1966,
+            "candles_1d": 0,
+            "funding_count": 500
+        },
+        "BLUAIUSDT": {
+            "first_4h": "2025-10-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1834,
+            "candles_1d": 306,
+            "funding_count": 500
+        },
+        "CCUSDT": {
+            "first_4h": "2025-10-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1773,
+            "candles_1d": 296,
+            "funding_count": 500
+        },
+        "STABLEUSDT": {
+            "first_4h": "2025-11-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1737,
+            "candles_1d": 290,
+            "funding_count": 500
+        },
+        "KITEUSDT": {
+            "first_4h": "2025-10-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1786,
+            "candles_1d": 298,
+            "funding_count": 500
+        },
+        "APRUSDT": {
+            "first_4h": "2025-10-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1822,
+            "candles_1d": 304,
+            "funding_count": 500
+        },
+        "UAIUSDT": {
+            "first_4h": "2025-11-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1738,
+            "candles_1d": 290,
+            "funding_count": 500
+        },
+        "JCTUSDT": {
+            "first_4h": "2025-11-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1714,
+            "candles_1d": 286,
+            "funding_count": 500
+        },
+        "\u5e01\u5b89\u4eba\u751fUSDT": {
+            "first_4h": "2025-10-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1840,
+            "candles_1d": 307,
+            "funding_count": 500
+        },
+        "TURTLEUSDT": {
+            "first_4h": "2025-10-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1827,
+            "candles_1d": 305,
+            "funding_count": 500
+        },
+        "SENTUSDT": {
+            "first_4h": "2025-11-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1689,
+            "candles_1d": 282,
+            "funding_count": 500
+        },
+        "FOLKSUSDT": {
+            "first_4h": "2025-11-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1737,
+            "candles_1d": 290,
+            "funding_count": 500
+        },
+        "ATUSDT": {
+            "first_4h": "2025-10-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1786,
+            "candles_1d": 298,
+            "funding_count": 500
+        },
+        "RECALLUSDT": {
+            "first_4h": "2025-10-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1869,
+            "candles_1d": 312,
+            "funding_count": 500
+        },
+        "POWERUSDT": {
+            "first_4h": "2025-12-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1558,
+            "candles_1d": 260,
+            "funding_count": 500
+        },
+        "TRUSTUSDT": {
+            "first_4h": "2025-11-05",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1744,
+            "candles_1d": 291,
+            "funding_count": 500
+        },
+        "NIGHTUSDT": {
+            "first_4h": "2025-12-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1534,
+            "candles_1d": 256,
+            "funding_count": 500
+        },
+        "ALLOUSDT": {
+            "first_4h": "2025-11-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1707,
+            "candles_1d": 285,
+            "funding_count": 500
+        },
+        "CLANKERUSDT": {
+            "first_4h": "2025-11-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1701,
+            "candles_1d": 284,
+            "funding_count": 500
+        },
+        "BEATUSDT": {
+            "first_4h": "2025-11-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1701,
+            "candles_1d": 284,
+            "funding_count": 500
+        },
+        "CYSUSDT": {
+            "first_4h": "2025-12-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1522,
+            "candles_1d": 254,
+            "funding_count": 500
+        },
+        "BREVUSDT": {
+            "first_4h": "2025-12-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1414,
+            "candles_1d": 236,
+            "funding_count": 500
+        },
+        "USUSDT": {
+            "first_4h": "2025-12-12",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1522,
+            "candles_1d": 0,
+            "funding_count": 500
+        },
+        "FRAXUSDT": {
+            "first_4h": "2026-01-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1318,
+            "candles_1d": 220,
+            "funding_count": 500
+        },
+        "MAGMAUSDT": {
+            "first_4h": "2025-12-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1407,
+            "candles_1d": 235,
+            "funding_count": 500
+        },
+        "PIEVERSEUSDT": {
+            "first_4h": "2026-03-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1000,
+            "candles_1d": 282,
+            "funding_count": 500
+        },
+        "ZKPUSDT": {
+            "first_4h": "2025-12-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1468,
+            "candles_1d": 245,
+            "funding_count": 500
+        },
+        "WETUSDT": {
+            "first_4h": "2026-03-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1000,
+            "candles_1d": 256,
+            "funding_count": 500
+        },
+        "ACUUSDT": {
+            "first_4h": "2026-01-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1281,
+            "candles_1d": 214,
+            "funding_count": 500
+        },
+        "FIGHTUSDT": {
+            "first_4h": "2026-01-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1269,
+            "candles_1d": 212,
+            "funding_count": 500
+        },
+        "BIRBUSDT": {
+            "first_4h": "2026-01-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1235,
+            "candles_1d": 206,
+            "funding_count": 500
+        },
+        "SKRUSDT": {
+            "first_4h": "2026-01-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1276,
+            "candles_1d": 213,
+            "funding_count": 500
+        },
+        "GWEIUSDT": {
+            "first_4h": "2026-01-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1235,
+            "candles_1d": 206,
+            "funding_count": 500
+        },
+        "GUAUSDT": {
+            "first_4h": "2026-03-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1000,
+            "candles_1d": 245,
+            "funding_count": 500
+        },
+        "IRYSUSDT": {
+            "first_4h": "2025-11-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1616,
+            "candles_1d": 0,
+            "funding_count": 500
+        },
+        "SPORTFUNUSDT": {
+            "first_4h": "2026-01-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1311,
+            "candles_1d": 219,
+            "funding_count": 500
+        },
+        "TRIAUSDT": {
+            "first_4h": "2026-02-06",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1185,
+            "candles_1d": 198,
+            "funding_count": 500
+        },
+        "INXUSDT": {
+            "first_4h": "2026-01-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1226,
+            "candles_1d": 205,
+            "funding_count": 500
+        },
+        "RAVEUSDT": {
+            "first_4h": "2026-03-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1000,
+            "candles_1d": 252,
+            "funding_count": 500
+        },
+        "MEGAUSDT": {
+            "first_4h": "2026-01-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1227,
+            "candles_1d": 205,
+            "funding_count": 500
+        },
+        "ELSAUSDT": {
+            "first_4h": "2026-01-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1277,
+            "candles_1d": 213,
+            "funding_count": 500
+        },
+        "ROBOUSDT": {
+            "first_4h": "2026-02-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1060,
+            "candles_1d": 177,
+            "funding_count": 500
+        },
+        "\u6211\u8e0f\u9a6c\u6765\u4e86USDT": {
+            "first_4h": "2026-01-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1281,
+            "candles_1d": 214,
+            "funding_count": 500
+        },
+        "FOGOUSDT": {
+            "first_4h": "2026-01-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1347,
+            "candles_1d": 225,
+            "funding_count": 500
+        },
+        "OPNUSDT": {
+            "first_4h": "2026-02-21",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1095,
+            "candles_1d": 183,
+            "funding_count": 500
+        },
+        "COLLECTUSDT": {
+            "first_4h": "2026-03-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1000,
+            "candles_1d": 235,
+            "funding_count": 500
+        },
+        "\u9f99\u867eUSDT": {
+            "first_4h": "2026-03-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 988,
+            "candles_1d": 165,
+            "funding_count": 500
+        },
+        "ZAMAUSDT": {
+            "first_4h": "2026-01-09",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1354,
+            "candles_1d": 226,
+            "funding_count": 500
+        },
+        "MANTRAUSDT": {
+            "first_4h": "2026-03-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1030,
+            "candles_1d": 172,
+            "funding_count": 500
+        },
+        "EDGEUSDT": {
+            "first_4h": "2026-03-19",
+            "last_4h": "2026-08-22",
+            "candles_4h": 939,
+            "candles_1d": 157,
+            "funding_count": 500
+        },
+        "CFGUSDT": {
+            "first_4h": "2026-03-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 957,
+            "candles_1d": 160,
+            "funding_count": 500
+        },
+        "BSBUSDT": {
+            "first_4h": "2026-03-25",
+            "last_4h": "2026-08-22",
+            "candles_4h": 904,
+            "candles_1d": 151,
+            "funding_count": 500
+        },
+        "GENIUSUSDT": {
+            "first_4h": "2026-04-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 774,
+            "candles_1d": 129,
+            "funding_count": 500
+        },
+        "BASEDUSDT": {
+            "first_4h": "2026-03-30",
+            "last_4h": "2026-08-22",
+            "candles_4h": 874,
+            "candles_1d": 146,
+            "funding_count": 500
+        },
+        "AIGENSYNUSDT": {
+            "first_4h": "2026-04-29",
+            "last_4h": "2026-08-22",
+            "candles_4h": 693,
+            "candles_1d": 116,
+            "funding_count": 500
+        },
+        "KATUSDT": {
+            "first_4h": "2026-03-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1043,
+            "candles_1d": 174,
+            "funding_count": 500
+        },
+        "PHAROSUSDT": {
+            "first_4h": "2026-05-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 605,
+            "candles_1d": 101,
+            "funding_count": 500
+        },
+        "PRLUSDT": {
+            "first_4h": "2026-04-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 862,
+            "candles_1d": 144,
+            "funding_count": 500
+        },
+        "SPACEUSDT": {
+            "first_4h": "2026-01-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1270,
+            "candles_1d": 212,
+            "funding_count": 500
+        },
+        "ZESTUSDT": {
+            "first_4h": "2026-06-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 477,
+            "candles_1d": 80,
+            "funding_count": 475
+        },
+        "BILLUSDT": {
+            "first_4h": "2026-05-07",
+            "last_4h": "2026-08-22",
+            "candles_4h": 646,
+            "candles_1d": 108,
+            "funding_count": 500
+        },
+        "CTRUSDT": {
+            "first_4h": "2026-05-28",
+            "last_4h": "2026-08-22",
+            "candles_4h": 520,
+            "candles_1d": 87,
+            "funding_count": 500
+        },
+        "STARUSDT": {
+            "first_4h": "2026-05-14",
+            "last_4h": "2026-08-22",
+            "candles_4h": 605,
+            "candles_1d": 101,
+            "funding_count": 500
+        },
+        "ARXUSDT": {
+            "first_4h": "2026-06-23",
+            "last_4h": "2026-08-22",
+            "candles_4h": 365,
+            "candles_1d": 61,
+            "funding_count": 364
+        },
+        "CHIPUSDT": {
+            "first_4h": "2026-04-16",
+            "last_4h": "2026-08-22",
+            "candles_4h": 773,
+            "candles_1d": 129,
+            "funding_count": 500
+        },
+        "GRAMUSDT": {
+            "first_4h": "2026-07-02",
+            "last_4h": "2026-08-22",
+            "candles_4h": 310,
+            "candles_1d": 52,
+            "funding_count": 310
+        },
+        "GRVTUSDT": {
+            "first_4h": "2026-07-31",
+            "last_4h": "2026-08-22",
+            "candles_4h": 135,
+            "candles_1d": 23,
+            "funding_count": 135
+        },
+        "OUSDT": {
+            "first_4h": "2026-06-24",
+            "last_4h": "2026-08-22",
+            "candles_4h": 358,
+            "candles_1d": 60,
+            "funding_count": 357
+        },
+        "SLXUSDT": {
+            "first_4h": "2026-06-01",
+            "last_4h": "2026-08-22",
+            "candles_4h": 497,
+            "candles_1d": 83,
+            "funding_count": 500
+        },
+        "CAPUSDT": {
+            "first_4h": "2026-06-27",
+            "last_4h": "2026-08-22",
+            "candles_4h": 340,
+            "candles_1d": 57,
+            "funding_count": 339
+        },
+        "BTWUSDT": {
+            "first_4h": "2026-06-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 477,
+            "candles_1d": 80,
+            "funding_count": 475
+        },
+        "OPGUSDT": {
+            "first_4h": "2026-04-22",
+            "last_4h": "2026-08-22",
+            "candles_4h": 735,
+            "candles_1d": 123,
+            "funding_count": 500
+        },
+        "ESPUSDT": {
+            "first_4h": "2026-02-10",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1162,
+            "candles_1d": 194,
+            "funding_count": 500
+        },
+        "DATAIPUSDT": {
+            "first_4h": "2026-07-03",
+            "last_4h": "2026-08-22",
+            "candles_4h": 305,
+            "candles_1d": 51,
+            "funding_count": 304
+        },
+        "DOSUSDT": {
+            "first_4h": "2026-08-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 69,
+            "candles_1d": 12,
+            "funding_count": 68
+        },
+        "ANCUSDT": {
+            "first_4h": "2022-03-08",
+            "last_4h": "2022-05-13",
+            "candles_4h": 398,
+            "candles_1d": 67,
+            "funding_count": 198
+        },
+        "AZTECUSDT": {
+            "first_4h": "2026-02-11",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1157,
+            "candles_1d": 193,
+            "funding_count": 500
+        },
+        "LITUSDT": {
+            "first_4h": "2021-02-04",
+            "last_4h": "2026-08-22",
+            "candles_4h": 9802,
+            "candles_1d": 243,
+            "funding_count": 500
+        },
+        "REUSDT": {
+            "first_4h": "2026-06-18",
+            "last_4h": "2026-08-22",
+            "candles_4h": 393,
+            "candles_1d": 66,
+            "funding_count": 391
+        },
+        "DODOUSDT": {
+            "first_4h": "2021-02-19",
+            "last_4h": "2022-05-27",
+            "candles_4h": 2772,
+            "candles_1d": 463,
+            "funding_count": 500
+        },
+        "AIAUSDT": {
+            "first_4h": "2026-01-20",
+            "last_4h": "2026-08-22",
+            "candles_4h": 1288,
+            "candles_1d": 215,
+            "funding_count": 500
+        },
+        "BZRXUSDT": {
+            "first_4h": "2020-09-05",
+            "last_4h": "2021-12-19",
+            "candles_4h": 2821,
+            "candles_1d": 471,
+            "funding_count": 500
+        },
+        "XAUTUSDT": {
+            "first_4h": "2026-03-26",
+            "last_4h": "2026-08-22",
+            "candles_4h": 897,
+            "candles_1d": 150,
+            "funding_count": 500
+        },
+        "LUNAUSDT": {
+            "first_4h": "2021-01-28",
+            "last_4h": "2022-05-13",
+            "candles_4h": 2821,
+            "candles_1d": 471,
+            "funding_count": 500
+        },
+        "YFIIUSDT": {
+            "first_4h": "2020-09-03",
+            "last_4h": "2022-04-12",
+            "candles_4h": 3518,
+            "candles_1d": 587,
+            "funding_count": 500
+        },
+        "MIRUSDT": {
+            "first_4h": "2021-04-19",
+            "last_4h": "2022-12-27",
+            "candles_4h": 3701,
+            "candles_1d": 618,
+            "funding_count": 0
+        },
+        "EOSUSDT": {
+            "first_4h": "2025-04-09",
+            "last_4h": "2025-05-21",
+            "candles_4h": 250,
+            "candles_1d": 1961,
+            "funding_count": 500
+        },
+        "TORNUSDT": {
+            "first_4h": "2021-06-11",
+            "last_4h": "2022-12-27",
+            "candles_4h": 3384,
+            "candles_1d": 565,
+            "funding_count": 0
+        },
+        "SRMUSDT": {
+            "first_4h": "2020-09-05",
+            "last_4h": "2024-05-28",
+            "candles_4h": 8168,
+            "candles_1d": 1362,
+            "funding_count": 500
+        },
+        "VGXUSDT": {
+            "first_4h": "2021-11-22",
+            "last_4h": "2024-08-26",
+            "candles_4h": 6048,
+            "candles_1d": 1009,
+            "funding_count": 0
+        },
+        "REPUSDT": {
+            "first_4h": "2020-06-12",
+            "last_4h": "2022-12-22",
+            "candles_4h": 5539,
+            "candles_1d": 924,
+            "funding_count": 0
+        },
+        "BTSUSDT": {
+            "first_4h": "2021-02-01",
+            "last_4h": "2024-05-28",
+            "candles_4h": 7273,
+            "candles_1d": 1213,
+            "funding_count": 500
+        },
+        "COCOSUSDT": {
+            "first_4h": "2023-02-21",
+            "last_4h": "2024-05-28",
+            "candles_4h": 2771,
+            "candles_1d": 463,
+            "funding_count": 500
+        },
+        "TCTUSDT": {
+            "first_4h": "2020-01-21",
+            "last_4h": "2022-10-24",
+            "candles_4h": 6041,
+            "candles_1d": 1008,
+            "funding_count": 0
+        },
+        "FTTUSDT": {
+            "first_4h": "2022-04-15",
+            "last_4h": "2026-08-22",
+            "candles_4h": 9546,
+            "candles_1d": 1591,
+            "funding_count": 500
+        },
+        "GTOUSDT": {
+            "first_4h": "2019-07-01",
+            "last_4h": "2022-11-28",
+            "candles_4h": 7473,
+            "candles_1d": 1247,
+            "funding_count": 0
+        }
+    }
 }

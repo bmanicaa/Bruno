@@ -1,6 +1,6 @@
-# Sistema Quantitativo de Swing Trade em Criptoativos (180 Dias)
+# Sistema Quantitativo de Swing Trade em Criptoativos — Prompt Mestre V2.2
 
-Este repositório contém a arquitetura completa, o protocolo de auditoria e os motores de simulação *point-in-time* (zero lookahead bias) para a estratégia de **Swing Trade Quantitativo Multidimensional** em timeframes de 4h e 1D.
+Este repositório contém a arquitetura completa, o protocolo de auditoria e o **motor de simulação canônico** *point-in-time* (zero lookahead bias) para a estratégia de **Swing Trade Quantitativo Multidimensional** em timeframes de 4h e 1D, operando bi-direcionalmente (Long/Short) sobre o mercado total da Binance (~550 moedas + delistados), com **validação walk-forward out-of-sample**.
 
 ---
 
@@ -8,93 +8,84 @@ Este repositório contém a arquitetura completa, o protocolo de auditoria e os 
 
 ```
 Project/
-├── Prompt.md                     # Arquivo Mestre (Carteira Dinâmica 3 Moedas / 20 Ativos)
+├── Prompt.md                     # Arquivo Mestre V2.2 (Protocolo de Teste + Operação + Engenharia)
 ├── README.md                     # Guia Geral e Documentação Executiva
+├── analises.md                   # Registro histórico de análises, experimentos e diagnósticos
 ├── data/
-│   ├── raw/                      # 🌟 DADOS BRUTOS IMUTÁVEIS (2 Anos: 2024–2026 / Binance)
-│   │   ├── universe_metadata.json# Metadados globais do reservatório de dados
-│   │   ├── macro/                # Referência Macro & Sentimento Global
-│   │   │   ├── BTCUSDT_4h.csv    # 4.500 velas 4h do Bitcoin (Benchmark)
-│   │   │   ├── BTCUSDT_1d.csv    # 800 velas diárias do Bitcoin
-│   │   │   └── fear_and_greed.csv# Histórico diário do Fear & Greed Index
-│   │   └── coins/                # Datasets Modulares Isolados por Ativo
-│   │       ├── SOLUSDT/          # [klines_4h.csv, klines_1d.csv, funding_rates.csv]
-│   │       ├── ETHUSDT/          # [klines_4h.csv, klines_1d.csv, funding_rates.csv]
-│   │       ├── SUIUSDT/          # [klines_4h.csv, klines_1d.csv, funding_rates.csv]
-│   │       └── [SYMBOL]/         # Estrutura modular idêntica para todas as moedas
-│   │
-│   └── [Arquivos .csv e .json de resultados serão gerados ao executar os scripts]
-├── reports/                      # Relatórios de Auditoria (Pronto para novas execuções)
-└── scripts/                      # Motores de Backtest e Utilitários
-    ├── download_raw_market_data.py           # Downloader de Dados Brutos (2 Anos / Binance)
-    ├── backtest_carteira_dinamica_3moedas.py # Motor da Carteira Dinâmica (3 Moedas / 20 Ativos)
-    ├── backtest_engine.py                    # Motor Principal de Validação Monomoeda
-    └── backtest_mercado_total_binance.py     # Motor de Varredura do Mercado Amplo
+│   ├── raw/                      # 🌟 DADOS BRUTOS IMUTÁVEIS (2019-09 → 2026-08 / Binance Futures)
+│   │   ├── universe_metadata.json# Metadados globais + cobertura por ativo
+│   │   ├── macro/                # BTCUSDT 4h/1d + Funding + Fear & Greed Index
+│   │   └── coins/{SYMBOL}/       # klines_4h.csv | klines_1d.csv | funding_rates.csv (inclui delistados)
+│   ├── resumo_{modo}.json        # Resumo estatístico da modalidade (1 arquivo por modo)
+│   ├── trades_{modo}.csv         # Tabela de trades com instrumentação (MAE/MFE, regime, classe)
+│   ├── experimentos/             # Resultados walk-forward (exp_{hash}.json)
+│   └── legado/                   # Artefatos de estratégias antigas (apenas histórico)
+├── reports/                      # relatorio_{modo}.md (Relatórios Executivos de Auditoria)
+└── scripts/
+    ├── backtest_institucional.py # ⚙️ MOTOR CANÔNICO ÚNICO (V2.2 + walk-forward + experimentos)
+    ├── download_raw_market_data.py # Downloader de Dados Brutos (~7 anos + delistados)
+    └── legado/                   # Motores antigos/experimentais (NÃO usar em novos testes)
 ```
-
----
-
-## 🗄️ Repositório de Dados Brutos de Mercado (`data/raw/`)
-
-Para garantir **zero viés de contaminação temporal** e permitir que qualquer IA acesse **estritamente o contexto necessário** para tomada de decisões:
-
-1. **Isolamento Total por Moeda (`data/raw/coins/{SYMBOL}/`):**
-   - Cada pasta contém exclusivamente os 3 arquivos brutos do ativo (`klines_4h.csv`, `klines_1d.csv` e `funding_rates.csv`).
-   - A IA/algoritmo só precisa carregar o arquivo da moeda que estiver analisando no momento.
-
-2. **Cegueira Temporal (*Point-in-Time Slicing*):**
-   - Em qualquer instante de simulação $T$, o sistema filtra as linhas onde `open_time < T`.
-   - Nenhuma informação futura (candles seguintes, preços de fechamento futuros) é visível no momento da avaliação.
 
 ---
 
 ## 🎯 As Regras Estruturais do Protocolo ([Prompt.md](Prompt.md))
 
-1. **Gestão de Risco & Alocação:** Risco Fixo de **5,0% por trade** ($\text{Alocação} = \frac{5,0\%}{\text{Distância do Stop}}$).
-2. **Controle de Correlação da Carteira:** Limite máximo de **3 posições abertas simultaneamente**.
-3. **Breakeven Antecipado em +1.0R:** Ao atingir $+1.0R$ de valorização, o Stop Loss é automaticamente movido para o preço de entrada (0x0).
-4. **Alvos Adaptativos por Regime (ADX / EMAs):**
-   - *Tendência Forte ($BTC > EMA\ 50\ 1D$ e $ADX > 20$):* Alvo 1 em **$2.5R$** e Alvo 2 em **$4.0R$**.
-   - *Consolidação / Recuperação:* Alvo 1 em **$1.8R$** (lucro rápido) e Alvo 2 na resistência da EMA 50 4h.
-5. **Time-Stop de 14 Dias (84 candles 4h):** Se a operação ficar estagnada sem atingir o Alvo 1 em 14 dias, é encerrada a mercado para liberar capital.
-6. **Vetos Obrigatórios:** Bloqueio de compras em semanas de desbloqueio de *Vesting* (>1%), *Funding Rate* extremo (>0.03%), perda de suporte do BTC ou preço abaixo da EMA 50 sem volume.
+1. **Universo:** ~550 moedas da Binance (Volume Médio Diário 30d > $25M, Maturidade > 180 dias) + delistados históricos (LUNA, FTT, SRM, ANC, MIR, DODO, EOS, YFII, BZRX, BTS, COCOS, GTO, TORN, VGX, TCT, REP).
+2. **Regime Macro (1D):** Long apenas com BTC ≥ EMA50 e EMA200; Short (só BTC/ETH) apenas com BTC < EMA50 e EMA200; Transição = caixa remunerado.
+3. **Seleção de Líderes:** Top 10% de Força Relativa (Alpha 7d vs BTC) + estrutura diária alinhada (Close 1D ≥ EMA20 ≥ EMA50).
+4. **Gatilho LONG (1D — V2.2):** Pullback na EMA20 1D + confirmação diária (Close > dia anterior) + RSI 1D 44-62 + CVD 4h > 0.
+   **Gatilho SHORT (V2.2):** Rompimento de fundo diário (Close 1D < mínima do dia anterior) + RSI 30-56 + CVD < 0 (trend-following).
+5. **Stop Estrutural:** mín/máx dos últimos 10 candles 4h ± 1,5×ATR14 (faixa 3,5%–8%).
+6. **Gestão de Risco:** 1,50% por trade | até 4 posições | Circuit Breaker (3 perdas → 0,75%; 5 perdas → pausa 5 dias) | Cooldown 2,5 dias por ativo.
+7. **Condução Assimétrica:** em +2.0R → Breakeven (0x0) + Parcial de 50%; Runner (50%) sem teto, trailing na EMA20 1D. Time-Stop de 21 dias.
+8. **Vetos:** Vesting > 1% em 7 dias; Funding > 0,03% (long) / < -0,03% (short).
+9. **Custos Reais:** Binance 0,075% maker/taker, slippage 5 bps (entrada) e 8 bps (stop), Funding a cada 8h, Cash Yield 6% a.a. no caixa livre.
+10. **Validação:** Walk-Forward deslizante (4 blocos OOS + holdout final intocado) obrigatório para qualquer mudança — aceite com melhora em ≥3/5 métricas OOS e PF OOS > 1.0.
 
 ---
 
-## 📊 Resumo de Performance das 6 Novas Criptomoedas (180 Dias — Risco 5% + Taxas Reais)
+## 🚀 Como Executar o Motor Canônico
 
-*Período: 20 de Fevereiro de 2026 a 19 de Agosto de 2026 | Capital Inicial: R$ 200,00 por moeda*
+```bash
+python scripts/backtest_institucional.py --mode full           # Auditoria Completa (7 anos)
+python scripts/backtest_institucional.py --mode preliminar     # 1 ano (rápido)
+python scripts/backtest_institucional.py --mode estresse_bear  # Bear 2022 (Luna/FTX)
+python scripts/backtest_institucional.py --mode estresse_bull  # Bull ETF/Halving
+python scripts/backtest_institucional.py --mode estresse_chop  # Lateral 2024
+python scripts/backtest_institucional.py --mode all            # Todas em sequência
+python scripts/backtest_institucional.py --walkforward         # Validação OOS de qualquer mudança
+```
 
-| Ticker | Perfil do Ativo | Saldo Final (R$) | Retorno Líquido (%) | Retorno *Buy & Hold* | *Win Rate* | *Profit Factor* | *Drawdown* Máx |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **ONDO** | *RWA Institucional* | **R$ 233,34** | **+16,67%** | +32,57% | **50,00%** | **1,84** | 14,50% |
-| **ARB** | *Layer 2 Rollup* | **R$ 229,42** | **+14,71%** | **-8,67%** | 37,50% | **1,75** | **10,04%** |
-| **RENDER** | *DePIN / AI Compute* | **R$ 207,50** | **+3,75%** | **-2,28%** | 38,46% | **1,13** | 11,53% |
-| **TIA** | *Modular DA* | **R$ 199,10** | **-0,45%** | +1,25% | 36,36% | 0,98 | 18,96% |
-| **PEPE** | *Memecoin / Order Flow* | **R$ 182,21** | **-8,90%** | **-32,15%** | 28,57% | 0,61 | 12,28% |
-| **AAVE** | *Blue-Chip DeFi* | **R$ 170,91** | **-14,54%** | **-23,63%** | 36,36% | 0,48 | 18,93% |
+Cada execução sobrescreve o trio padrão: `data/resumo_{modo}.json`, `data/trades_{modo}.csv` e `reports/relatorio_{modo}.md`.
 
 ---
 
-## 🏆 Tabela Consolidada de Todos os 15 Ativos Auditados (Risco 5% + Taxas Reais)
+## 📊 Resultados Atuais (V2.2 — validada por walk-forward OOS)
 
-| Ticker | Perfil / Setor | Saldo Final (R$) | Retorno Líquido (%) | Retorno *Buy & Hold* | *Win Rate* | *Profit Factor* |
+*Última auditoria: 22/08/2026 | 552 moedas | R$100k | custos reais Binance*
+
+### Validação Out-of-Sample (4 blocos deslizantes, 2022-09 → 2026-02)
+
+| Config | Trading PnL OOS | PF | Sharpe | DD Máx |
+| :--- | :---: | :---: | :---: | :---: |
+| V2.1 (antiga) | -R$4.145 | 0.90 | -0.02 | 18.4% |
+| **V2.2 (adotada)** | **+R$73.098** | **1.18** | **0.63** | 24.4% |
+
+*Holdout final intocado (2026-02→08): V2.2 -1.2% vs B&H BTC -12.2% (preservação confirmada).*
+
+### Modalidades Oficiais
+
+| Modalidade | Período | Retorno | Win Rate | PF | DD Máx | B&H BTC |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **NEAR** | *Major Layer 1* | **R$ 248,58** | **+24,29%** | +72,10% | 45,45% | **1,86** |
-| **INJ** | *DeFi / L1 Derivativos* | **R$ 242,57** | **+21,29%** | +40,17% | 46,15% | **1,92** |
-| **ONDO** 🆕 | *RWA Institucional* | **R$ 233,34** | **+16,67%** | +32,57% | **50,00%** | **1,84** |
-| **ARB** 🆕 | *Layer 2 Rollup* | **R$ 229,42** | **+14,71%** | **-8,67%** | 37,50% | **1,75** |
-| **RENDER** 🆕| *DePIN / AI Compute* | **R$ 207,50** | **+3,75%** | **-2,28%** | 38,46% | **1,13** |
-| **GALA** | *GameFi / Metaverso* | **R$ 203,23** | **+1,61%** | **-62,82%** | 42,86% | **1,08** |
-| **ILV** | *GameFi / Mid-Cap* | **R$ 202,61** | **+1,31%** | **-18,30%** | 41,67% | **1,05** |
-| **TIA** 🆕 | *Modular DA* | **R$ 199,10** | **-0,45%** | +1,25% | 36,36% | 0,98 |
-| **PENDLE** | *DeFi Yields* | **R$ 196,38** | **-1,81%** | +20,30% | 30,77% | 0,94 |
-| **APT** | *Move-VM L1 (Vesting)* | **R$ 194,79** | **-2,61%** | **-34,99%** | 33,33% | 0,80 |
-| **SOL** | *Major Layer 1* | **R$ 186,18** | **-6,91%** | +3,65% | 38,46% | 0,80 |
-| **PEPE** 🆕 | *Memecoin / Order Flow*| **R$ 182,21** | **-8,90%** | **-32,15%** | 28,57% | 0,61 |
-| **SUI** | *Move-VM L1 (Vesting)* | **R$ 178,81** | **-10,59%** | **-23,89%** | 25,00% | 0,61 |
-| **TON** | *Telegram L1* | **R$ 177,68** | **-11,16%** | +17,04% | 14,29% | 0,55 |
-| **AAVE** 🆕 | *Blue-Chip DeFi* | **R$ 170,91** | **-14,54%** | **-23,63%** | 36,36% | 0,48 |
+| Full (7 anos) | 2019-09 → 2026-08 | **+555.2%** | 43.4% | 1.47 | 34.0% | +569.1% |
+| 5 anos | 2021-11 → 2026-08 | **+101.5%** | 39.5% | 1.28 | 34.0% | +5.2% |
+| Preliminar (1 ano) | 2023-10 → 2024-10 | **+35.2%** | 44.2% | 1.43 | 16.8% | +135.7% |
+| Bull (6m) | 2023-10 → 2024-03 | **+38.9%** | 50.0% | 1.92 | 16.8% | +158.9% |
+| Bear (1 ano) | 2022 | **+19.7%** | 44.4% | 1.75 | 10.9% | -64.6% |
+| Chop (6m) | 2024-04 → 2024-09 | **-2.3%** | 33.3% | 0.78 | 13.7% | -8.7% |
+
+**Leitura honesta:** o sistema iguala o B&H BTC em 7 anos (+555% vs +569%) com ~1/3 do drawdown, vence nas janelas adversas (bear 2022: +19.7% vs -64.6%; 5 anos: +101% vs +5%) e cede upside apenas nos janelões de alta (Bull: +39% vs +159%). Nos 5 anos o trading líquido é de +R$73,2k (vs -R$9,5k da V2.1). Recomendação de alocação padrão: **75% sistema + 25% B&H BTC** (a tabela de híbridos está em cada relatório) e buscar tier VIP de taxas (meta: 0.02%).
 
 ---
 
@@ -103,7 +94,7 @@ Para garantir **zero viés de contaminação temporal** e permitir que qualquer 
 Ao abrir uma nova conversa, você pode simplesmente referenciar o arquivo:
 > *"Siga as diretrizes e o protocolo conforme @Prompt.md"*
 
-O arquivo [**`Prompt.md`**](file:///c:/Users/bmani/Documents/GitHub/Bruno/Project/Prompt.md) contém os 3 setores desacoplados e autocontidos:
-1. **Setor 1:** Protocolo de Backtest e Auditoria.
-2. **Setor 2:** Prompt Mestre Operacional para análise diária em tempo real.
-3. **Setor 3:** Instruções de Engenharia Quantitativa e Execução.
+O arquivo [**`Prompt.md`**](Prompt.md) contém os 3 setores desacoplados e autocontidos:
+1. **Setor 1:** Protocolo de Backtest e Auditoria (menu de modalidades + blindagens + walk-forward + armazenamento padrão).
+2. **Setor 2:** Prompt Mestre Operacional para análise diária em tempo real (funil quantitativo bi-direcional V2.2).
+3. **Setor 3:** Engenharia Quantitativa (motor canônico `scripts/backtest_institucional.py`) e Execução Prática.

@@ -1,0 +1,87 @@
+{
+    "config": {
+        "risk_pct": 0.015,
+        "max_positions": 4,
+        "fee_pct": 0.0002,
+        "btc_adx_min": 0.0,
+        "entry_tf": "4h",
+        "runner_mode": "ema20_1d",
+        "short_mode": "revert",
+        "universe": "alpha"
+    },
+    "config_hash": "b9768f4c",
+    "generated_at": "2026-08-22T23:22:48.087206",
+    "windows": {
+        "IS": {
+            "window": "2019-09-01 -> 2022-09-01",
+            "trades": 41,
+            "return_pct": 27.33,
+            "trading_pnl": 9092.59,
+            "pf": 1.25,
+            "win_rate": 41.5,
+            "dd_pct": 10.32,
+            "sharpe": 1.01,
+            "expectancy_r": 0.319,
+            "bnh_btc_pct": 93.58
+        },
+        "OOS1": {
+            "window": "2022-09-01 -> 2023-09-01",
+            "trades": 42,
+            "return_pct": -17.43,
+            "trading_pnl": -22261.17,
+            "pf": 0.34,
+            "win_rate": 23.8,
+            "dd_pct": 17.73,
+            "sharpe": -1.48,
+            "expectancy_r": -0.329,
+            "bnh_btc_pct": 30.25
+        },
+        "OOS2": {
+            "window": "2023-09-01 -> 2024-09-01",
+            "trades": 46,
+            "return_pct": 21.6,
+            "trading_pnl": 15849.79,
+            "pf": 1.39,
+            "win_rate": 45.7,
+            "dd_pct": 11.91,
+            "sharpe": 1.06,
+            "expectancy_r": 0.288,
+            "bnh_btc_pct": 124.39
+        },
+        "OOS3": {
+            "window": "2024-09-01 -> 2025-09-01",
+            "trades": 64,
+            "return_pct": 13.8,
+            "trading_pnl": 9000.54,
+            "pf": 1.15,
+            "win_rate": 43.8,
+            "dd_pct": 16.06,
+            "sharpe": 0.64,
+            "expectancy_r": 0.15,
+            "bnh_btc_pct": 83.96
+        },
+        "OOS4": {
+            "window": "2025-09-01 -> 2026-02-01",
+            "trades": 18,
+            "return_pct": -0.83,
+            "trading_pnl": -2802.32,
+            "pf": 0.8,
+            "win_rate": 33.3,
+            "dd_pct": 13.03,
+            "sharpe": -0.06,
+            "expectancy_r": -0.198,
+            "bnh_btc_pct": -26.75
+        }
+    },
+    "oos_aggregate": {
+        "trades_total": 170,
+        "return_pct_sum": 17.14,
+        "trading_pnl_sum": -213.16,
+        "pf_mean": 0.92,
+        "pf_median": 0.98,
+        "win_rate_mean": 36.6,
+        "dd_max": 17.73,
+        "sharpe_mean": 0.04,
+        "expectancy_r_mean": -0.022
+    }
+}

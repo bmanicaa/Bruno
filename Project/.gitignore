@@ -14,3 +14,7 @@ venv/
 ENV/
 env/
 .pytest_cache/
+# Environment and Secrets
+.env
+*.env
+Telegram/crons.json

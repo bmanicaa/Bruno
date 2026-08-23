@@ -1,25 +1,104 @@
 {
+    "engine_version": "V2.2",
+    "params": {
+        "risk_pct": 0.015,
+        "max_positions": 4,
+        "fee_pct": 0.00075,
+        "entry_slippage": 0.0005,
+        "stop_slippage": 0.0008,
+        "annual_cash_yield": 0.06,
+        "btc_adx_min": 0.0,
+        "entry_tf": "1d",
+        "runner_mode": "ema20_1d",
+        "short_mode": "breakout",
+        "universe": "alpha"
+    },
     "start_date": "2022-01-01",
     "end_date": "2022-12-31",
     "initial_capital": 100000.0,
-    "final_capital": 92921.48744744355,
-    "net_profit_brl": -7078.512552556451,
-    "return_pct": -7.078512552556451,
-    "total_trades": 23,
-    "winning_trades": 7,
-    "losing_trades": 16,
+    "final_capital": 119654.24155763825,
+    "net_profit_brl": 19654.24155763825,
+    "return_pct": 19.65424155763825,
+    "total_trades": 27,
+    "winning_trades": 12,
+    "losing_trades": 15,
     "breakeven_trades": 0,
-    "win_rate_pct": 30.434782608695656,
-    "profit_factor": 0.5430334860539933,
-    "max_drawdown_pct": 20.13038269014107,
-    "sharpe_ratio": -0.2220550845532438,
-    "sortino_ratio": -0.1959408645800636,
-    "total_cash_yield_brl": 4570.679143930281,
-    "total_funding_fees_brl": -2243.255786788204,
-    "coins_scanned": 536,
+    "win_rate_pct": 44.44444444444444,
+    "win_rate_ci95_low_pct": 27.585597670072826,
+    "win_rate_ci95_high_pct": 62.687280520423116,
+    "min_trades_warning": true,
+    "profit_factor": 1.7456159809487801,
+    "max_drawdown_pct": 10.899531079869282,
+    "sharpe_ratio": 1.4924085604810948,
+    "sortino_ratio": 1.5512190980273979,
+    "expectancy_r": 0.3955892298590304,
+    "avg_mae_r": -0.5206564081913414,
+    "avg_mfe_r": 1.3290664362130644,
+    "total_cash_yield_brl": 5743.871053924633,
+    "total_funding_fees_brl": -461.2060012788428,
+    "total_fees_brl": 1107.1280070068585,
+    "trading_pnl_net_brl": 13910.370503713419,
+    "trading_pnl_gross_brl": 14556.292509441435,
+    "bnh_btc_return_pct": -64.63078515805663,
+    "bnh_eth_return_pct": -67.91355347964976,
+    "coins_scanned": 552,
     "semester_checkpoints": {
-        "2022-05-15": 85880.37089954411,
-        "2022-11-15": 94389.74286462707,
-        "2022-12-31": 93002.01002794325
+        "2022-01-01": 100002.7397260274,
+        "2022-07-01": 118096.9086524189,
+        "2022-12-31": 119688.03296315872
+    },
+    "seg_by_regime": {
+        "bear": {
+            "trades": 27,
+            "win_rate_pct": 44.4,
+            "pnl_brl": 13910.37,
+            "avg_r": 0.396
+        }
+    },
+    "seg_by_asset": {
+        "ETH": {
+            "trades": 12,
+            "win_rate_pct": 50.0,
+            "pnl_brl": 7326.34,
+            "avg_r": 0.513
+        },
+        "BTC": {
+            "trades": 15,
+            "win_rate_pct": 40.0,
+            "pnl_brl": 6584.03,
+            "avg_r": 0.302
+        }
+    },
+    "seg_by_exit": {
+        "Trailing Runner 50% (ema20_1d)": {
+            "trades": 7,
+            "win_rate_pct": 100.0,
+            "pnl_brl": 25632.18,
+            "avg_r": 2.801
+        },
+        "Stop BE Runner (50%)": {
+            "trades": 4,
+            "win_rate_pct": 100.0,
+            "pnl_brl": 6915.59,
+            "avg_r": 0.979
+        },
+        "Stop Loss Inicial": {
+            "trades": 12,
+            "win_rate_pct": 0.0,
+            "pnl_brl": -17868.22,
+            "avg_r": -1.036
+        },
+        "Time-Stop (21d)": {
+            "trades": 2,
+            "win_rate_pct": 0.0,
+            "pnl_brl": -786.82,
+            "avg_r": -0.216
+        },
+        "Fechamento Fim do Período (MtM)": {
+            "trades": 2,
+            "win_rate_pct": 50.0,
+            "pnl_brl": 17.65,
+            "avg_r": 0.01
+        }
     }
 }

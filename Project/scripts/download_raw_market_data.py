@@ -1,10 +1,15 @@
 """
-Script de Download de Alta Performance para Mercado Total da Binance (~536 Pares USDT)
-Baixa 5 anos completos de dados históricos (Agosto/2021 a Agosto/2026 = 1.825+ dias):
-- Velas 4h (11.000 candles)
-- Velas 1D (2.000 candles)
-- Funding Rates 8h (5.500 registros)
-- Fear & Greed Index (2.000 dias)
+Script de Download de Alta Performance para Mercado Total da Binance (~536 Pares USDT + Delistados)
+Baixa ~7 anos completos de dados históricos (Setembro/2019 a Agosto/2026):
+- Velas 4h (até 15.300 candles)
+- Velas 1D (até 2.600 candles)
+- Funding Rates 8h (até 7.700 registros)
+- Fear & Greed Index (até 3.650 dias)
+
+Redução de Viés de Sobrevivência: além dos pares listados hoje, baixa uma lista
+curada de ativos DELISTADOS da Binance Futures (LUNA, FTT, SRM, ANC, MIR, DODO, EOS,
+YFII, BZRX, BTS, COCOS, GTO...) cujos dados históricos ainda são servidos pela API.
+A data final de cada série delimita naturalmente o delisting (point-in-time).
 
 Organizado de forma modular por moeda em data/raw/coins/{SYMBOL}/ e macro em data/raw/macro/
 """
@@ -23,12 +28,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW_DIR = os.path.join(BASE_DIR, 'data', 'raw')
 COINS_DIR = os.path.join(RAW_DIR, 'coins')
 MACRO_DIR = os.path.join(RAW_DIR, 'macro')
-DIR_4H = os.path.join(RAW_DIR, 'klines_4h')
-DIR_1D = os.path.join(RAW_DIR, 'klines_1d')
-DIR_FUNDING = os.path.join(RAW_DIR, 'funding_rates')
 
-for d in [RAW_DIR, COINS_DIR, MACRO_DIR, DIR_4H, DIR_1D, DIR_FUNDING]:
+for d in [RAW_DIR, COINS_DIR, MACRO_DIR]:
     os.makedirs(d, exist_ok=True)
+
+TARGET_4H = 15300
+TARGET_1D = 2600
+TARGET_FUNDING = 7700
+FNG_LIMIT = 3650
+
+DELISTED_SYMBOLS = [
+    'LUNAUSDT', 'FTTUSDT', 'ANCUSDT', 'MIRUSDT', 'SRMUSDT', 'DODOUSDT',
+    'EOSUSDT', 'YFIIUSDT', 'BZRXUSDT', 'BTSUSDT', 'COCOSUSDT', 'GTOUSDT',
+    'TORNUSDT', 'VGXUSDT', 'TCTUSDT', 'REPUSDT'
+]
 
 def fetch_json(url, params=None, retries=4):
     if params:
@@ -50,17 +63,17 @@ def fetch_json(url, params=None, retries=4):
             time.sleep(0.8 * (attempt + 1))
     return None
 
-def fetch_klines_paginated(symbol, interval='4h', total_target=11000):
+def fetch_klines_paginated(symbol, interval='4h', total_target=TARGET_4H):
     fut_url = 'https://fapi.binance.com/fapi/v1/klines'
     all_candles = []
     end_time = None
-    
+
     while len(all_candles) < total_target:
         limit = min(1000, total_target - len(all_candles))
         params = {'symbol': symbol, 'interval': interval, 'limit': limit}
         if end_time:
             params['endTime'] = end_time
-            
+
         data = fetch_json(fut_url, params)
         if not data or not isinstance(data, list) or len(data) == 0:
             # Fallback para Spot se não encontrar em futuros
@@ -69,7 +82,7 @@ def fetch_klines_paginated(symbol, interval='4h', total_target=11000):
             data = fetch_json(spot_url, {'symbol': spot_sym, 'interval': interval, 'limit': limit, **({'endTime': end_time} if end_time else {})})
             if not data or not isinstance(data, list) or len(data) == 0:
                 break
-                
+
         all_candles = data + all_candles
         end_time = data[0][0] - 1
         if len(data) < limit:
@@ -102,24 +115,24 @@ def save_klines_csv(candles, filepath):
                 c[6], close_dt, c[7], c[8], c[9], c[10]
             ])
 
-def fetch_and_save_funding(symbol, filepath, total_target=5500):
+def fetch_and_save_funding(symbol, filepath, total_target=TARGET_FUNDING):
     url = 'https://fapi.binance.com/fapi/v1/fundingRate'
     all_funding = []
     end_time = None
-    
+    page_size = 500  # A API da Binance capa funding em 500 registros por request
+
     while len(all_funding) < total_target:
-        limit = min(1000, total_target - len(all_funding))
-        params = {'symbol': symbol, 'limit': limit}
+        params = {'symbol': symbol, 'limit': page_size}
         if end_time:
             params['endTime'] = end_time
-            
+
         data = fetch_json(url, params)
         if not data or not isinstance(data, list) or len(data) == 0:
             break
-            
+
         all_funding = data + all_funding
         end_time = data[0]['fundingTime'] - 1
-        if len(data) < limit:
+        if len(data) < page_size:
             break
         time.sleep(0.015)
 
@@ -144,7 +157,7 @@ def fetch_and_save_funding(symbol, filepath, total_target=5500):
             writer.writerow([f_time, f_dt, f_rate, m_price])
     return len(unique_funding)
 
-def fetch_and_save_fear_and_greed(filepath, limit=2000):
+def fetch_and_save_fear_and_greed(filepath, limit=FNG_LIMIT):
     url = f'https://api.alternative.me/fng/?limit={limit}'
     try:
         res = fetch_json(url)
@@ -168,7 +181,7 @@ def get_all_binance_usdt_futures():
     data = fetch_json(url)
     if not data or 'symbols' not in data:
         raise RuntimeError("Falha ao obter exchangeInfo da Binance Futures")
-        
+
     stables = {'USDCUSDT', 'FDUSDUSDT', 'TUSDUSDT', 'BUSDUSDT', 'EURUSDT', 'DAIUSDT', 'USDPUSDT', 'AEURUSDT', 'PAXGUSDT'}
     symbols = []
     for s in data['symbols']:
@@ -178,79 +191,88 @@ def get_all_binance_usdt_futures():
                 symbols.append(sym)
     return symbols
 
-def process_single_coin(symbol, target_4h=11000, target_1d=2000, target_funding=5500):
+def process_single_coin(symbol, target_4h=TARGET_4H, target_1d=TARGET_1D, target_funding=TARGET_FUNDING):
     coin_folder = os.path.join(COINS_DIR, symbol)
     os.makedirs(coin_folder, exist_ok=True)
-    
+
     k4h_path = os.path.join(coin_folder, 'klines_4h.csv')
     k1d_path = os.path.join(coin_folder, 'klines_1d.csv')
     fr_path = os.path.join(coin_folder, 'funding_rates.csv')
-    
-    # 4h (11.000 velas)
+
+    # 4h (até 15.300 velas)
     candles_4h = fetch_klines_paginated(symbol, interval='4h', total_target=target_4h)
     if not candles_4h:
-        return symbol, False, "Sem candles 4h"
+        return symbol, False, "Sem candles 4h", None
     save_klines_csv(candles_4h, k4h_path)
-    save_klines_csv(candles_4h, os.path.join(DIR_4H, f"{symbol}.csv"))
-    
-    # 1D (2.000 velas)
+
+    # 1D (até 2.600 velas)
     candles_1d = fetch_klines_paginated(symbol, interval='1d', total_target=target_1d)
-    save_klines_csv(candles_1d, k1d_path)
-    save_klines_csv(candles_1d, os.path.join(DIR_1D, f"{symbol}.csv"))
-    
-    # Funding (5.500 registros)
+    if candles_1d:
+        save_klines_csv(candles_1d, k1d_path)
+
+    # Funding (até 7.700 registros)
     funding_count = fetch_and_save_funding(symbol, fr_path, total_target=target_funding)
-    fetch_and_save_funding(symbol, os.path.join(DIR_FUNDING, f"{symbol}.csv"), total_target=target_funding)
-    
-    return symbol, True, f"4h: {len(candles_4h)} | 1D: {len(candles_1d)} | FR: {funding_count}"
+
+    coverage = {
+        'first_4h': datetime.datetime.utcfromtimestamp(candles_4h[0][0] / 1000).strftime('%Y-%m-%d'),
+        'last_4h': datetime.datetime.utcfromtimestamp(candles_4h[-1][0] / 1000).strftime('%Y-%m-%d'),
+        'candles_4h': len(candles_4h),
+        'candles_1d': len(candles_1d),
+        'funding_count': funding_count
+    }
+
+    return symbol, True, f"4h: {len(candles_4h)} | 1D: {len(candles_1d)} | FR: {funding_count}", coverage
 
 def main():
     print("=" * 85)
-    print("DOWNLOAD DE DADOS BRUTOS — 5 ANOS HISTÓRICOS (2021 A 2026 / BINANCE TOTAL)")
+    print("DOWNLOAD DE DADOS BRUTOS — ~7 ANOS HISTÓRICOS (2019 A 2026 / BINANCE TOTAL + DELISTADOS)")
     print(f"Diretório Raiz: {RAW_DIR}")
     print("=" * 85)
-    
+
     # 1. Macro
-    print("\n1. Baixando Dados Macro de 5 Anos (Fear & Greed 2.000d + BTC 5 Anos)...")
+    print("\n1. Baixando Dados Macro (~7 Anos | Fear & Greed + BTC)...")
     fng_path = os.path.join(MACRO_DIR, 'fear_and_greed.csv')
-    fetch_and_save_fear_and_greed(fng_path, limit=2000)
-    print(f"   ✓ Fear & Greed Index (2.000 dias): {fng_path}")
-    
-    btc_4h = fetch_klines_paginated('BTCUSDT', interval='4h', total_target=11000)
+    fetch_and_save_fear_and_greed(fng_path, limit=FNG_LIMIT)
+    print(f"   [OK] Fear & Greed Index: {fng_path}")
+
+    btc_4h = fetch_klines_paginated('BTCUSDT', interval='4h', total_target=TARGET_4H)
     btc_4h_path = os.path.join(MACRO_DIR, 'BTCUSDT_4h.csv')
     save_klines_csv(btc_4h, btc_4h_path)
-    save_klines_csv(btc_4h, os.path.join(DIR_4H, 'BTCUSDT.csv'))
-    print(f"   ✓ BTCUSDT 4h Benchmark (5 Anos): {len(btc_4h)} candles -> {btc_4h_path}")
-    
-    btc_1d = fetch_klines_paginated('BTCUSDT', interval='1d', total_target=2000)
+    print(f"   [OK] BTCUSDT 4h Benchmark: {len(btc_4h)} candles -> {btc_4h_path}")
+
+    btc_1d = fetch_klines_paginated('BTCUSDT', interval='1d', total_target=TARGET_1D)
     btc_1d_path = os.path.join(MACRO_DIR, 'BTCUSDT_1d.csv')
     save_klines_csv(btc_1d, btc_1d_path)
-    save_klines_csv(btc_1d, os.path.join(DIR_1D, 'BTCUSDT.csv'))
-    print(f"   ✓ BTCUSDT 1D Benchmark (5 Anos): {len(btc_1d)} candles -> {btc_1d_path}")
-    
-    # 2. Obter Todos os Pares USDT
-    print("\n2. Identificando Todos os Pares Perpétuos USDT da Binance...")
+    print(f"   [OK] BTCUSDT 1D Benchmark: {len(btc_1d)} candles -> {btc_1d_path}")
+
+    # 2. Obter Todos os Pares USDT Ativos + Delistados
+    print("\n2. Identificando Pares Perpétuos USDT da Binance (Ativos + Delistados)...")
     symbols = get_all_binance_usdt_futures()
-    print(f"   Total de Ativos Encontrados: {len(symbols)} moedas")
-    
+    for ds in DELISTED_SYMBOLS:
+        if ds not in symbols:
+            symbols.append(ds)
+    print(f"   Total de Ativos a Baixar: {len(symbols)} moedas (inclui {len(DELISTED_SYMBOLS)} delistados curados)")
+
     # 3. Download Paralelo Multi-Thread (15 Threads Concorrentes)
-    print(f"\n3. Iniciando Download Paralelo (15 Threads) para {len(symbols)} Ativos (Até 5 Anos cada)...")
+    print(f"\n3. Iniciando Download Paralelo (15 Threads) para {len(symbols)} Ativos (Até ~7 Anos cada)...")
     start_time = time.time()
-    
+
     success_count = 0
     failed_symbols = []
     successful_symbols = []
-    
+    coverage_map = {}
+
     with ThreadPoolExecutor(max_workers=15) as executor:
         futures = {executor.submit(process_single_coin, sym): sym for sym in symbols}
-        
+
         for idx, future in enumerate(as_completed(futures), 1):
             sym = futures[future]
             try:
-                symbol, success, msg = future.result()
+                symbol, success, msg, coverage = future.result()
                 if success:
                     success_count += 1
                     successful_symbols.append(symbol)
+                    coverage_map[symbol] = coverage
                     if idx % 25 == 0 or idx == len(symbols):
                         elapsed = time.time() - start_time
                         print(f"   [{idx}/{len(symbols)}] ({idx/len(symbols)*100:.1f}%) Processado: {symbol} ({msg}) - Tempo: {elapsed:.1f}s")
@@ -260,26 +282,33 @@ def main():
             except Exception as e:
                 failed_symbols.append(sym)
                 print(f"   [ERRO] {sym}: {e}")
-                
+
     elapsed_total = time.time() - start_time
-    
+
     metadata = {
         'download_timestamp': datetime.datetime.utcnow().isoformat(),
-        'period_years': 5,
-        'target_candles_4h': 11000,
-        'target_candles_1d': 2000,
+        'period_start': '2019-09-01',
+        'period_years': 7,
+        'target_candles_4h': TARGET_4H,
+        'target_candles_1d': TARGET_1D,
+        'target_funding': TARGET_FUNDING,
         'total_found': len(symbols),
         'coins_count': len(successful_symbols),
+        'delisted_included': [s for s in DELISTED_SYMBOLS if s in successful_symbols],
         'symbols': sorted(successful_symbols),
-        'failed_symbols': failed_symbols
+        'failed_symbols': failed_symbols,
+        'coverage': coverage_map
     }
-    
+
     with open(os.path.join(RAW_DIR, 'universe_metadata.json'), 'w', encoding='utf-8') as f:
         json.dump(metadata, f, indent=4)
-        
+
     print("\n" + "=" * 85)
-    print(f"DOWNLOAD DE 5 ANOS CONCLUÍDO COM SUCESSO EM {elapsed_total:.1f} SEGUNDOS!")
-    print(f"Moedas Estruturadas (Até 5 Anos): {len(successful_symbols)} / {len(symbols)}")
+    print(f"DOWNLOAD DE ~7 ANOS CONCLUÍDO EM {elapsed_total:.1f} SEGUNDOS!")
+    print(f"Moedas Estruturadas: {len(successful_symbols)} / {len(symbols)}")
+    print(f"Delistados incluídos: {len([s for s in DELISTED_SYMBOLS if s in successful_symbols])}")
+    if failed_symbols:
+        print(f"Falhas ({len(failed_symbols)}): {failed_symbols[:10]}{'...' if len(failed_symbols) > 10 else ''}")
     print(f"Metadados Salvos em: {os.path.join(RAW_DIR, 'universe_metadata.json')}")
     print(f"Pastas Modulares em: {COINS_DIR}")
     print("=" * 85)

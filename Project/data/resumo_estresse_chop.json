@@ -1,28 +1,115 @@
 {
+    "engine_version": "V2.2",
+    "params": {
+        "risk_pct": 0.015,
+        "max_positions": 4,
+        "fee_pct": 0.00075,
+        "entry_slippage": 0.0005,
+        "stop_slippage": 0.0008,
+        "annual_cash_yield": 0.06,
+        "btc_adx_min": 0.0,
+        "entry_tf": "1d",
+        "runner_mode": "ema20_1d",
+        "short_mode": "breakout",
+        "universe": "alpha"
+    },
     "start_date": "2024-04-01",
     "end_date": "2024-09-30",
     "initial_capital": 100000.0,
-    "final_capital": 86824.74009790315,
-    "net_profit_brl": -13175.259902096848,
-    "return_pct": -13.175259902096847,
-    "total_trades": 20,
-    "winning_trades": 7,
-    "losing_trades": 13,
+    "final_capital": 97686.456398395,
+    "net_profit_brl": -2313.5436016049935,
+    "return_pct": -2.3135436016049935,
+    "total_trades": 30,
+    "winning_trades": 10,
+    "losing_trades": 20,
     "breakeven_trades": 0,
-    "win_rate_pct": 35.0,
-    "profit_factor": 0.3883760332840235,
-    "max_drawdown_pct": 23.07586481214926,
-    "sharpe_ratio": -0.9797027809673348,
-    "sortino_ratio": -0.7669776581856674,
-    "total_cash_yield_brl": 2334.397266840553,
-    "total_funding_fees_brl": 260.364049546193,
-    "coins_scanned": 536,
+    "win_rate_pct": 33.33333333333333,
+    "win_rate_ci95_low_pct": 19.230295526846188,
+    "win_rate_ci95_high_pct": 51.22027418616973,
+    "min_trades_warning": false,
+    "profit_factor": 0.7832031834185688,
+    "max_drawdown_pct": 13.73824554714608,
+    "sharpe_ratio": -0.1467545825487407,
+    "sortino_ratio": -0.15771037289834247,
+    "expectancy_r": -0.21388775156813203,
+    "avg_mae_r": -0.7200476933254236,
+    "avg_mfe_r": 1.0265979807883558,
+    "total_cash_yield_brl": 2449.0341097298397,
+    "total_funding_fees_brl": 806.9733570627221,
+    "total_fees_brl": 841.7520197299909,
+    "trading_pnl_net_brl": -4762.57771133473,
+    "trading_pnl_gross_brl": -3113.852334542017,
+    "bnh_btc_return_pct": -8.648536944746015,
+    "bnh_eth_return_pct": -27.274135760627484,
+    "coins_scanned": 552,
     "semester_checkpoints": {
-        "2022-05-15": 100002.7397260274,
-        "2022-11-15": 100002.7397260274,
-        "2023-05-15": 100002.7397260274,
-        "2023-11-15": 100002.7397260274,
-        "2024-05-15": 102923.39176760336,
-        "2024-09-30": 86909.23168426128
+        "2024-04-01": 100002.7397260274,
+        "2024-09-30": 97718.02422426124
+    },
+    "seg_by_regime": {
+        "bull": {
+            "trades": 23,
+            "win_rate_pct": 34.8,
+            "pnl_brl": -1769.49,
+            "avg_r": -0.153
+        },
+        "bear": {
+            "trades": 7,
+            "win_rate_pct": 28.6,
+            "pnl_brl": -2993.09,
+            "avg_r": -0.414
+        }
+    },
+    "seg_by_asset": {
+        "ALT": {
+            "trades": 21,
+            "win_rate_pct": 38.1,
+            "pnl_brl": 1713.67,
+            "avg_r": -0.06
+        },
+        "BTC": {
+            "trades": 5,
+            "win_rate_pct": 20.0,
+            "pnl_brl": -4227.99,
+            "avg_r": -0.64
+        },
+        "ETH": {
+            "trades": 4,
+            "win_rate_pct": 25.0,
+            "pnl_brl": -2248.25,
+            "avg_r": -0.488
+        }
+    },
+    "seg_by_exit": {
+        "Stop Loss Inicial": {
+            "trades": 17,
+            "win_rate_pct": 0.0,
+            "pnl_brl": -20406.94,
+            "avg_r": -1.046
+        },
+        "Stop BE Runner (50%)": {
+            "trades": 2,
+            "win_rate_pct": 100.0,
+            "pnl_brl": 2915.26,
+            "avg_r": 0.958
+        },
+        "Trailing Runner 50% (ema20_1d)": {
+            "trades": 7,
+            "win_rate_pct": 100.0,
+            "pnl_brl": 13447.68,
+            "avg_r": 1.338
+        },
+        "Time-Stop (21d)": {
+            "trades": 2,
+            "win_rate_pct": 50.0,
+            "pnl_brl": 569.36,
+            "avg_r": 0.473
+        },
+        "Fechamento Fim do Período (MtM)": {
+            "trades": 2,
+            "win_rate_pct": 0.0,
+            "pnl_brl": -1287.93,
+            "avg_r": -0.434
+        }
     }
 }

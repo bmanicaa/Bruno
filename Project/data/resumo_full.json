@@ -1,0 +1,122 @@
+{
+    "engine_version": "V2.2",
+    "params": {
+        "risk_pct": 0.015,
+        "max_positions": 4,
+        "fee_pct": 0.00075,
+        "entry_slippage": 0.0005,
+        "stop_slippage": 0.0008,
+        "annual_cash_yield": 0.06,
+        "btc_adx_min": 0.0,
+        "entry_tf": "1d",
+        "runner_mode": "ema20_1d",
+        "short_mode": "breakout",
+        "universe": "alpha"
+    },
+    "start_date": "2019-09-01",
+    "end_date": "2026-08-20",
+    "initial_capital": 100000.0,
+    "final_capital": 655186.7745374202,
+    "net_profit_brl": 555186.7745374202,
+    "return_pct": 555.1867745374203,
+    "total_trades": 334,
+    "winning_trades": 145,
+    "losing_trades": 189,
+    "breakeven_trades": 0,
+    "win_rate_pct": 43.41317365269461,
+    "win_rate_ci95_low_pct": 38.20226250706121,
+    "win_rate_ci95_high_pct": 48.773882526587705,
+    "min_trades_warning": false,
+    "profit_factor": 1.4725317000394396,
+    "max_drawdown_pct": 34.02667259618423,
+    "sharpe_ratio": 1.2533266891600399,
+    "sortino_ratio": 1.2869727571960778,
+    "expectancy_r": 0.38285816865073385,
+    "avg_mae_r": -0.6318890496015228,
+    "avg_mfe_r": 1.7219062975067672,
+    "total_cash_yield_brl": 110973.47528170353,
+    "total_funding_fees_brl": 37057.94523400754,
+    "total_fees_brl": 39528.700460534325,
+    "trading_pnl_net_brl": 444213.2992557171,
+    "trading_pnl_gross_brl": 520799.94495025894,
+    "bnh_btc_return_pct": 569.0783085689527,
+    "bnh_eth_return_pct": 1441.6849315068496,
+    "coins_scanned": 552,
+    "semester_checkpoints": {
+        "2019-09-01": 100002.7397260274,
+        "2020-03-01": 102909.99019369137,
+        "2020-09-01": 133308.07008337262,
+        "2021-03-01": 257622.4350192335,
+        "2021-09-01": 346917.29297830525,
+        "2022-03-01": 336910.8522532678,
+        "2022-09-01": 370843.18649429735,
+        "2023-03-01": 385085.52401776146,
+        "2023-09-01": 328715.75508243387,
+        "2024-03-01": 353833.83208763704,
+        "2024-09-01": 378858.9026089895,
+        "2025-03-01": 485934.03391922795,
+        "2025-09-01": 639467.6877677673,
+        "2026-03-01": 675483.773493072,
+        "2026-08-20": 655186.7745374202
+    },
+    "seg_by_regime": {
+        "bear": {
+            "trades": 74,
+            "win_rate_pct": 41.9,
+            "pnl_brl": 110259.56,
+            "avg_r": 0.242
+        },
+        "bull": {
+            "trades": 260,
+            "win_rate_pct": 43.8,
+            "pnl_brl": 333953.74,
+            "avg_r": 0.423
+        }
+    },
+    "seg_by_asset": {
+        "BTC": {
+            "trades": 70,
+            "win_rate_pct": 47.1,
+            "pnl_brl": 149266.56,
+            "avg_r": 0.563
+        },
+        "ETH": {
+            "trades": 47,
+            "win_rate_pct": 48.9,
+            "pnl_brl": 147283.77,
+            "avg_r": 0.552
+        },
+        "ALT": {
+            "trades": 217,
+            "win_rate_pct": 41.0,
+            "pnl_brl": 147662.97,
+            "avg_r": 0.288
+        }
+    },
+    "seg_by_exit": {
+        "Trailing Runner 50% (ema20_1d)": {
+            "trades": 97,
+            "win_rate_pct": 100.0,
+            "pnl_brl": 1196730.85,
+            "avg_r": 2.855
+        },
+        "Stop Loss Inicial": {
+            "trades": 178,
+            "win_rate_pct": 0.0,
+            "pnl_brl": -919441.36,
+            "avg_r": -1.043
+        },
+        "Time-Stop (21d)": {
+            "trades": 23,
+            "win_rate_pct": 52.2,
+            "pnl_brl": 7261.95,
+            "avg_r": 0.111
+        },
+        "Stop BE Runner (50%)": {
+            "trades": 36,
+            "win_rate_pct": 100.0,
+            "pnl_brl": 159661.86,
+            "avg_r": 0.944
+        }
+    }
+}

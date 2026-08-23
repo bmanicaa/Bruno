@@ -1,27 +1,115 @@
 {
+    "engine_version": "V2.2",
+    "params": {
+        "risk_pct": 0.015,
+        "max_positions": 4,
+        "fee_pct": 0.00075,
+        "entry_slippage": 0.0005,
+        "stop_slippage": 0.0008,
+        "annual_cash_yield": 0.06,
+        "btc_adx_min": 0.0,
+        "entry_tf": "1d",
+        "runner_mode": "ema20_1d",
+        "short_mode": "breakout",
+        "universe": "alpha"
+    },
     "start_date": "2023-10-01",
     "end_date": "2024-03-31",
     "initial_capital": 100000.0,
-    "final_capital": 80237.0295323789,
-    "net_profit_brl": -19762.970467621097,
-    "return_pct": -19.762970467621095,
-    "total_trades": 33,
-    "winning_trades": 9,
+    "final_capital": 138880.9316281036,
+    "net_profit_brl": 38880.9316281036,
+    "return_pct": 38.880931628103596,
+    "total_trades": 48,
+    "winning_trades": 24,
     "losing_trades": 24,
     "breakeven_trades": 0,
-    "win_rate_pct": 27.27272727272727,
-    "profit_factor": 0.510613350369162,
-    "max_drawdown_pct": 23.9174094316333,
-    "sharpe_ratio": -1.390701627392146,
-    "sortino_ratio": -1.5421631986652542,
-    "total_cash_yield_brl": 1786.0562257328313,
-    "total_funding_fees_brl": 1577.5114440652278,
-    "coins_scanned": 536,
+    "win_rate_pct": 50.0,
+    "win_rate_ci95_low_pct": 36.38909893203777,
+    "win_rate_ci95_high_pct": 63.610901067962224,
+    "min_trades_warning": false,
+    "profit_factor": 1.9230233958291998,
+    "max_drawdown_pct": 16.83154132765058,
+    "sharpe_ratio": 2.222388108314285,
+    "sortino_ratio": 2.741517012248545,
+    "expectancy_r": 0.9630039706695399,
+    "avg_mae_r": -0.5408697188657817,
+    "avg_mfe_r": 2.379858966851899,
+    "total_cash_yield_brl": 1850.236687013576,
+    "total_funding_fees_brl": 4015.0796843375615,
+    "total_fees_brl": 1621.9146106109706,
+    "trading_pnl_net_brl": 37030.69494109044,
+    "trading_pnl_gross_brl": 42667.689236038976,
+    "bnh_btc_return_pct": 158.87174934339512,
+    "bnh_eth_return_pct": 111.50870232838817,
+    "coins_scanned": 552,
     "semester_checkpoints": {
-        "2022-05-15": 100002.7397260274,
-        "2022-11-15": 100002.7397260274,
-        "2023-05-15": 100002.7397260274,
-        "2023-11-15": 101319.97293892117,
-        "2024-03-31": 80257.36442091438
+        "2023-10-01": 100002.7397260274,
+        "2024-03-31": 138904.9625666372
+    },
+    "seg_by_regime": {
+        "bull": {
+            "trades": 47,
+            "win_rate_pct": 51.1,
+            "pnl_brl": 37771.41,
+            "avg_r": 1.006
+        },
+        "bear": {
+            "trades": 1,
+            "win_rate_pct": 0.0,
+            "pnl_brl": -740.72,
+            "avg_r": -1.052
+        }
+    },
+    "seg_by_asset": {
+        "ALT": {
+            "trades": 40,
+            "win_rate_pct": 50.0,
+            "pnl_brl": 27472.15,
+            "avg_r": 0.969
+        },
+        "BTC": {
+            "trades": 6,
+            "win_rate_pct": 50.0,
+            "pnl_brl": 9506.43,
+            "avg_r": 1.256
+        },
+        "ETH": {
+            "trades": 2,
+            "win_rate_pct": 50.0,
+            "pnl_brl": 52.11,
+            "avg_r": -0.035
+        }
+    },
+    "seg_by_exit": {
+        "Stop Loss Inicial": {
+            "trades": 24,
+            "win_rate_pct": 0.0,
+            "pnl_brl": -40118.91,
+            "avg_r": -1.063
+        },
+        "Trailing Runner 50% (ema20_1d)": {
+            "trades": 14,
+            "win_rate_pct": 100.0,
+            "pnl_brl": 58600.7,
+            "avg_r": 3.831
+        },
+        "Time-Stop (21d)": {
+            "trades": 2,
+            "win_rate_pct": 100.0,
+            "pnl_brl": 1729.91,
+            "avg_r": 1.057
+        },
+        "Stop BE Runner (50%)": {
+            "trades": 4,
+            "win_rate_pct": 100.0,
+            "pnl_brl": 5099.5,
+            "avg_r": 0.896
+        },
+        "Fechamento Fim do Período (MtM)": {
+            "trades": 4,
+            "win_rate_pct": 100.0,
+            "pnl_brl": 11719.49,
+            "avg_r": 3.102
+        }
     }
 }

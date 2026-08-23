@@ -1,4 +1,4 @@
-# Sistema Quantitativo de Swing Trade em Criptoativos — Prompt Mestre V2.2
+# Sistema Quantitativo de Swing Trade em Criptoativos — Manual Mestre V2.3.1
 
 Este repositório contém a arquitetura completa, o protocolo de auditoria e o **motor de simulação canônico** *point-in-time* (zero lookahead bias) para a estratégia de **Swing Trade Quantitativo Multidimensional** em timeframes de 4h e 1D, operando bi-direcionalmente (Long/Short) sobre o mercado total da Binance (~550 moedas + delistados), com **validação walk-forward out-of-sample**.
 
@@ -8,7 +8,7 @@ Este repositório contém a arquitetura completa, o protocolo de auditoria e o *
 
 ```
 Project/
-├── Prompt.md                     # Arquivo Mestre V2.2 (Protocolo de Teste + Operação + Engenharia)
+├── Prompt.md                     # Manual Mestre V2.3.1 (Protocolo de Teste + Operação + Engenharia)
 ├── README.md                     # Guia Geral e Documentação Executiva
 ├── analises.md                   # Registro histórico de análises, experimentos e diagnósticos
 ├── data/
@@ -22,7 +22,7 @@ Project/
 │   └── legado/                   # Artefatos de estratégias antigas (apenas histórico)
 ├── reports/                      # relatorio_{modo}.md (Relatórios Executivos de Auditoria)
 └── scripts/
-    ├── backtest_institucional.py # ⚙️ MOTOR CANÔNICO ÚNICO (V2.2 + walk-forward + experimentos)
+    ├── backtest_institucional.py # ⚙️ MOTOR CANÔNICO ÚNICO (V2.3.1 + walk-forward + experimentos)
     ├── download_raw_market_data.py # Downloader de Dados Brutos (~7 anos + delistados)
     └── legado/                   # Motores antigos/experimentais (NÃO usar em novos testes)
 ```

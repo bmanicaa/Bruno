@@ -1,8 +1,19 @@
-# SISTEMA QUANTITATIVO INSTITUCIONAL DE SWING TRADE & CAPTURA DE CICLO (MANUAL MESTRE V2.2)
+# SISTEMA QUANTITATIVO INSTITUCIONAL DE SWING TRADE & CAPTURA DE CICLO (MANUAL MESTRE V2.3.1)
 
 Este documento contém os 3 setores operacionais estruturados para alta assimetria de retorno, operação bi-direcional (Long/Short), filtragem no gráfico Diário (1D), condução de lucros sem teto artificial, **blindagem estrita contra overfitting (foco no futuro)** e menu interativo de testes.
 
-> **VERSÃO V2.2 (22/08/2026):** Validada por protocolo Walk-Forward em 4 blocos out-of-sample (2022-09 → 2026-02, 245 trades) + holdout final intocado (2026-02 → 2026-08). Mudanças vs V2.1: (1) Gatilho LONG confirmado no 1D (close > dia anterior) em vez do gatilho 4h. (2) Short por ROMPIMENTO de fundo diário (trend-following) em vez de repique contra-tendência — os shorts perderam 15/15 trades em 2022-2023 no modo antigo e passaram a contribuir positivamente. (3) Resultado OOS: trading PnL +R$73.098 (PF 1.18, Sharpe 0.63) vs -R$4.145 do V2.1.
+> ## ⚠️ AVISO DE STATUS (24/08/2026) — LEIA ANTES DE USAR ESTE DOCUMENTO
+>
+> **A estratégia descrita aqui NÃO tem edge comprovado e NÃO deve receber dinheiro real.**
+>
+> Este documento descreve o *desenho* do sistema. Ele não é evidência de que o sistema funciona.
+>
+> - A validação anunciada na versão V2.2 (*"OOS +R$73.098, PF 1.18, Sharpe 0.63"*) era **artefato de um bug de lookahead intra-diário** — o gatilho usava o fechamento do próprio dia. Corrigido na V2.3, o mesmo teste devolve **-R$12.064 (PF 0.99)**. **O número +R$73.098 não deve ser citado como resultado.**
+> - Sob o protocolo corrigido, **32 configurações limpas em 4 famílias de sinal foram testadas e nenhuma passou** — nenhuma sequer tem lucro em 3 dos 4 blocos de validação.
+> - O que o sistema realmente faz: **ganha dinheiro em alta confirmada** (bull 6m: +R$37.493 de trading, Sharpe de trading +1,99) e **perde ou empata em todo o resto**. Nos outros períodos o "lucro" que aparece é o rendimento do caixa (6% a.a.), não a operação.
+> - Estado atual, próximos passos e protocolo em vigor: **`analises.md` (seções 1 a 3)**. Recomendação para dinheiro real: **`PLANO_OPERACIONAL_REAL.md`**.
+>
+> *Mudanças de desenho da V2.2 vs V2.1 (mantidas, mas sem validação estatística): (1) gatilho LONG confirmado no 1D em vez do gatilho 4h; (2) short por rompimento de fundo diário em vez de repique contra-tendência.*
 
 ---
 
@@ -28,7 +39,10 @@ Escolha o número da modalidade desejada para prosseguir:
       -> [RECOMENDADO para triagem rápida e calibração de estratégias robustas].
 
 [ 2 ] 🐻 TESTE DE ESTRESSE BEAR MARKET (1 Ano: 01/01/2022 a 31/12/2022 - Queda Extrema)
-      -> Duração: 365 dias | Tempo: ~20 seg | Testa a defesa de capital e lucros em SHORT no colapso Luna/FTX.
+      -> Duração: 365 dias | Tempo: ~20 seg | Testa a defesa de capital no colapso Luna/FTX.
+      -> NOTA (24/08/2026): nao houve "lucro em SHORT" neste periodo. O trading PERDEU R$1.399;
+         os +4,1% de retorno sao o rendimento do caixa. A defesa contra os -64,6% do B&H e real,
+         mas vem do filtro de regime manter o capital FORA do mercado, nao de operar bem no bear.
 
 [ 3 ] 🐂 TESTE DE ESTRESSE BULL MARKET (6 Meses: 01/10/2023 a 31/03/2024 - Rali Explosivo)
       -> Duração: 180 dias | Tempo: ~15 seg | Testa a multiplicação de capital e condução do RUNNER na alta do ETF/Halving.
@@ -52,7 +66,13 @@ Escolha o número da modalidade desejada para prosseguir:
 - **Universo Dinâmico Point-in-Time (Mercado Total da Binance ~550 Moedas):**
   * Screener a cada candle que varre todas as moedas do mercado e filtra ativos com Volume Médio Diário 30d > $25M USD, Futuros ativos e Maturidade > 180 dias.
 - **Blindagem Temporal Estrita (*Zero Lookahead Bias*):** Acesso exclusivo a dados passados até o timestamp corrente (`open_time < current_time`). Proibido qualquer vazamento de dados futuros.
-- **Blindagem de Validação (Protocolo Walk-Forward):** Toda mudança de regra/parâmetro DEVE ser validada pelo modo `--walkforward` (4 blocos OOS + holdout final intocado). Critério de aceite: melhora em ≥3 de 5 métricas OOS (trading PnL, PF, DD, Sharpe, retorno) vs baseline vigente, PF OOS > 1.0 e piora de DD ≤ 20% relativa. Resultados de experimentos ficam em `data/experimentos/` com hash da config e registro automático no `analises.md`.
+- **Blindagem de Validação (Protocolo Walk-Forward):** Toda mudança de regra/parâmetro DEVE ser validada pelo modo `--walkforward` (4 blocos OOS + holdout final intocado). Resultados ficam em `data/experimentos/` com hash da config e registro no `analises.md`.
+  **Critério de aceite (endurecido em 24/08/2026 — a versão canônica vive em `analises.md` seção 3):**
+  1. **`sharpe_trading_mean` > 0.** O `sharpe_mean` inclui o cash yield de 6% a.a. e não mede edge: uma carteira 100% parada no caixa marca Sharpe > 100 nessa métrica.
+  2. **Trading PnL OOS positivo em ≥3 dos 4 blocos.** Agregado positivo não basta — a config `45c0eb3c` somava +R$4,5k perdendo em 3 de 4 blocos, com tudo concentrado na alta do ETF.
+  3. **≥30 trades OOS.** Abaixo disso o block bootstrap satura e devolve p-valores falsamente confiantes.
+  4. Melhora em ≥3 de 5 métricas OOS (trading PnL, PF, **sharpe_trading**, DD, retorno) vs baseline vigente, PF OOS > 1.0 e piora de DD ≤ 20% relativa.
+  5. Bootstrap P(PF>1) ≥ 90% **e** Deflated Sharpe p < 0.10.
 
 ### 2. Execução Realista e Custos Operacionais:
 - **Preço de Entrada:** Abertura do candle seguinte com 5 bps de slippage (`open * 1.0005`).
@@ -165,7 +185,7 @@ FUNIL QUANTITATIVO BI-DIRECIONAL (DIÁRIO COMANDA / 4H REFINA O TIMING)
 
 ### Motor Canônico de Simulação
 
-> **Motor Único Oficial:** `scripts/backtest_institucional.py` (versão V2.2). Este é o ÚNICO motor que gera os artefatos de auditoria. Qualquer divergência entre este motor e o Prompt.md deve ser tratada como bug (corrigir o código ou o prompt). Motores antigos/experimentais ficam arquivados em `scripts/legado/` e NÃO devem ser usados em novos testes.
+> **Motor Único Oficial:** `scripts/backtest_institucional.py` (versão **V2.3.1** — zero lookahead, 22 testes de regressão). Este é o ÚNICO motor que gera os artefatos de auditoria. Qualquer divergência entre este motor e o Prompt.md deve ser tratada como bug (corrigir o código ou o prompt). Motores antigos/experimentais ficam arquivados em `scripts/legado/` e NÃO devem ser usados em novos testes.
 >
 > ```bash
 > python scripts/backtest_institucional.py --mode full           # Auditoria Completa (7 anos: 2019-2026)

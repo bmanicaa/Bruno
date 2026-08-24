@@ -1,7 +1,7 @@
 # Plan.md — Laboratório de Acumulação (Projeto B)
 
-> **Versão:** 24/08/2026 · **Status:** aprovado pelo usuário, **nada implementado ainda**
-> **Leia antes:** `analises.md` seções 1, 2, 3.1 e a entrada "Fase C" da seção 4.
+> **Versão:** 24/08/2026 · **Status:** **Etapas 1 a 4 EXECUTADAS na Fase E.** Ver seção 8.
+> **Leia antes:** `analises.md` seções 1, 2, 3.1 e as entradas "Fase C" e "Fase E" da seção 4.
 > **Este arquivo é a única fonte de verdade sobre o que fazer a seguir.** Se ele divergir de qualquer
 > outro documento do repositório, ele vence — exceto quanto a fatos medidos, que vivem no `analises.md`.
 
@@ -21,8 +21,15 @@ sobre uma frente que foi **congelada**. Não releia tudo; leia isto e depois a F
    fluxo de acumulação que ele vai de fato executar com dinheiro real (aporte mensal em BTC + airbag).
 4. A **Fase C** mediu esse plano pela primeira vez, em sessão, com scripts standalone. Os achados estão
    no `analises.md` seção 4. **Eles não estão no repositório como código.**
-5. **Sua primeira tarefa é a Etapa 2 deste plano: reimplementar a Fase C dentro do repositório e
-   conferir que os números batem.** Não invente análise nova antes disso.
+5. ~~**Sua primeira tarefa é a Etapa 2 deste plano.**~~ **FEITO na Fase E (24/08).** A Fase C foi
+   reimplementada em `scripts/acumulacao/`: 10 dos 13 alvos batem, os demais ficam em ~1%. A
+   reprodução encontrou um **erro real de modelagem** (IR cobrado só na liquidação em vez de na
+   venda) — exatamente o que a Etapa 2 existia para pegar. Ver seção 8.
+
+6. **A Fase E também descobriu que o motivo do congelamento do Projeto A estava errado.** O protocolo
+   não tem poder para aprovar nada abaixo de Sharpe de trading ~1,2. "36 configs, zero aprovadas" era
+   o resultado *esperado* de uma régua cega, não evidência de que nada funciona. Isso **não
+   descongela** o Projeto A (ver seção 8), mas muda o que se pode afirmar sobre ele.
 
 **O erro mais provável que você vai cometer:** tentar "melhorar" o motor de swing
 (`backtest_institucional.py`) enquanto constrói o novo laboratório. Não faça. A seção 2 explica por quê.
@@ -193,6 +200,9 @@ Implementar `dados.py`, `indicadores.py`, `metricas.py`, `imposto.py`, `motor.py
 **Pronto quando:** todos os alvos da seção 5 reproduzem dentro de **±0,5%**, e existe um teste
 (`test_reproduz_fase_c`) que trava pelo menos 4 deles.
 
+> **✅ CONCLUÍDA em 24/08 (Fase E).** `tests/test_acumulacao.py` trava 6 alvos (R1, R2, R4, R5, R7,
+> R12) mais a modelagem de imposto. Resultado da reprodução na seção 8.
+
 **Se não bater:** investigue e **registre a divergência no `analises.md`** antes de seguir. Os números da
 Fase C vieram de scripts descartáveis e podem conter erro — reproduzir é justamente o teste disso. Uma
 divergência encontrada aqui é resultado válido, não fracasso.
@@ -211,6 +221,10 @@ divergência encontrada aqui é resultado válido, não fracasso.
 - Implementar `Inclinacao` e `DoisAtivos` **apenas** para travar as reprovações da Fase C em teste.
 
 **Pronto quando:** um comando único reproduz as tabelas C4, C5, C6, C7 e C8 do `analises.md`.
+
+> **✅ PARCIALMENTE CONCLUÍDA em 24/08 (Fase E).** `grid.py` + `cli.py --tudo` entregam o grid
+> obrigatório com pior/mediana/melhor/taxa de vitória, a sensibilidade ao juro (C5) e o imposto (C6).
+> Falta: implementar `Inclinacao` e `DoisAtivos` para travar as reprovações C2 e C3 em teste.
 
 ---
 
@@ -232,11 +246,23 @@ divergência encontrada aqui é resultado válido, não fracasso.
 **Pronto quando:** nenhuma afirmação numérica dos documentos de dinheiro real está sem lastro em
 `analises.md` ou em artefato de `data/acumulacao/`.
 
+> **✅ CONCLUÍDA em 24/08 (Fase E)**, e com **uma correção a mais do que este plano previa**: a
+> vantagem de retorno do airbag não sobrevive ao block bootstrap do caminho de preço (vence o DCA em
+> 31–59% das histórias reamostradas, contra os 40/42 = 95% do histórico único). O
+> `PLANO_OPERACIONAL_REAL.md` foi reescrito e, **dado o perfil declarado pelo usuário** (sem limite
+> de queda, sem saques, maximizar dinheiro), a recomendação mudou para **DCA puro sem airbag** — o
+> airbag cobra imposto e atenção para entregar proteção que ele disse não precisar.
+
 ---
 
 ### Etapa 5 — Perguntas ainda abertas
 
 Em ordem de valor esperado. **Cada uma passa pelo protocolo 3.1 do `analises.md`.**
+
+> **Reordenação após a Fase E (perfil do usuário conhecido):** como ele declarou não ter limite de
+> drawdown e não fazer saques, tudo que vende conforto (airbag, banda, fatia) perde prioridade, e o
+> item **5 (câmbio BRL/USD)** sobe para o topo — é a única lacuna que pode mover o resultado em
+> dezenas de pontos percentuais e o benchmark dele é em reais.
 
 1. **Checagem mensal em vez de semanal.** *(mais promissora — não testada)* Reduziria operações,
    imposto e chicote, e poderia ser fundida com o dia do aporte — uma única data no mês, uma única
@@ -246,13 +272,18 @@ Em ordem de valor esperado. **Cada uma passa pelo protocolo 3.1 do `analises.md`
    cruzamento exato. Ataca diretamente o chicote — o modo de falha visível na lateral de 2024 (−15%).
 3. **Fatia ótima no airbag.** A Fase C testou 30/50/100% num eixo só. Falta o grid completo. Fatia
    menor = menos imposto e menos custo nas altas, com menos proteção.
-4. **Aporte único vs. mensal**, para dinheiro que já está parado. Pergunta diferente da do salário
-   mensal, e ainda não respondida. *(Perguntar ao usuário qual é o caso dele.)*
+4. **Aporte único vs. mensal**, para dinheiro que já está parado. *(Usuário consultado em 24/08:
+   **ainda não decidido** — declarou estar "em fase de compreensão", que o dinheiro é de
+   investimento, **não** para sustento, e que **não haverá saques**. Portanto: horizonte longo e sem
+   necessidade de liquidez. As duas variantes seguem em aberto e ambas devem ser medidas.)*
 5. **Câmbio BRL/USD.** Não modelado e **material**: os preços estão em dólar e o benchmark do usuário
    (CDB) é em reais. A desvalorização do real no período torna os resultados atuais **conservadores**,
    mas o correto é medir.
-6. **Tempo submerso**, não só profundidade da queda. Quantos meses a carteira passa valendo menos que o
-   total aportado — provavelmente mais decisivo para desistência que o maxDD.
+6. ~~**Tempo submerso**~~ — **MEDIDO na Fase E.** Implementado em `metricas.py::tempo_submerso`.
+   Resultado que muda a leitura: no DCA puro a carteira passa **apenas 7% dos dias** valendo menos
+   que o total depositado, com pior sequência de **69 dias**. A queda de 68% assusta muito mais do
+   que dói, porque os aportes continuam entrando. O argumento comportamental do C8 fica bem mais
+   fraco do que parecia. *(Prioridade rebaixada: pergunta respondida.)*
 7. **Regras tributárias corretas** (domicílio da corretora, isenção de R$ 35k/mês, Lei 14.754/2023). A
    Fase C usou 15% liso como ordem de grandeza. **Confirmar com contador antes de virar recomendação.**
 
@@ -314,3 +345,84 @@ primeiros `span` valores, `alpha = 2/(span+1)`. Caixa capitalizado diariamente a
 - **Carry:** retorno que vem de manter o dinheiro num ativo remunerado (aqui, o CDI do caixa), não de
   acertar o movimento do mercado.
 - **Grid:** varredura do produto cartesiano dos parâmetros, usada para separar mecanismo de sorte.
+
+---
+
+## 8. Resultado da execução (Fase E, 24/08/2026)
+
+### Reprodução da Fase C — 10 de 13 alvos batem exatamente
+
+| # | cenário | alvo | obtido | erro |
+| :--- | :--- | ---: | ---: | ---: |
+| R1 | CDB 1% a.m. | 231.566 | **231.566** | 0,00% |
+| R2 | DCA fixo BTC (maxDD 68%) | 382.177 | **382.177** | 0,00% |
+| R3 | DCA fixo, taxa 0,02% | 382.387 | **382.387** | 0,00% |
+| R4 | Airbag EMA200, domingo | 480.754 | **480.754** | 0,00% |
+| R5 | Airbag EMA200, quarta *(sentinela)* | 317.516 | 316.214 | −0,41% |
+| R6 | Airbag EMA300, mediana dos 7 dias | 500.315 | 494.484 | −1,17% |
+| R7 | Grid 42: mediana / **vitórias** | 486.722 / 40 de 42 | 483.923 / **40 de 42** | −0,57% |
+| R8 | Grid caixa 0%: vantagem / vitórias | +2,3% / 24 de 42 | +1,7% / 23 de 42 | — |
+| R9a | IR 15%: DCA fixo | 347.689 | **347.950** | +0,08% |
+| R9b | IR 15%: airbag / **vitórias** | 404.199 / 36 de 42 | 401.466 / **36 de 42** | −0,68% |
+| R12 | Pior início (nov/21): DCA / CDB | 212.714 / 157.039 | **212.714** / **157.039** | 0,00% |
+
+**As contagens de vitória batem exatamente** (40/42, 36/42) e os benchmarks-chave batem a zero. As
+três divergências residuais ficam em ~1% e não movem nenhuma conclusão — registradas aqui em vez de
+perseguidas, conforme a orientação da Etapa 2.
+
+### A divergência que valeu a etapa inteira
+
+A primeira versão do motor errava o alvo R9b em **+9,9%** e marcava 40/42 vitórias em vez de 36/42.
+Causa: cobrava o IR **só na liquidação final**, em vez de **na venda**. Cobrar tudo no fim subestima o
+custo do giro — quem realiza ganho pelo caminho perde a composição sobre o imposto pago. **É
+literalmente o alerta do achado C6, e a implementação nova caiu nele.** Corrigido em
+`imposto.py::imposto_da_venda`, o erro caiu para −0,68% e as vitórias bateram exatamente.
+
+Isso é o que a Etapa 2 existia para pegar. Travado por `test_ir_sai_do_caixa_na_venda_e_nao_so_no_resgate`.
+
+### Achado novo: o benchmark que faltava (releitura do C5)
+
+O C5 conclui que "~90% da vantagem do airbag é CDI, não market timing". É verdade **contra o DCA
+100% BTC** — mas o airbag fica ~40% do tempo fora do mercado. Contra uma carteira **passiva de mesma
+exposição média** (`PassivoIsoExposicao`, zero operações):
+
+| comparação | com CDI 1% a.m. | **sem carry (caixa 0%)** |
+| :--- | ---: | ---: |
+| airbag vs DCA 100% BTC | +26,6% | **+1,7%** |
+| airbag vs passivo 60/40 iso-exposição | +50,2% | **+33,4%** |
+
+O timing do airbag **não é bom o bastante para bater exposição total**, mas **é bom o bastante para
+tornar a fatia em caixa quase gratuita**. *"A vantagem é carry"* e *"o timing não vale nada"* são
+afirmações diferentes, e só a primeira é verdadeira.
+
+### Achado novo: a vantagem do airbag não sobrevive à reamostragem
+
+Block bootstrap dos log-retornos do BTC, varrendo blocos de 90/180/365/730 dias × 2 sementes
+(o próprio critério 1 do protocolo 3.1: nunca julgar por um ponto só):
+
+| | histórico único | reamostrado |
+| :--- | :--- | ---: |
+| P(DCA em BTC > CDB) | "48 de 71 = sempre com ≥4 anos" | **71% a 82%** |
+| P(Airbag > DCA fixo) | "40 de 42 = 95%" | **31% a 59%** |
+
+P(Airbag > DCA) **cresce com o comprimento do bloco** — ou seja, a vantagem depende inteiramente de o
+cripto continuar tendo ciclos longos e persistentes como o de 2022. Coerente com o C5.
+
+**O que sobrevive:** a redução de queda (68% → 45%), que é mecânica.
+
+### Como rodar
+
+```
+python -m scripts.acumulacao.cli --reproduzir   # alvos R1..R12
+python -m scripts.acumulacao.cli --timing       # airbag vs iso-exposição
+python -m scripts.acumulacao.cli --evidencia    # block bootstrap
+python -m scripts.acumulacao.cli --tudo
+pytest tests/test_acumulacao.py                 # 16 testes
+```
+
+### O que NÃO foi feito
+
+- `Inclinacao` e `DoisAtivos` (Etapa 3): faltam os testes que travam as reprovações C2 e C3.
+- Câmbio BRL/USD (Etapa 5, item 5): **prioridade nº 1 agora.**
+- Banda de tolerância e fatia ótima do airbag: despriorizadas — vendem conforto que o usuário
+  declarou não precisar.

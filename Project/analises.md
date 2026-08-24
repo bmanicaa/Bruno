@@ -16,21 +16,51 @@
   - **DSR p = 0,229** (REPROVA) — antes marcava p=1e-12 por um erro de escala, ver seção 4.
 - **Nenhuma das 36 configs limpas a substitui.** Com a régua corrigida: 7 têm Sharpe de trading > 0 e **zero** passam nos critérios endurecidos (seção 3). Tabela completa na seção 4.
 - **Fase B item 1 (híbrido trend + swing) CONCLUÍDA e REPROVADA.** O filtro "só operar acima da EMA200 diária" **já existia** no motor — o regime bull exige `close_1d >= EMA50 E >= EMA200` (provado com trades idênticos em dados reais). A variante mais estrita (`ac35a444` — EMA50 semanal + confirmação de 7 dias) é a **primeira das 36 a passar nos 4 primeiros critérios**, mas reprova no bootstrap (P(PF>1)=58,8%) e no DSR (p=0,84); a autópsia mostra que o ganho veio de **realocação de vagas da carteira**, não do filtro. Seção 4, Fase B.
-- **Recomendação vigente para dinheiro real:** INALTERADA — núcleo B&H BTC com DCA + airbag trend EMA200 (`PLANO_OPERACIONAL_REAL.md`). Fases A e B reforçam: o candidato de swing que parecia mais próximo de servir era ruído, e o filtro macro que deveria salvá-lo já estava ligado.
+- **Fase C (24/08) — o plano de dinheiro real foi medido pela primeira vez.** Ver seção 4. Em uma linha:
+  o DCA fixo em BTC fez **1,65x o CDB de 1% a.m.** no período completo (R$382.177 contra R$231.566, com
+  R$154.000 aportados), e **1,35x mesmo começando no pior dia possível** (topo de nov/2021). O airbag vence
+  o DCA fixo em **40 de 42 combinações de parâmetro**, mas a decomposição mostra que **~90% dessa vantagem
+  é o juro do caixa (CDI) e não market timing**, e o IR de 15% consome mais ~40% do que resta.
+- **Recomendação vigente para dinheiro real:** mantida na direção, **com 3 correções pendentes** (Fase D):
+  trocar EMA200 por EMA250/EMA300 (a EMA200 é a **pior** das 6 médias testadas), despriorizar o tier VIP
+  de taxas (vale R$210 em 6,4 anos neste perfil) e registrar que o retorno extra do airbag é
+  majoritariamente CDI. O efeito robusto e que sobrevive a tudo é a **redução de queda: 68% → 42%**.
+- **Reprovadas na Fase C, com mecanismo identificado (não refazer):** aporte com inclinação/Mayer
+  (12/12 calibrações negativas — arrasto de caixa) e BTC+ETH 80/20 com rebalanceio por aporte (o ETH é
+  que não pagou, o mecanismo de rebalanceio é sadio).
 - **Porta macro (nova):** `build_macro_gate()` + `--macro-filter` / `--macro-confirm-days`, `off` por padrão. Desligada, o motor roda **bit a bit** como antes — invariância provada re-executando `ad61cd70`.
-- **Git:** Fase A commitada em `171c7d5`, `70c1eda`, `2381146`. As mudanças da Fase B ainda **não commitadas** — sugerir commit ao usuário (ele não pede automaticamente).
+- **Plano de execução da próxima sessão:** `Plan.md` na raiz do projeto — modularização do motor +
+  construção do laboratório de acumulação. **Ler `Plan.md` antes de tocar em qualquer código.**
+- **Git:** Fase A commitada em `171c7d5`, `70c1eda`, `2381146`. As mudanças da Fase B ainda **não commitadas**.
+  A Fase C **não alterou uma linha de código** — só documentação (`analises.md`, `Plan.md`); os números dela
+  vieram de scripts de sessão e ainda precisam ser reimplementados no repositório (`Plan.md`, Etapa 2).
 
 ---
 
 ## 2. Por Onde Começar (próximos passos sugeridos)
 
+> ### ⚠️ MUDANÇA DE PRIORIDADE (24/08, decisão do usuário)
+> O projeto tem **duas frentes**, e a ordem entre elas foi invertida:
+> - **Projeto A — motor de swing (buscar edge).** 36 configs limpas, zero aprovadas. **Congelado como está**,
+>   preservado para desenvolvimento futuro. Não é caminho de renda e não recebe esforço agora.
+> - **Projeto B — fluxo de acumulação (DCA + airbag).** É onde o dinheiro real vai. Passa a ser a
+>   **frente exclusiva de trabalho**. A Fase C mediu o plano pela primeira vez; a Fase D constrói o
+>   laboratório próprio dele.
+>
+> **Próximo passo concreto: executar `Plan.md`** (raiz do projeto). Ele contém a modularização do motor,
+> o novo pacote de acumulação, o protocolo de aceite específico para acumulação e a lista de perguntas
+> ainda abertas, em ordem. **Nenhuma outra tarefa deve ser iniciada antes dele.**
+
 **Fase A (medição) — CONCLUÍDA em 24/08.** Detalhes na seção 4. Não refazer.
+
+**Fase C (medição do plano real) — CONCLUÍDA em 24/08.** Seção 4. Números precisam ser reproduzidos
+no repositório (`Plan.md`, Etapa 2), mas as **conclusões não devem ser re-derivadas do zero**.
 
 **Fase B item 1 (híbrido trend + swing) — CONCLUÍDA em 24/08 e REPROVADA. Não refazer.** O filtro "só operar acima da EMA200 diária" já estava no motor (o regime bull exige `close_1d >= EMA50 E >= EMA200`), e a variante mais estrita que sobrou reprova no bootstrap e no DSR. Detalhes na seção 4.
 
 > **Ler antes de propor qualquer filtro novo (achado B5):** numa carteira de 4 vagas fixas, bloquear uma entrada libera a vaga para outra moeda mais tarde. O efeito medido de um filtro mistura o mérito dele com o sorteio de quem ocupou a vaga — na Fase B a segunda parte foi ~1,6× maior que a primeira e tinha sinal contrário. Toda mudança que altere quais posições entram exige a decomposição do critério 6 da seção 3.
 
-**Fase B — candidatos ainda não testados**, em ordem de prioridade:
+**Fase B — candidatos ainda não testados** (PROJETO A — congelado; retomar só se o usuário reabrir a frente de swing), em ordem de prioridade:
 
 1. **Momentum cross-sectional com hedge** (long top-N / short bottom-N) — hedge nunca testado; é a única variante que muda a natureza da exposição, e **não sofre do problema B5** (não tem vagas fixas). É o candidato metodologicamente mais limpo que sobrou.
 2. **Medir qualidade de tendência, não posição** — a Fase B mostrou que rali e chop são indistinguíveis por posição vs. média (nos dois o BTC fica acima da EMA200; ver B1). Se algum filtro macro ainda vale a pena, tem de medir **persistência/eficiência** da tendência (ex.: efficiency ratio do BTC), não onde o preço está.
@@ -69,9 +99,197 @@
 - **Blindagens:** zero lookahead (dados diários usam apenas o dia completo anterior); walk-forward 4 blocos OOS + holdout (confirmado intocado); correção de múltiplos testes (DSR, na escala correta e só sobre configs limpas e distintas); experimentos em `data/experimentos/exp_{hash}.json`; configs pré-V2.3 marcadas com `invalid_lookahead` e excluídas do universo do DSR.
 - **Limitações conhecidas e aceitas:** vesting hardcoded (~10 moedas), slippage fixo (adequado a R$100k), granularidade de 4h, cash yield 6% a.a. modelado.
 
+### 3.1 Protocolo de aceite para ACUMULAÇÃO (Projeto B) — novo, Fase C
+
+Os 7 critérios acima foram desenhados para medir **edge de trading** e **não se aplicam** a uma
+estratégia de acumulação (que não tem trades no sentido de R-múltiplos, e cujo retorno é dominado pelo
+beta do ativo). Para qualquer variante do plano real valem estes:
+
+1. **Grid obrigatório, nunca um ponto.** Mínimo de **5 valores do parâmetro principal × 7 valores do
+   parâmetro de execução** (ex.: 6 médias × 7 dias de checagem = 42). Reportar sempre **pior caso,
+   mediana, melhor caso e taxa de vitória**. Um único número é motivo de rejeição do relatório, não da
+   estratégia. *(Origem: achado C10 — a leitura inicial errada do airbag veio de variar um eixo só.)*
+2. **Decomposição obrigatória da vantagem** em (a) juro do caixa, (b) imposto realizado, (c) timing
+   residual. Uma variante só pode ser chamada de melhor se vencer **com o juro do caixa zerado** ou se
+   o relatório declarar explicitamente que a vantagem é carry, não timing. *(Origem: C5 — 90% era CDI.)*
+3. **Imposto sempre modelado**, com liquidação final idêntica em todas as variantes comparadas.
+   Estratégias que realizam ganho pelo caminho perdem composição; ignorar isso favorece o giro. *(Origem: C6.)*
+4. **Sensibilidade ao juro do caixa** em pelo menos 3 níveis (1,0% / 0,7% / 0,5% a.m.). É um risco
+   macro brasileiro independente de cripto.
+5. **Reportar por regime, não só agregado** — mínimo de 10 janelas cobrindo bull, bear, lateral, topo e
+   fundo. O agregado de um período que contém um bear profundo esconde o custo nas altas. *(Origem: C7.)*
+6. **Queda máxima (maxDD) é métrica de primeira classe**, reportada junto do retorno em toda tabela.
+   Para acumulação ela é frequentemente o produto principal. *(Origem: C8.)*
+7. **Robustez de início:** testar todos os meses de início possíveis e reportar taxa de vitória e
+   mediana, nunca um início escolhido. *(Origem: C9.)*
+
 ---
 
 ## 4. Histórico Condensado
+
+### 24/08 — Fase C: primeiro teste do PLANO OPERACIONAL REAL (acumulação BTC)
+
+**Motivação.** As Fases A e B gastaram todo o rigor do protocolo *reprovando* o motor de swing. O plano
+que o usuário vai de fato executar (`PLANO_OPERACIONAL_REAL.md` — DCA + airbag EMA200) nunca tinha
+passado por medição nenhuma: era recomendação por eliminação, não por evidência. Esta fase mede o
+plano real pela primeira vez.
+
+> **AVISO METODOLÓGICO — LEIA ANTES DE CITAR ESTES NÚMEROS.**
+> Os resultados abaixo foram produzidos por **scripts standalone em Python puro executados em sessão**
+> (stdlib apenas, sem pandas), **não** pelo motor canônico. Não geraram `data/experimentos/exp_*.json`,
+> não têm `config_hash` e **não estão cobertos por testes de regressão**. São **diretriz de
+> reimplementação e alvo de reprodução**, não artefato de auditoria. A primeira tarefa da Fase D
+> (`Plan.md`, Etapa 2) é reimplementar isto no repositório e conferir que os números batem.
+
+**C0. Modelo simulado.** Fechamento diário do BTCUSDT (`data/raw/macro/BTCUSDT_1d.csv`), 05/04/2020 a
+22/08/2026 (início limitado pelo aquecimento de 200 dias da EMA200; dados começam em 08/09/2019).
+77 aportes de R$ 2.000 no fechamento do dia 5 de cada mês = **R$ 154.000 aportados**. Taxa de 0,075%
+por operação. Caixa remunerado a 1,0% a.m. (proxy de CDI). Sem câmbio, sem funding (spot), sem
+slippage além da taxa. O benchmark do usuário é **CDB a 1% a.m. com os mesmos aportes nas mesmas datas**.
+
+**C1. Linhas de base.**
+
+| estratégia | valor final | lucro | vs CDB | maxDD |
+| :--- | ---: | ---: | ---: | ---: |
+| CDB 1% a.m. | 231.566 | +77.566 | 1,00x | 0% |
+| **DCA fixo BTC** | **382.177** | **+228.177** | **1,65x** | **68%** |
+| DCA fixo BTC, taxa VIP 0,02% | 382.387 | +228.387 | 1,65x | 68% |
+
+**Achado C1a — taxa é irrelevante neste perfil.** A diferença entre 0,075% e a taxa VIP de 0,02% em
+6,4 anos é de **R$ 210**. O item 2 da seção 5 do `PLANO_OPERACIONAL_REAL.md` ("ative o tier VIP...
+reduz custos em ~4x") está correto em percentual e **irrelevante em reais** para quem faz 12 operações
+por ano. É conselho herdado do contexto de swing (200+ trades/ano), onde de fato importa.
+
+**C2. Aporte com inclinação (comprar mais quando barato) — REPROVADO, 12/12.** Regra: reservar X% de
+cada aporte num caixa a 1% a.m.; no dia do aporte, se `close/EMA200 < l1` desloca 100% da reserva para
+compra, se `< l2` desloca 50%. Testadas 3 frações de reserva (10/20/30%) × 4 escadas de gatilho
+(0,85/1,00 · 0,90/1,05 · 0,80/0,95 · só abaixo de 0,85).
+
+- **As 12 calibrações perderam para o DCA fixo**, de **−1,4% a −6,9%**.
+- A perda é **monotônica na fração de reserva** (10% → −1,4 a −2,3% | 20% → −2,9 a −4,6% | 30% → −4,3 a −6,9%),
+  o que identifica o mecanismo: é **arrasto de caixa**, não má calibração dos gatilhos.
+- **Razão econômica:** com aporte total constante, a única forma de comprar mais no barato é comprar
+  menos no caro. Num ativo com tendência de alta secular, "caro" ainda era preço lucrativo, e o caixa
+  a 1% a.m. rende muito menos que o ativo composto. Nenhuma escada de gatilho conserta isso.
+- **Corolário (vale para a hipótese oposta):** bloquear/reduzir aporte em pessimismo é a mesma
+  operação com sinal invertido e falha pelo mesmo motivo, com agravante — os meses de medo são
+  justamente os de preço baixo. **Aporte mensal deve ser fixo e incondicional.**
+
+**C3. BTC+ETH 80/20 com rebalanceio pelo aporte — REPROVADO.** Direcionar cada aporte inteiro ao ativo
+subponderado (rebalanceio sem venda, portanto sem taxa de venda e sem evento tributário). Resultado
+**361.307 (1,56x CDB)** contra 382.177 (1,65x) do BTC puro. O ETH teve desempenho inferior ao BTC no
+período; o mecanismo de rebalanceio é sólido, o ativo adicionado é que não pagou. **Não confundir os dois.**
+
+**C4. Airbag EMA200 — o resultado principal, e a correção de um erro de leitura meu.**
+
+Primeira medição (só EMA200, variando o dia da checagem semanal) sugeriu **sorteio**: mesma regra,
+mesmos dados, resultado de **−16,9% (quarta) a +45,1% (terça com 1d de atraso)**, amplitude de
+R$ 236.902 sobre R$ 154.000 aportados. **Essa leitura estava errada por amostragem insuficiente do
+espaço de parâmetros.** Ampliando para **6 médias móveis × 7 dias de checagem = 42 combinações**:
+
+| média | pior dia | mediana | melhor dia | DD med | ops med | % do tempo fora |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| EMA100 | 406.658 | 492.954 | 613.085 | 31% | 36 | 43% |
+| EMA150 | 413.912 | 473.627 | 521.283 | 41% | 30 | 41% |
+| **EMA200** | **317.516** | 480.754 | 543.097 | 42% | 29 | 38% |
+| EMA250 | 419.865 | 518.215 | 556.117 | 48% | 25 | 35% |
+| EMA300 | 433.111 | 500.315 | 622.240 | 48% | 17 | 34% |
+| SMA200 | 399.479 | 455.211 | 552.259 | 45% | 25 | 41% |
+
+*(referência: DCA fixo = 382.177)*
+
+- **Airbag vence em 40/42 combinações**, mediana **+27,4%** sobre o DCA fixo.
+- **A EMA200 — o parâmetro que o plano operacional adota hoje — é a PIOR das seis** e a única cujo
+  pior caso fica abaixo do DCA fixo. As duas únicas derrotas das 42 são EMA200.
+- EMA250/EMA300 são mais estáveis, com **menos da metade das operações** (17–25 contra 29–36), o que
+  também significa menos imposto e menos exposição a chicote.
+
+**C5. Decomposição: ~90% da vantagem do airbag é a Selic, não market timing.** O airbag fica **34–43%
+do tempo em caixa**. Variando só a remuneração do caixa (sem imposto):
+
+| juro do caixa | mediana do airbag | vs DCA fixo | vitórias |
+| :--- | ---: | ---: | :---: |
+| 1,0% a.m. (CDI atual) | 486.722 | **+27,4%** | 40/42 |
+| 0,5% a.m. | 434.979 | +13,8% | 33/42 |
+| 0,0% a.m. | 391.130 | **+2,3%** | 24/42 |
+
+Sem juro no caixa o airbag **empata** com o DCA fixo (vence em 57% das combinações = cara ou coroa).
+**A vantagem medida é, em sua maior parte, um veículo para ficar no CDI ~40% do tempo — não habilidade
+de sair do mercado na hora certa.** Consequência direta: o airbag é **sensível à Selic**, um risco que
+não tem nada a ver com cripto e que nenhum documento do projeto mencionava.
+
+**C6. Custo tributário — nunca modelado no projeto, e material.** O DCA fixo não vende nunca (nenhum
+ganho realizado até o resgate). O airbag realizou **~R$ 344k–379k** de ganho ao longo do caminho em
+**12 a 14 vendas**, das quais **12 a 13 ultrapassariam R$ 35.000 no mês** (limite de isenção). Comparação
+justa, com liquidação final em ambas e IR de 15%:
+
+| cenário | DCA fixo | airbag (mediana) | vantagem | vitórias |
+| :--- | ---: | ---: | ---: | :---: |
+| sem imposto | 381.890 | 487.067 | +27,5% | 40/42 |
+| **com IR 15%** | **347.689** | **404.199** | **+16,3%** | 36/42 |
+
+Combinando os dois efeitos (já com IR de 15%): caixa a 1,0% a.m. → **+16,3%** (36/42) | 0,7% a.m. →
+**+9,0%** (31/42) | 0,5% a.m. → **+4,2%** (26/42, empate técnico).
+
+**C7. Comportamento por regime — 12 janelas × 42 combinações.** O sinal não é aleatório; é uma troca
+fixa: **paga 12–18% em toda alta para comprar proteção em toda queda.**
+
+| janela | DCA fixo | airbag (mediana) | vs DCA | vitórias |
+| :--- | ---: | ---: | ---: | :---: |
+| Recuperação COVID 2020-21 | 110.454 | 107.678 | −3% | 0/42 |
+| Bull até o topo de 2021 | 59.263 | 50.576 | −15% | 4/42 |
+| **Bear 2022 (topo→fundo)** | 14.798 | 26.104 | **+76%** | **42/42** |
+| **Ano-calendário 2022** | 15.005 | 24.888 | **+66%** | **42/42** |
+| Fundo → recuperação 2023 | 40.173 | 32.975 | −18% | 0/42 |
+| Bull do ETF 2023-24 | 40.178 | 35.191 | −12% | 0/42 |
+| Halving e alta 2024 | 43.214 | 37.500 | −13% | 0/42 |
+| Lateral 2024 | 16.098 | 13.694 | −15% | 0/42 |
+| **Topo 2025 → reversão** | 20.543 | 25.995 | **+27%** | **42/42** |
+| Bear recente 2025-26 | 22.261 | 22.786 | +2% | 34/42 |
+| Pior início (topo nov/21) | 212.714 | 225.286 | +6% | 31/42 |
+| **Período completo** | **382.177** | **486.722** | **+27%** | **40/42** |
+
+O resultado de qualquer período longo é função de **quanto bear aquele período contém** — não de
+habilidade preditiva. Nas 4 janelas de queda vence em 160/168 combinações; nas 6 de alta/lateral,
+perde em 164/168.
+
+**C8. O efeito robusto é a redução de queda, não o retorno.** É o único que não depende de juro,
+imposto ou escolha de parâmetro:
+
+| janela | maxDD DCA fixo | maxDD airbag | redução |
+| :--- | ---: | ---: | ---: |
+| Ano-calendário 2022 | 40% | 7% | −32 pp |
+| Bear 2022 (topo→fundo) | 40% | 27% | −12 pp |
+| Pior início (nov/21) | 49% | 31% | −18 pp |
+| **Período completo** | **68%** | **42%** | **−26 pp** |
+
+**Argumento comportamental (não quantificado, mas decisivo):** uma queda de 68% deixa a carteira
+valendo menos que o total já depositado, por meses. É onde o investidor abandona o plano — e um plano
+abandonado no fundo rende zero, independentemente do backtest. 42% é atravessável; 68% talvez não seja.
+
+**C9. Horizonte é a variável que mais decide.** DCA fixo BTC × CDB 1% a.m., testando **todos os 71
+meses de início possíveis**, cada um segurando até 22/08/2026:
+
+- Vence o CDB em **48/71 = 68%** dos inícios | mediana **1,29x** | melhor 1,91x (out/2019) | pior **0,81x** (dez/2024).
+- **Os 39 inícios com ≥4 anos de horizonte venceram TODOS**, com pior caso **1,28x**.
+- Os inícios que perderam são **todos** de 2023–2025, isto é, com menos de 3 anos decorridos.
+- **Pior início possível (topo de nov/2021, seguido de −65%):** 58 aportes, R$ 116.000 → DCA BTC
+  **R$ 212.714** contra CDB **R$ 157.039** = **1,35x**.
+
+**C10. Achado metodológico da fase (equivalente ao B5, para acumulação).** *Uma estratégia de
+acumulação nunca pode ser julgada por uma única escolha de parâmetro.* A leitura inicial errada de C4
+aconteceu por variar um eixo só (dia da semana) com um valor de média que era, por acaso, o pior do
+conjunto. **Toda avaliação daqui em diante exige o grid completo** (≥5 valores do parâmetro principal
+× ≥7 valores do parâmetro de execução), reportando **pior caso, mediana, melhor caso e taxa de
+vitória** — nunca um número isolado. E **toda vantagem aparente exige decomposição em (a) juro do
+caixa, (b) imposto realizado, (c) efeito de timing residual**, porque em C5 os dois primeiros
+explicavam ~90% do resultado.
+
+**Veredito da fase.** O `PLANO_OPERACIONAL_REAL.md` está **direcionalmente correto e erra em três
+pontos concretos**: adota a pior média móvel do conjunto (EMA200), prioriza uma alavanca irrelevante
+(taxa VIP), e apresenta o airbag como redutor de queda sem registrar que a vantagem de retorno medida
+é majoritariamente CDI e encolhe ~40% com imposto. Duas ideias novas testadas nesta fase (inclinação
+de aporte e BTC+ETH 80/20) foram **reprovadas com mecanismo identificado**, não por ruído.
 
 ### 24/08 — Fase B item 1: híbrido trend + swing (filtro macro EMA200)
 

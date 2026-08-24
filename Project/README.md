@@ -99,7 +99,7 @@ As duas últimas colunas separam o que veio de **operar** do que veio de **dinhe
 
 **Conclusão de uma linha:** o sistema só ganha dinheiro em bull confirmado; em todo o resto, o "lucro" é o juro do dinheiro parado.
 
-**Leitura honesta:** após 32 configurações limpas e distintas em 4 famílias de sinal (swing pullback, meta-labeling ML, momentum cross-sectional, trend time-series), **nenhuma tem edge OOS estatisticamente significativo** sob o protocolo (walk-forward + bootstrap + Deflated Sharpe). O B&H BTC não foi batido em retorno total; o valor demonstrável dos sistemas é **redução de risco** (trend-timing BTC EMA200/252 corta o DD pela metade). Recomendação: núcleo B&H BTC + camada opcional de trend-timing + sistemas de swing apenas como satélite de observação, até nova validação.
+**Leitura honesta:** após 36 configurações limpas e distintas em 4 famílias de sinal (swing pullback, meta-labeling ML, momentum cross-sectional, trend time-series), **nenhuma tem edge OOS estatisticamente significativo** sob o protocolo (walk-forward + bootstrap + Deflated Sharpe). O B&H BTC não foi batido em retorno total; o valor demonstrável dos sistemas é **redução de risco** (trend-timing BTC EMA200/252 corta o DD pela metade). Recomendação: núcleo B&H BTC + camada opcional de trend-timing + sistemas de swing apenas como satélite de observação, até nova validação.
 
 ### Fase A (24/08/2026) — auditoria da régua estatística
 
@@ -116,7 +116,7 @@ Antes de gastar mais orçamento de múltiplos testes, os instrumentos de valida�
 
 Também corrigido: `backtest_trend_bh.py` descartava o ETH em silêncio (procurava só em `raw/macro/`), tornando as configs "BTC+ETH" duplicatas das BTC-only. Com o ETH entrando de fato, a família trend melhorou no bruto (+R$64k → +R$116k) — e continua reprovando por amostra insuficiente.
 
-**As 32 configs limpas foram reprocessadas com a métrica correta.** Resultado: **6 têm Sharpe de trading > 0, zero passam** nos critérios endurecidos, e **nenhuma tem ≥3/4 blocos OOS positivos** — quase tudo lucra só na alta do ETF (2023-09→2024-09) e sangra nos outros três blocos.
+**As 32 configs limpas foram reprocessadas com a métrica correta.** Resultado: **6 têm Sharpe de trading > 0 e zero passam** nos critérios endurecidos — quase tudo lucra só na alta do ETF (2023-09→2024-09) e sangra nos outros três blocos. Só uma (`ad61cd70`) chega a 3/4 blocos positivos, e com Sharpe de trading −0,12.
 
 **Nada foi aprovado indevidamente pelo protocolo antigo — mas por sorte, não por desenho.** Reconstituindo os vereditos antigos das duas configs mais perigosas:
 
@@ -127,9 +127,31 @@ Também corrigido: `backtest_trend_bh.py` descartava o ETH em silêncio (procura
 
 Os dois filtros estavam desalinhados em direções opostas e cada um cobriu o buraco do outro. Um teste que discorda do outro por 10 ordens de grandeza na mesma config acerta por acidente. Depois da Fase A os dois **concordam**, e a `12616cbc` passa a ser barrada por três motivos independentes (amostra de 20 trades, concentração em 2/4 blocos, DSR p=0,82) em vez de um acaso.
 
+### Fase B item 1 (24/08/2026) — híbrido trend + swing: REPROVADO
+
+A hipótese era usar o airbag EMA200 como filtro macro do swing: *"só operar quando o BTC está acima da EMA200 diária"*. Três achados, em ordem de importância:
+
+**1. O filtro já existia.** O regime `bull` do motor — a única condição que libera compras — já exige `close_1d >= EMA50_1d` **E** `close_1d >= EMA200_1d`. Controle em dados reais: ligar `macro_filter=ema200d` com shorts habilitados produz trades **idênticos, um a um, nas 5 janelas** a simplesmente desligar os shorts. Travado por teste de regressão.
+
+**2. Posição vs. média não separa rali de lateralização.** No chop de 2024 (pior período do sistema, Sharpe de trading −3,70) o BTC passou **78% dos dias acima da EMA200** e o regime bull já estava ligado em 46% dos dias. No rali de 2023-24 (Sharpe +1,99) os números são 97,8% e 92,9%. Um filtro de posição não consegue distinguir os dois.
+
+**3. O candidato que passou nos 4 primeiros critérios passou por sorte de realocação.** A `ac35a444` (EMA50 semanal + confirmação de 7 dias) é a **primeira das 36 configs** a bater Sharpe de trading > 0 (+0,10), ≥3/4 blocos, ≥30 trades e PF > 1 — com Trading PnL OOS de **+R$12.909**, o primeiro positivo sem cash yield. Reprova mesmo assim: bootstrap **P(PF>1)=58,8%** (exigido 90%) e DSR **p=0,84** (exigido <0,10). A autópsia explica por quê:
+
+| janela | baseline | candidata | delta | o que aconteceu |
+| :--- | ---: | ---: | ---: | :--- |
+| OOS1 | −23.201 | −13.292 | +9.909 | **genuíno** — o filtro cortou 55→32 trades |
+| OOS2 | +1.546 | +17.829 | +16.283 | **artefato de realocação** |
+| OOS3 / OOS4 | +6.415 / +1.956 | idênticos | 0 | a porta nunca fechou |
+
+No OOS2 a porta fechou em ~1% dos dias, mas o PnL mexeu R$16 mil: os 73 trades comuns **pioraram**, os 13 trades removidos eram **vencedores** (+16.793), e apareceram 9 trades **novos** (+36.796) — dominados por um único INJUSDT de **+R$19.988**. Sem esse trade o agregado cai para **−R$7.080**.
+
+**Achado metodológico (B5):** numa carteira de **4 vagas fixas**, bloquear uma entrada libera a vaga para outra moeda mais tarde. O efeito medido de qualquer filtro mistura o mérito dele com o sorteio de quem ocupou a vaga — aqui a segunda parte foi ~1,6× maior que a primeira e tinha sinal contrário. Isso virou o **critério 6** do protocolo: toda mudança que altere quais posições entram exige decomposição de trades **comuns × removidos × novos** antes do bootstrap.
+
+**Entregue:** `build_macro_gate()` + `--macro-filter {off,ema200d,ema50w,ema200w}` e `--macro-confirm-days N` no motor (`off` por padrão; desligado, o motor roda bit a bit como antes — invariância provada). Também corrigido: `--long-mode` era parseado pela CLI e descartado.
+
 ### Infraestrutura de validação (entregável principal desta fase)
 
-- `tests/` — **22 testes** unitários de regressão (sizing, stops, BE/parcial, funding, breakers, identidade contábil, merge point-in-time + 7 blindagens da régua estatística da Fase A).
+- `tests/` — **33 testes** unitários de regressão (sizing, stops, BE/parcial, funding, breakers, identidade contábil, merge point-in-time + 7 blindagens da régua estatística da Fase A + 7 da porta macro e 4 da CLI da Fase B).
 - `scripts/statistical_validation.py` — bootstrap em blocos, leave-one-out, Deflated Sharpe Ratio (escala corrigida).
 - `scripts/meta_label.py` — screening de filtro ML (AUC IS = 0.48: sem sinal aprendível).
 - `scripts/batch_experiments.py` — baterias de experimentos com 1 carga de dados.

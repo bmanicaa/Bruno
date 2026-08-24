@@ -1160,6 +1160,36 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
     return results, trades, equity_df
 
 
+def params_from_args(args):
+    """Monta o dict de params a partir dos argumentos da CLI.
+
+    Chaves opcionais entram no dict SÓ quando saem do padrão: acrescentar uma
+    chave nova a todas as configs mudaria o `config_hash` das 36 já registradas
+    e elas deixariam de ser reproduzíveis pela linha de comando.
+
+    `long_mode` estava sendo parseado pela CLI e descartado aqui — os
+    experimentos de breakout só rodaram porque `batch_experiments.py` monta o
+    dict à mão. Corrigido em 24/08/2026 (Fase B).
+    """
+    params = {
+        'risk_pct': args.risk,
+        'max_positions': args.max_pos,
+        'fee_pct': args.fee,
+        'btc_adx_min': args.btc_adx_min,
+        'entry_tf': args.entry_tf,
+        'runner_mode': args.runner_mode,
+        'short_mode': args.short_mode,
+        'universe': args.universe,
+    }
+    if args.long_mode != 'pullback':
+        params['long_mode'] = args.long_mode
+    if args.macro_filter != 'off':
+        params['macro_filter'] = args.macro_filter
+    if args.macro_confirm_days:
+        params['macro_confirm_days'] = args.macro_confirm_days
+    return params
+
+
 def config_hash(params):
     blob = json.dumps(params, sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(blob.encode('utf-8')).hexdigest()[:8]
@@ -1504,27 +1534,7 @@ if __name__ == '__main__':
         'estresse_chop': ('2024-04-01', '2024-09-30')
     }
 
-    params = {
-        'risk_pct': args.risk,
-        'max_positions': args.max_pos,
-        'fee_pct': args.fee,
-        'btc_adx_min': args.btc_adx_min,
-        'entry_tf': args.entry_tf,
-        'runner_mode': args.runner_mode,
-        'short_mode': args.short_mode,
-        'universe': args.universe
-    }
-    # Chaves opcionais entram no dict SÓ quando saem do padrão. Assim o config_hash
-    # das 32 configs já registradas continua reproduzível pela CLI (acrescentar uma
-    # chave nova a todo mundo mudaria todos os hashes históricos).
-    # `long_mode` estava sendo parseado e jogado fora — os experimentos de breakout
-    # só rodaram porque batch_experiments.py monta o dict à mão.
-    if args.long_mode != 'pullback':
-        params['long_mode'] = args.long_mode
-    if args.macro_filter != 'off':
-        params['macro_filter'] = args.macro_filter
-    if args.macro_confirm_days:
-        params['macro_confirm_days'] = args.macro_confirm_days
+    params = params_from_args(args)
 
     if args.walkforward:
         run_walkforward(params, args.capital, append=not args.no_append)

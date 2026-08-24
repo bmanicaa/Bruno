@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 
@@ -512,3 +513,44 @@ class TestMacroFilter:
         d = self._daily(100 + np.arange(300) * 0.1)
         with pytest.raises(ValueError, match='macro_filter desconhecido'):
             bi.build_macro_gate(d, 'ema200_mensal')
+
+
+class TestCliParams:
+    """A CLI montava o dict de params a mao e perdia argumentos no caminho.
+
+    `--long-mode` era parseado e descartado: os experimentos de breakout so
+    existem porque batch_experiments.py monta o dict direto. Estes testes
+    cobrem a traducao args -> params, que antes nao tinha teste nenhum.
+    """
+
+    def _args(self, **over):
+        base = dict(risk=0.015, max_pos=4, fee=0.00075, btc_adx_min=0.0,
+                    entry_tf='1d', runner_mode='ema20_1d', short_mode='breakout',
+                    universe='alpha', long_mode='pullback', macro_filter='off',
+                    macro_confirm_days=0)
+        base.update(over)
+        return argparse.Namespace(**base)
+
+    def test_hash_da_baseline_nao_muda_com_as_chaves_novas(self):
+        """9ea2dff4 e a baseline canonica — a CLI tem de continuar reproduzindo ela."""
+        assert bi.config_hash(bi.params_from_args(self._args())) == '9ea2dff4'
+
+    def test_long_mode_chega_ao_dict(self):
+        p = bi.params_from_args(self._args(long_mode='breakout'))
+        assert p['long_mode'] == 'breakout'
+        # 9ea2dff4 + long_mode=breakout e a config ja registrada como a1d02e0c
+        # (aquela roda sem short); aqui basta garantir que a chave nao some.
+        assert 'long_mode' not in bi.params_from_args(self._args())
+
+    def test_porta_macro_chega_ao_dict(self):
+        p = bi.params_from_args(self._args(macro_filter='ema50w', macro_confirm_days=7))
+        assert p['macro_filter'] == 'ema50w' and p['macro_confirm_days'] == 7
+        # ac35a444: mesma config do lote da Fase B (alpha, sem short, ema50w+7d).
+        p_ac = bi.params_from_args(self._args(short_mode='none', macro_filter='ema50w',
+                                              macro_confirm_days=7))
+        assert bi.config_hash(p_ac) == 'ac35a444'
+
+    def test_chaves_opcionais_ausentes_no_padrao(self):
+        p = bi.params_from_args(self._args())
+        for k in ('long_mode', 'macro_filter', 'macro_confirm_days'):
+            assert k not in p, f'{k} no padrao mudaria todos os hashes historicos'

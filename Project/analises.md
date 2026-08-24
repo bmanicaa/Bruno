@@ -6,17 +6,19 @@
 
 ## 1. Estado Atual (24/08/2026)
 
-- **Motor canônico:** `scripts/backtest_institucional.py` v**2.3.1** — matematicamente íntegro (zero lookahead, funding/notional corretos, **22 testes de regressão verdes**). Único motor que gera os artefatos oficiais.
-- **Veredito da exploração (32 configurações limpas e distintas, 4 famílias de sinal):** NENHUMA estratégia tem edge OOS estatisticamente significativo. O "edge" da V2.2 era artefato de lookahead intra-diário — corrigido em V2.3.
+- **Motor canônico:** `scripts/backtest_institucional.py` v**2.3.1** — matematicamente íntegro (zero lookahead, funding/notional corretos, **33 testes de regressão verdes**). Único motor que gera os artefatos oficiais.
+- **Veredito da exploração (36 configurações limpas e distintas, 4 famílias de sinal):** NENHUMA estratégia tem edge OOS estatisticamente significativo. O "edge" da V2.2 era artefato de lookahead intra-diário — corrigido em V2.3.
 - **g3 (`45c0eb3c`) foi REPROVADA e não é mais candidata.** Com a régua corrigida na Fase A ela aparece pelo que é:
   - **Sharpe de trading = -0,47** (o "Sharpe 1,20" incluía o cash yield). P(Sharpe>0) = 23,8%.
   - **Expectância média = -0,049R** e **PF mediano = 0,64** (a média 1,03 era carregada por um único bloco).
   - **Perde em 3 dos 4 blocos OOS**; todo o +R$4,5k vem do OOS2 (alta do ETF). Sem o OOS2: -R$6,7k, PF 0,43.
   - **82% do retorno era o rendimento do caixa** (R$20,3k de cash yield vs R$4,5k de trading).
   - **DSR p = 0,229** (REPROVA) — antes marcava p=1e-12 por um erro de escala, ver seção 4.
-- **Nenhuma das 32 configs limpas a substitui.** Reprocessadas com a régua corrigida: 6 têm Sharpe de trading > 0, **zero** passam nos critérios endurecidos (seção 3). Nenhuma tem ≥3/4 blocos OOS positivos. Tabela completa na seção 4.
-- **Recomendação vigente para dinheiro real:** INALTERADA — núcleo B&H BTC com DCA + airbag trend EMA200 semanal (`PLANO_OPERACIONAL_REAL.md`). A Fase A reforça a recomendação: o candidato de swing que parecia mais próximo de servir era ruído.
-- **Git:** estado da fase anterior commitado em `90aaf4c`. As mudanças da Fase A ainda **não commitadas** — sugerir commit ao usuário (ele não pede automaticamente).
+- **Nenhuma das 36 configs limpas a substitui.** Com a régua corrigida: 7 têm Sharpe de trading > 0 e **zero** passam nos critérios endurecidos (seção 3). Tabela completa na seção 4.
+- **Fase B item 1 (híbrido trend + swing) CONCLUÍDA e REPROVADA.** O filtro "só operar acima da EMA200 diária" **já existia** no motor — o regime bull exige `close_1d >= EMA50 E >= EMA200` (provado com trades idênticos em dados reais). A variante mais estrita (`ac35a444` — EMA50 semanal + confirmação de 7 dias) é a **primeira das 36 a passar nos 4 primeiros critérios**, mas reprova no bootstrap (P(PF>1)=58,8%) e no DSR (p=0,84); a autópsia mostra que o ganho veio de **realocação de vagas da carteira**, não do filtro. Seção 4, Fase B.
+- **Recomendação vigente para dinheiro real:** INALTERADA — núcleo B&H BTC com DCA + airbag trend EMA200 (`PLANO_OPERACIONAL_REAL.md`). Fases A e B reforçam: o candidato de swing que parecia mais próximo de servir era ruído, e o filtro macro que deveria salvá-lo já estava ligado.
+- **Porta macro (nova):** `build_macro_gate()` + `--macro-filter` / `--macro-confirm-days`, `off` por padrão. Desligada, o motor roda **bit a bit** como antes — invariância provada re-executando `ad61cd70`.
+- **Git:** Fase A commitada em `171c7d5`, `70c1eda`, `2381146`. As mudanças da Fase B ainda **não commitadas** — sugerir commit ao usuário (ele não pede automaticamente).
 
 ---
 
@@ -24,16 +26,20 @@
 
 **Fase A (medição) — CONCLUÍDA em 24/08.** Detalhes na seção 4. Não refazer.
 
-**Fase B — retomar a busca de edge** no protocolo corrigido (seção 3). Candidatos ainda não testados, em ordem de prioridade:
+**Fase B item 1 (híbrido trend + swing) — CONCLUÍDA em 24/08 e REPROVADA. Não refazer.** O filtro "só operar acima da EMA200 diária" já estava no motor (o regime bull exige `close_1d >= EMA50 E >= EMA200`), e a variante mais estrita que sobrou reprova no bootstrap e no DSR. Detalhes na seção 4.
 
-1. **Híbrido trend + swing** (subiu para 1º): usar o airbag EMA200 como filtro macro do swing. É o único candidato cuja lógica ataca o padrão observado — a família swing só ganha em bull confirmado (OOS2) e sangra no resto.
-2. **Vol-targeting** (risco inverso à volatilidade realizada) e **cap de correlação** (evitar 4 posições correlacionadas). *Atenção:* estes mudam o **tamanho** da aposta, não o **sinal**. Como a expectância por trade da g3 é negativa (-0,049R), dimensionar melhor uma aposta ruim não cria edge — reduz variância. Testar, mas sem esperar que resolvam.
-3. **Momentum cross-sectional com hedge** (long top-N / short bottom-N) — hedge nunca testado; é a única variante que muda a natureza da exposição.
+> **Ler antes de propor qualquer filtro novo (achado B5):** numa carteira de 4 vagas fixas, bloquear uma entrada libera a vaga para outra moeda mais tarde. O efeito medido de um filtro mistura o mérito dele com o sorteio de quem ocupou a vaga — na Fase B a segunda parte foi ~1,6× maior que a primeira e tinha sinal contrário. Toda mudança que altere quais posições entram exige a decomposição do critério 6 da seção 3.
+
+**Fase B — candidatos ainda não testados**, em ordem de prioridade:
+
+1. **Momentum cross-sectional com hedge** (long top-N / short bottom-N) — hedge nunca testado; é a única variante que muda a natureza da exposição, e **não sofre do problema B5** (não tem vagas fixas). É o candidato metodologicamente mais limpo que sobrou.
+2. **Medir qualidade de tendência, não posição** — a Fase B mostrou que rali e chop são indistinguíveis por posição vs. média (nos dois o BTC fica acima da EMA200; ver B1). Se algum filtro macro ainda vale a pena, tem de medir **persistência/eficiência** da tendência (ex.: efficiency ratio do BTC), não onde o preço está.
+3. **Vol-targeting** (risco inverso à volatilidade realizada) e **cap de correlação** (evitar 4 posições correlacionadas). *Atenção:* estes mudam o **tamanho** da aposta, não o **sinal**. Como a expectância por trade da g3 é negativa (-0,049R), dimensionar melhor uma aposta ruim não cria edge — reduz variância. Testar, mas sem esperar que resolvam. Sujeitos a B5.
 4. **Novas features para meta-labeling** (features de mercado/cross-section em vez das de entrada — AUC foi 0.48 com as atuais).
 
 **Segundo momento (quando o usuário pedir):** módulo operacional diário (`scripts/operador.py`) — sinais para execução manual + controle de carteira + aportes; e substituição do vesting hardcoded por fonte real (necessário para o ao vivo).
 
-**Não fazer:** re-otimizar parâmetros no período completo; operar com dinheiro real sem aprovação do protocolo; apagar experimentos marcados com `invalid_lookahead` (são evidência histórica); **julgar qualquer config pelo `sharpe_mean` — use sempre `sharpe_trading_mean`**.
+**Não fazer:** re-otimizar parâmetros no período completo; operar com dinheiro real sem aprovação do protocolo; apagar experimentos marcados com `invalid_lookahead` (são evidência histórica); **julgar qualquer config pelo `sharpe_mean` — use sempre `sharpe_trading_mean`**; reimplementar o filtro "acima da EMA200 diária" — já existe dentro do regime bull (ver B0, travado por teste).
 
 ---
 
@@ -43,9 +49,10 @@
 - **Ambiente:** `.venv\Scripts\python.exe` (Python 3.11, pandas 3.0.5, numpy 2.4.6, sklearn 1.9.0, pytest 9.1.1).
 - **Comandos principais:**
   ```
-  .venv\Scripts\python.exe -m pytest tests/test_engine.py            # 22 testes de regressão (sempre antes de confirmar mudanças)
+  .venv\Scripts\python.exe -m pytest tests/test_engine.py            # 33 testes de regressão (sempre antes de confirmar mudanças)
   .venv\Scripts\python.exe scripts\backtest_institucional.py --mode all              # artefatos oficiais (resumo/trades/relatório por modalidade)
   .venv\Scripts\python.exe scripts\backtest_institucional.py --walkforward --no-append --<param> <valor>   # experimento isolado
+  .venv\Scripts\python.exe scripts\backtest_institucional.py --walkforward --no-append --macro-filter ema50w --macro-confirm-days 7   # porta macro (Fase B)
   .venv\Scripts\python.exe scripts\batch_experiments.py              # bateria (1 carga de dados); editar CONFIGS no arquivo
   .venv\Scripts\python.exe scripts\statistical_validation.py --exp <hash>           # bootstrap + leave-one-out + Deflated Sharpe
   .venv\Scripts\python.exe scripts\meta_label.py --exp <hash>        # screening ML (AUC IS)
@@ -57,13 +64,82 @@
   3. **≥30 trades OOS.** Abaixo disso o bootstrap satura e devolve p-valores falsamente confiantes (a família trend marcava P(PF>1)=100% com 10 trades). O `statistical_validation.py` agora sinaliza `insufficient_sample`.
   4. Melhora em ≥3/5 métricas OOS (trading PnL, PF, **sharpe_trading**, DD, retorno) vs baseline vigente; PF OOS > 1.0; piora de DD ≤ 20% relativa.
   5. Bootstrap P(PF>1) ≥ 90% **e** Deflated Sharpe p < 0.10.
-  6. Registrar em `analises.md` (seção 4, formato na seção 5) com hash da config.
+  6. **Decomposição de trades antes do bootstrap** (novo na Fase B): se a mudança altera quais posições entram, comparar a lista de trades contra a baseline separando **comuns × removidos × novos**, e reportar o agregado **sem o maior trade**. Numa carteira de vagas fixas, bloquear uma entrada libera a vaga para outra moeda — foi assim que a `ac35a444` "ganhou" R$16k num bloco onde a porta fechou em ~1% dos dias. Ver seção 4, achado B5.
+  7. Registrar em `analises.md` (seção 4, formato na seção 5) com hash da config.
 - **Blindagens:** zero lookahead (dados diários usam apenas o dia completo anterior); walk-forward 4 blocos OOS + holdout (confirmado intocado); correção de múltiplos testes (DSR, na escala correta e só sobre configs limpas e distintas); experimentos em `data/experimentos/exp_{hash}.json`; configs pré-V2.3 marcadas com `invalid_lookahead` e excluídas do universo do DSR.
 - **Limitações conhecidas e aceitas:** vesting hardcoded (~10 moedas), slippage fixo (adequado a R$100k), granularidade de 4h, cash yield 6% a.a. modelado.
 
 ---
 
 ## 4. Histórico Condensado
+
+### 24/08 — Fase B item 1: híbrido trend + swing (filtro macro EMA200)
+
+Hipótese da seção 2: *"o sistema só ganha em alta confirmada — a solução é simplesmente não operar fora da alta"*, implementada como o airbag EMA200 filtrando o swing. Quatro configs pré-registradas antes de rodar. **Nenhuma passa.** Uma delas passa nos 4 primeiros critérios e é reprovada pelo 5º — e a autópsia dela é o achado mais útil da fase.
+
+**B0. O filtro literal já estava no motor (é redundante).** O regime `bull`, único que libera compras, já exige `close_1d >= EMA50_1d` **E** `close_1d >= EMA200_1d`. "Só operar acima da EMA200 diária" não remove um único long — remove apenas os shorts, que por definição só existem abaixo da EMA200. Ou seja: é exatamente o `short_mode=none` já testado.
+
+- **Controle em dados reais** (`macro_filter=ema200d` com shorts ligados × `short_mode=none` sem filtro): trades **idênticos, um a um, nas 5 janelas** (IS 66, OOS1 55, OOS2 86, OOS3 90, OOS4 12). Não gerou arquivo de experimento — não é tentativa, é verificação.
+- Travado pelo teste `test_ema200d_e_redundante_para_longs`, para que nenhuma sessão futura reimplemente isto achando que é ideia nova.
+
+**B1. Por que o airbag não separa o rali do chop.** % de dias com o filtro ligado:
+
+| período | `bull` (motor) | acima da EMA200d | `bull` + semanal EMA50 |
+| :--- | ---: | ---: | ---: |
+| BULL 6m (out/23→mar/24) — Sharpe trading +1,99 | 92,9% | 97,8% | 92,9% |
+| CHOP 6m (abr→set/24) — Sharpe trading −3,70 | **46,4%** | 78,1% | **46,4%** |
+| OOS1 (2022-09→2023-09) | 40,4% | 57,1% | **26,0%** |
+
+O chop **já era 46% filtrado** pelo regime bull e o BTC passou 78% dos dias acima da EMA200. A diferença entre o rali e o chop não é a posição em relação à média — é a **qualidade da tendência**. Um filtro de posição não enxerga isso. O único lugar onde um filtro mais lento morde de verdade é o OOS1 (40,4% → 26,0%).
+
+**B2. O que foi construído.** `build_macro_gate()` no motor canônico — porta macro **opcional** sobre **novas entradas** (posições abertas seguem as saídas normais). Modos: `off` (padrão), `ema200d`, `ema50w`, `ema200w`; mais `--macro-confirm-days N` (condição válida por N fechamentos diários seguidos — equivalente à checagem semanal do `PLANO_OPERACIONAL_REAL.md`).
+
+- **Zero lookahead:** a porta de um dia só é lida a partir do dia seguinte, mesma regra do regime bull/bear. Nos modos semanais só a semana **fechada** anterior decide, e a porta fica **fechada** enquanto a EMA semanal não tiver aquecimento (`span` semanas).
+- **Invariância provada:** com a porta desligada, a baseline `ad61cd70` reproduziu `exp_ad61cd70.json` **idêntico trade a trade**. Chaves novas só entram no dict de params quando saem do padrão, então os hashes históricos continuam reproduzíveis pela CLI.
+- **`ema200w` foi implementado mas NÃO testado:** a EMA200 semanal exige ~200 semanas de aquecimento e os dados começam em 09/2019, o que deixaria IS e OOS1 "parados por construção" e não por decisão. Testá-la sem tratar isso produziria um falso positivo de aquecimento, não um edge.
+
+**B3. Resultados (4 configs pré-registradas, walk-forward 4 blocos OOS).**
+
+| config | hash | trades | Trading PnL | PF med | Sharpe TRADING | blocos+ | veredito |
+| :--- | :--- | ---: | ---: | ---: | ---: | :---: | :--- |
+| baseline `ad61cd70` (alpha, sem short) | ad61cd70 | 243 | −13.283 | 1,05 | −0,12 | 3/4 | — |
+| h1: ema200d + confirm 7d | 1a83b0e4 | 237 | −12.822 | 1,03 | −0,24 | 2/4 | REPROVA |
+| h2: ema50w | 87233457 | 218 | −3.542 | 1,06 | −0,05 | 3/4 | REPROVA |
+| **h3: ema50w + confirm 7d** | **ac35a444** | **216** | **+12.909** | **1,12** | **+0,10** | **3/4** | **REPROVA (ver B4)** |
+| h4: g3 + ema200d + confirm 7d | e8196b0d | 44 | −655 | 0,52 | −0,72 | 1/4 | REPROVA |
+
+**A `ac35a444` é a primeira config das 36 a passar nos 4 primeiros critérios** (Sharpe de trading > 0, ≥3/4 blocos, ≥30 trades, PF > 1). É também a primeira config de swing com Trading PnL OOS agregado positivo sem depender do cash yield. E ainda assim reprova:
+
+- **Bootstrap: P(PF>1) = 58,8%** (exigido ≥ 90%). IC95 do PnL: [−80.053, +126.046] — atravessa o zero com folga enorme.
+- **DSR: p = 0,8435** (exigido < 0,10), com 36 tentativas e piso de ruído SR0 = 0,64 contra SR observado de 0,10.
+- **Leave-one-out:** sem o OOS2 o Trading PnL cai para −4.920 e o Sharpe de trading para −0,10. Todo o resultado positivo vem de um bloco.
+
+**B4. Autópsia da `ac35a444`: o ganho não veio do filtro.** Decompondo as janelas que mudaram:
+
+| janela | PnL baseline | PnL candidata | delta | efeito |
+| :--- | ---: | ---: | ---: | :--- |
+| OOS1 | −23.201 | −13.292 | **+9.909** | **genuíno** — o filtro cortou 55→32 trades no único período em que ele morde |
+| OOS2 | +1.546 | +17.829 | **+16.283** | **artefato** — ver abaixo |
+| OOS3 | +6.415 | +6.415 | 0 | filtro nunca fechou a porta |
+| OOS4 | +1.956 | +1.956 | 0 | filtro nunca fechou a porta |
+
+O OOS2 se decompõe assim:
+
+- 73 trades presentes nas duas versões: **pioraram** (−15.246 → −18.967).
+- 13 trades que o filtro **removeu**: somavam **+16.793** — o filtro tirou trades *vencedores*.
+- 9 trades **novos**, inexistentes na baseline: **+36.796**, dominados por um único INJUSDT de **+19.988** em 15/10/2023.
+
+Esses 9 trades não apareceram porque o filtro os aprovou — apareceram porque **bloquear uma entrada libera uma das 4 vagas da carteira**, e a vaga foi ocupada por outra moeda mais tarde. Sem esse único trade de INJ o agregado cai de +12.909 para **−7.080**, e a config perde o critério 1. Sem os 3 maiores, −31.345.
+
+**B5. Achado metodológico (vale para toda a Fase B).** Numa carteira com **número fixo de vagas**, o efeito de qualquer filtro **não é decomponível** em "os trades ruins que ele evitou". Remover uma entrada realoca a carteira inteira dali para frente, e o resultado medido mistura duas coisas de naturezas opostas: o mérito do filtro e o sorteio de quem ocupou a vaga liberada. Aqui a segunda parte foi ~1,6× maior que a primeira e tinha sinal **contrário** à lógica do filtro — em OOS2 a porta fechou em cerca de 1% dos dias e o PnL mexeu R$16 mil.
+
+**Consequência prática:** os itens 2, 3 e 4 da seção 2 (vol-targeting, cap de correlação, momentum com hedge) mexem em entradas ou em tamanho e sofrem do mesmo problema. Daqui em diante, todo candidato que passe nos 4 primeiros critérios precisa de uma **decomposição de trades comuns × removidos × novos** antes de ir para o bootstrap. Sem isso, um filtro sem mérito nenhum passa por sorte de realocação.
+
+**B6. Bug corrigido de passagem.** `--long-mode` era parseado pela CLI e **descartado** — o dict de params do `__main__` não incluía a chave. Os experimentos de breakout só rodaram porque o `batch_experiments.py` monta o dict à mão. Corrigido; a chave só entra no dict quando sai do padrão, para não mudar os hashes históricos.
+
+**Entregues:** `build_macro_gate()` + `--macro-filter` / `--macro-confirm-days` no motor; 11 testes novos (**33 no total, todos verdes**), incluindo dois de blindagem temporal da porta semanal e um que trava a redundância do `ema200d`; `batch_experiments.py` com o lote da Fase B pré-registrado.
+
+**Veredito da fase:** a hipótese nº1 da Fase B está **testada e reprovada**. Não porque o filtro foi mal implementado, mas porque o mecanismo que ela propunha já existia no motor, e a versão mais estrita que sobrou só melhora o bloco em que remove muitos trades — sem edge estatístico. **36 configs limpas, zero aprovadas.** A recomendação de dinheiro real (`PLANO_OPERACIONAL_REAL.md`) não muda.
 
 ### 24/08 — Fase A: auditoria da própria régua estatística
 

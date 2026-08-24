@@ -9,8 +9,9 @@ Este documento contém os 3 setores operacionais estruturados para alta assimetr
 > Este documento descreve o *desenho* do sistema. Ele não é evidência de que o sistema funciona.
 >
 > - A validação anunciada na versão V2.2 (*"OOS +R$73.098, PF 1.18, Sharpe 0.63"*) era **artefato de um bug de lookahead intra-diário** — o gatilho usava o fechamento do próprio dia. Corrigido na V2.3, o mesmo teste devolve **-R$12.064 (PF 0.99)**. **O número +R$73.098 não deve ser citado como resultado.**
-> - Sob o protocolo corrigido, **32 configurações limpas em 4 famílias de sinal foram testadas e nenhuma passou** — nenhuma sequer tem lucro em 3 dos 4 blocos de validação.
+> - Sob o protocolo corrigido, **36 configurações limpas em 4 famílias de sinal foram testadas e nenhuma passou.** A que chegou mais perto (`ac35a444`, com filtro macro semanal) passa nos 4 primeiros critérios e reprova nos testes estatísticos — e a autópsia mostra que o lucro dela vinha de realocação de vagas da carteira, não do filtro.
 > - O que o sistema realmente faz: **ganha dinheiro em alta confirmada** (bull 6m: +R$37.493 de trading, Sharpe de trading +1,99) e **perde ou empata em todo o resto**. Nos outros períodos o "lucro" que aparece é o rendimento do caixa (6% a.a.), não a operação.
+> - **Não adianta "só operar na alta": isso já é o que o motor faz.** O regime BULL do Setor 2 (BTC ≥ EMA50 1D **e** ≥ EMA200 1D) é a única condição que libera compras. No mercado lateral de 2024 — o pior período do sistema — o BTC passou 78% dos dias acima da EMA200, e o regime BULL já estava ligado em 46% dos dias. Posição em relação à média não distingue rali de lateralização (Fase B, `analises.md`).
 > - Estado atual, próximos passos e protocolo em vigor: **`analises.md` (seções 1 a 3)**. Recomendação para dinheiro real: **`PLANO_OPERACIONAL_REAL.md`**.
 >
 > *Mudanças de desenho da V2.2 vs V2.1 (mantidas, mas sem validação estatística): (1) gatilho LONG confirmado no 1D em vez do gatilho 4h; (2) short por rompimento de fundo diário em vez de repique contra-tendência.*
@@ -185,7 +186,7 @@ FUNIL QUANTITATIVO BI-DIRECIONAL (DIÁRIO COMANDA / 4H REFINA O TIMING)
 
 ### Motor Canônico de Simulação
 
-> **Motor Único Oficial:** `scripts/backtest_institucional.py` (versão **V2.3.1** — zero lookahead, 22 testes de regressão). Este é o ÚNICO motor que gera os artefatos de auditoria. Qualquer divergência entre este motor e o Prompt.md deve ser tratada como bug (corrigir o código ou o prompt). Motores antigos/experimentais ficam arquivados em `scripts/legado/` e NÃO devem ser usados em novos testes.
+> **Motor Único Oficial:** `scripts/backtest_institucional.py` (versão **V2.3.1** — zero lookahead, 33 testes de regressão). Este é o ÚNICO motor que gera os artefatos de auditoria. Qualquer divergência entre este motor e o Prompt.md deve ser tratada como bug (corrigir o código ou o prompt). Motores antigos/experimentais ficam arquivados em `scripts/legado/` e NÃO devem ser usados em novos testes.
 >
 > ```bash
 > python scripts/backtest_institucional.py --mode full           # Auditoria Completa (7 anos: 2019-2026)
@@ -195,6 +196,7 @@ FUNIL QUANTITATIVO BI-DIRECIONAL (DIÁRIO COMANDA / 4H REFINA O TIMING)
 > python scripts/backtest_institucional.py --mode estresse_chop  # Lateral 2024
 > python scripts/backtest_institucional.py --mode all            # Todas as modalidades em sequência
 > python scripts/backtest_institucional.py --walkforward         # Validação OOS de qualquer mudança
+> python scripts/backtest_institucional.py --walkforward --macro-filter ema50w --macro-confirm-days 7   # porta macro opcional (Fase B)
 > ```
 
 ### Registro de Análises e Diagnóstico (analises.md)

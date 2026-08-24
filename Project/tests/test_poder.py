@@ -198,3 +198,38 @@ class TestSinalNuloNaoInvade:
         for c in ('rsi14_1d', 'cvd', 'ema20_1d'):
             assert np.allclose(np.sort(saida[c]), np.sort(base)), (
                 f'{c}: a rotacao alterou a distribuicao')
+
+
+class TestEscalaDeAmostra:
+    """Trava o defeito da varredura de tamanho de amostra (achado na Fase E)."""
+
+    def test_vol_por_barra_depende_da_densidade_e_nao_do_total_de_trades(self, forma):
+        """Ao simular MAIS ANOS da mesma estrategia (trades e barras escalando
+        juntos), a volatilidade por barra tem de ficar ESTAVEL — e a estrategia
+        e a mesma, so observada por mais tempo.
+
+        A versao anterior escalava a vol com o numero ABSOLUTO de trades, o que
+        a inflava em sqrt(k) e fazia o Sharpe CAIR com mais dados: o oposto do
+        que deve acontecer, e um erro invisivel enquanto o periodo e fixo."""
+        rng = np.random.default_rng(11)
+        sharpes = {}
+        for esc in (1.0, 4.0, 10.0):
+            vals = []
+            for _ in range(10):
+                jan = poder.simular_config(rng, 0.20, forma, esc)
+                vals.append(np.mean([poder.sharpe_trading_da_janela(jan[w]['equity_curve'])
+                                     for w in poder.OOS_NAMES]))
+            sharpes[esc] = float(np.mean(vals))
+        base = sharpes[1.0]
+        for esc, s in sharpes.items():
+            assert abs(s - base) < 0.25 * abs(base), (
+                f'Sharpe deveria ser estavel com a escala, mas {sharpes}')
+
+    def test_mais_dados_aumentam_o_poder(self, forma):
+        """A contraprova: com a mesma estrategia observada por mais tempo, o
+        protocolo TEM de ficar mais capaz de aprova-la. Se este teste falhar,
+        a varredura de amostra esta medindo outra coisa."""
+        p1 = poder.curva_de_poder(forma, [0.30], rodadas=40, escala_trades=1.0, n_iter=500)[0]
+        p4 = poder.curva_de_poder(forma, [0.30], rodadas=40, escala_trades=4.0, n_iter=500)[0]
+        assert p4['dsr_p_mediano'] < p1['dsr_p_mediano'], (
+            f"mais dados deveriam baixar o DSR p: {p1['dsr_p_mediano']:.3f} -> {p4['dsr_p_mediano']:.3f}")

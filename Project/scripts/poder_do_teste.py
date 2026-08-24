@@ -131,6 +131,7 @@ def carregar_forma_empirica():
         # o que faria o protocolo parecer MAIS poderoso do que e.
         'std_barra_ref': float(np.median(std_por_barra)) if std_por_barra else 0.0022,
         'trades_ref': float(np.median(trades_da_config)) if trades_da_config else 88.0,
+        'barras_ref': float(sum(barras_por_janela.values())) if barras_por_janela else 7502.0,
     }
 
 
@@ -189,7 +190,14 @@ def gerar_janela(rng, n_trades, n_bars, expectancia, forma):
 
     # Escala o ruido para que a volatilidade por barra bata com a real medida nas
     # curvas de equity do motor (escalada pela raiz do tamanho da amostra).
-    alvo = forma['std_barra_ref'] * math.sqrt(max(n_trades, 1) / (forma['trades_ref'] / 4.0))
+    # A vol por barra escala com a DENSIDADE de trades (trades por barra), nao com
+    # o numero absoluto de trades. Usar o absoluto parece igual enquanto o periodo
+    # e fixo, mas corrompe a varredura de TAMANHO DE AMOSTRA: ao dobrar trades E
+    # barras juntos (mais anos da mesma estrategia), o absoluto inflava a vol em
+    # sqrt(2) e fazia o Sharpe CAIR com mais dados — o oposto do que deve ocorrer.
+    dens = max(n_trades, 1) / max(n_bars, 1)
+    dens_ref = forma['trades_ref'] / max(forma['barras_ref'], 1)
+    alvo = forma['std_barra_ref'] * math.sqrt(dens / dens_ref)
     var_alvo = (alvo * CAPITAL) ** 2
     var_det = float(np.var(incremento, ddof=1)) if n_bars > 2 else 0.0
     var_ruido = float(np.var(ruido, ddof=1)) if n_bars > 2 else 0.0

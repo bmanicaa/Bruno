@@ -6,7 +6,7 @@
 
 ## 1. Estado Atual (24/08/2026)
 
-- **Motor canônico:** `scripts/backtest_institucional.py` v**2.3.1** — matematicamente íntegro (zero lookahead, funding/notional corretos, **33 testes de regressão verdes**). Único motor que gera os artefatos oficiais.
+- **Motor canônico:** `scripts/backtest_institucional.py` v**2.3.1** — matematicamente íntegro (zero lookahead, funding/notional corretos, **37 testes de regressão verdes**). Único motor que gera os artefatos oficiais. **Walk-forward completo agora em ~23s** (era 197,6s) — ver I2 na seção 4.
 - **Veredito da exploração (36 configurações limpas e distintas, 4 famílias de sinal):** NENHUMA estratégia tem edge OOS estatisticamente significativo. O "edge" da V2.2 era artefato de lookahead intra-diário — corrigido em V2.3.
 - **g3 (`45c0eb3c`) foi REPROVADA e não é mais candidata.** Com a régua corrigida na Fase A ela aparece pelo que é:
   - **Sharpe de trading = -0,47** (o "Sharpe 1,20" incluía o cash yield). P(Sharpe>0) = 23,8%.
@@ -33,13 +33,35 @@
 **Fase B — candidatos ainda não testados**, em ordem de prioridade:
 
 1. **Momentum cross-sectional com hedge** (long top-N / short bottom-N) — hedge nunca testado; é a única variante que muda a natureza da exposição, e **não sofre do problema B5** (não tem vagas fixas). É o candidato metodologicamente mais limpo que sobrou.
-2. **Medir qualidade de tendência, não posição** — a Fase B mostrou que rali e chop são indistinguíveis por posição vs. média (nos dois o BTC fica acima da EMA200; ver B1). Se algum filtro macro ainda vale a pena, tem de medir **persistência/eficiência** da tendência (ex.: efficiency ratio do BTC), não onde o preço está.
+2. ~~**Medir qualidade de tendência, não posição**~~ — **DESCARTADO em 24/08: já foi testado.** A premissa ("nunca se mediu qualidade, só posição") é falsa. O parâmetro `btc_adx_min` existe no motor desde a bateria e1 e **ADX é exatamente um medidor de persistência/qualidade de tendência**, não de posição. Testado em 4 configs (3 limpas), todas reprovam:
+
+   | hash | universo | ADX min | Sharpe trading | Trading PnL | trades |
+   | :--- | :--- | ---: | ---: | ---: | ---: |
+   | `a089303c` | btceth | 20 | −0,20 | −3.974 | 70 |
+   | `46f23cb9` | btceth | 25 | −0,31 | −10.883 | 63 |
+   | `e3572fb7` | alpha | 25 | −0,59 | −16.669 | 176 |
+
+   Efficiency ratio é primo próximo do ADX (ambos medem deslocamento direcional contra ruído). **Este é o mesmo erro do achado B0**: uma ideia registrada como "nunca testada" que já estava no motor sob outro nome. Não refazer sem justificar o que a nova forma funcional mede que o ADX não mede.
 3. **Vol-targeting** (risco inverso à volatilidade realizada) e **cap de correlação** (evitar 4 posições correlacionadas). *Atenção:* estes mudam o **tamanho** da aposta, não o **sinal**. Como a expectância por trade da g3 é negativa (-0,049R), dimensionar melhor uma aposta ruim não cria edge — reduz variância. Testar, mas sem esperar que resolvam. Sujeitos a B5.
 4. **Novas features para meta-labeling** (features de mercado/cross-section em vez das de entrada — AUC foi 0.48 com as atuais).
 
-**Segundo momento (quando o usuário pedir):** módulo operacional diário (`scripts/operador.py`) — sinais para execução manual + controle de carteira + aportes; e substituição do vesting hardcoded por fonte real (necessário para o ao vivo).
+**Pendências abertas de infraestrutura** (independentes da busca de edge — levantadas na revisão de 24/08):
 
-**Não fazer:** re-otimizar parâmetros no período completo; operar com dinheiro real sem aprovação do protocolo; apagar experimentos marcados com `invalid_lookahead` (são evidência histórica); **julgar qualquer config pelo `sharpe_mean` — use sempre `sharpe_trading_mean`**; reimplementar o filtro "acima da EMA200 diária" — já existe dentro do regime bull (ver B0, travado por teste).
+| # | Pendência | Por que importa | Estado |
+| :--- | :--- | :--- | :--- |
+| I1 | **Teste de holdout não existe.** `HOLDOUT = ('2026-02-01','2026-08-20')` é só uma constante no motor; nenhum código o executa. | É o último portão antes do dinheiro real. Hoje ele está "intocado" por omissão, não por desenho — se uma config passar nos 6 critérios, o teste final ainda precisa ser escrito. | Não iniciado |
+| I2 | ~~Motor gasta 88% do tempo em `df.iloc[]`~~ — **RESOLVIDO em 24/08.** | Walk-forward de **197,6s → 23,0s (8,6×)**, saída idêntica trade a trade em 7 configs. Ver seção 4. | **Concluído** |
+| I3 | **Vesting hardcoded** (~10 moedas na função `is_vesting_cliff`) **e com bug de colisão de substring.** `'OP' in s` casa com 7 moedas do repositório — `OPUSDT` (a pretendida) mais `OPENUSDT`, `OPGUSDT`, `OPNUSDT`, `PEOPLEUSDT`, `POPCATUSDT`, `SOPHUSDT` — e todas perdem os longs do dia 24 ao fim de cada mês, em todo config de universo `alpha`. O guard `'PEPE' not in s` na mesma linha é código morto ('PEPE' não contém 'OP'). | Não é só "limitação aceita": é veto ativo e indevido sobre 6 moedas. Correção barata: casamento exato de símbolo + transformar o veto em parâmetro (`vesting_veto`) para **medir o tamanho do efeito** numa rodada. Só se for material vale procurar fonte real de unlocks. | Bug identificado, não corrigido |
+| I4 | **`scripts/operador.py` não existe** — módulo operacional diário (sinais para execução manual + controle de carteira + aportes). | Só quando o usuário pedir. | Não iniciado |
+
+**Armadilhas conhecidas (ler antes de mexer no motor):**
+
+- `--macro-confirm-days` nos modos **semanais** equivale a **uma semana extra de atraso**, não a confirmação diária — a porta semanal só muda de valor na virada da semana. A leitura literal só vale para `ema200d`.
+- `ema200w` está implementado mas **não deve ser testado** sem tratar o aquecimento (~200 semanas contra dados que começam em 09/2019). O motor avisa em `stderr`.
+- Chaves opcionais de params (`long_mode`, `macro_filter`, `macro_confirm_days`) só entram no dict quando saem do padrão. **Não "normalizar" isso** — acrescentar uma chave a todas as configs mudaria os 36 `config_hash` já registrados. Travado por `test_hash_da_baseline_nao_muda_com_as_chaves_novas`.
+- A porta semanal usa `shift(1)` sobre semanas e supõe série sem buracos. Verificado em 24/08: BTC diário tem 364 semanas consecutivas, zero buracos. Se a base mudar, revalidar.
+
+**Não fazer:** re-otimizar parâmetros no período completo; operar com dinheiro real sem aprovação do protocolo; apagar experimentos marcados com `invalid_lookahead` (são evidência histórica); **julgar qualquer config pelo `sharpe_mean` — use sempre `sharpe_trading_mean`**; reimplementar o filtro "acima da EMA200 diária" — já existe dentro do regime bull (ver B0, travado por teste); **propor "medir qualidade de tendência" como ideia nova — o `btc_adx_min` já faz isso e reprovou em 3 configs limpas** (ver seção 2, item 2).
 
 ---
 
@@ -49,7 +71,7 @@
 - **Ambiente:** `.venv\Scripts\python.exe` (Python 3.11, pandas 3.0.5, numpy 2.4.6, sklearn 1.9.0, pytest 9.1.1).
 - **Comandos principais:**
   ```
-  .venv\Scripts\python.exe -m pytest tests/test_engine.py            # 33 testes de regressão (sempre antes de confirmar mudanças)
+  .venv\Scripts\python.exe -m pytest tests/test_engine.py            # 37 testes de regressão (sempre antes de confirmar mudanças)
   .venv\Scripts\python.exe scripts\backtest_institucional.py --mode all              # artefatos oficiais (resumo/trades/relatório por modalidade)
   .venv\Scripts\python.exe scripts\backtest_institucional.py --walkforward --no-append --<param> <valor>   # experimento isolado
   .venv\Scripts\python.exe scripts\backtest_institucional.py --walkforward --no-append --macro-filter ema50w --macro-confirm-days 7   # porta macro (Fase B)
@@ -57,7 +79,9 @@
   .venv\Scripts\python.exe scripts\statistical_validation.py --exp <hash>           # bootstrap + leave-one-out + Deflated Sharpe
   .venv\Scripts\python.exe scripts\meta_label.py --exp <hash>        # screening ML (AUC IS)
   .venv\Scripts\python.exe scripts\reprocess_experiments.py          # re-roda configs limpas (usar após mudar métricas do motor)
+  .venv\Scripts\python.exe scripts\verify_replay.py <ref.json> --hash <hash>   # prova que uma mudança é NULA (igualdade trade a trade)
   ```
+- **Toda mudança que se propõe nula** (refatoração, performance, reorganização) **deve passar pelo `verify_replay.py`** em pelo menos uma config por ramo de código tocado — não só na baseline. O ramo `short_mode=revert` não tem experimento registrado; gere a referência rodando o motor da versão anterior (`git show HEAD:./scripts/backtest_institucional.py`).
 - **Critério de aceite de qualquer mudança** (endurecido na Fase A — os 3 primeiros itens são novos):
   1. **`sharpe_trading_mean` > 0.** O `sharpe_mean` inclui o cash yield e não mede edge — uma carteira 100% parada no caixa marca Sharpe > 100 nessa métrica.
   2. **Trading PnL OOS positivo em ≥3 dos 4 blocos.** Agregado positivo não basta: a g3 somava +R$4,5k perdendo em 3 de 4 blocos, com tudo concentrado na alta do ETF. Um edge que só existe num regime não é edge.
@@ -66,12 +90,37 @@
   5. Bootstrap P(PF>1) ≥ 90% **e** Deflated Sharpe p < 0.10.
   6. **Decomposição de trades antes do bootstrap** (novo na Fase B): se a mudança altera quais posições entram, comparar a lista de trades contra a baseline separando **comuns × removidos × novos**, e reportar o agregado **sem o maior trade**. Numa carteira de vagas fixas, bloquear uma entrada libera a vaga para outra moeda — foi assim que a `ac35a444` "ganhou" R$16k num bloco onde a porta fechou em ~1% dos dias. Ver seção 4, achado B5.
   7. Registrar em `analises.md` (seção 4, formato na seção 5) com hash da config.
-- **Blindagens:** zero lookahead (dados diários usam apenas o dia completo anterior); walk-forward 4 blocos OOS + holdout (confirmado intocado); correção de múltiplos testes (DSR, na escala correta e só sobre configs limpas e distintas); experimentos em `data/experimentos/exp_{hash}.json`; configs pré-V2.3 marcadas com `invalid_lookahead` e excluídas do universo do DSR.
+- **Blindagens:** zero lookahead (dados diários usam apenas o dia completo anterior); walk-forward 4 blocos OOS + holdout (`HOLDOUT = 2026-02-01 → 2026-08-20`; **atenção: é só uma constante — nenhum código o executa hoje.** Está "intocado" por omissão, não por desenho. Quando/se uma config passar nos 6 critérios, o teste final de holdout ainda precisa ser escrito); correção de múltiplos testes (DSR, na escala correta e só sobre configs limpas e distintas); experimentos em `data/experimentos/exp_{hash}.json`; configs pré-V2.3 marcadas com `invalid_lookahead` e excluídas do universo do DSR.
 - **Limitações conhecidas e aceitas:** vesting hardcoded (~10 moedas), slippage fixo (adequado a R$100k), granularidade de 4h, cash yield 6% a.a. modelado.
 
 ---
 
 ## 4. Histórico Condensado
+
+### 24/08 — I2: vetorização do screener (mudança nula, 8,6× mais rápida)
+
+**Mudança implementada.** Os dois laços de screening (long e short) liam cada vela com `df.iloc[loc_idx - k]`, o que constrói uma Series nova por acesso — 88% do tempo do motor. Agora as colunas quentes viram arrays numpy uma vez por moeda (`_hot_arrays`, 25 colunas) e são indexadas por posição. Corrigido também o segundo gargalo: o laço que monta `btc_macro_map` refazia uma **máscara booleana sobre a série diária inteira a cada vela de 4h**; virou `searchsorted` vetorizado.
+
+**Resultado (config `ad61cd70`, walk-forward completo, 5 janelas):**
+
+| | antes | depois |
+| :--- | ---: | ---: |
+| tempo | 197,6s | **23,0s** |
+| ganho | — | **8,6×** |
+
+A config mais pesada (`9ea2dff4`, universo alpha **com** shorts) roda em **24,2s**. A estimativa de "~10 min por config" registrada em 24/08 era alta: o tempo real medido antes da mudança era 3,3 min.
+
+**Prova de que a mudança é nula.** Criado `scripts/verify_replay.py` — compara dois artefatos de experimento campo a campo com **igualdade numérica estrita** (sem tolerância de ponto flutuante, de propósito), ignorando só `generated_at`. Protocolo executado:
+
+1. Referência do git re-executada **antes** de qualquer edição → idêntica ao `exp_ad61cd70.json` commitado. Isso descarta desvio de ambiente e torna qualquer diferença posterior atribuível ao refactor.
+2. Sete configs re-executadas **depois**, cobrindo todos os ramos tocados — `ad61cd70` (long 1d/pullback), `a1d02e0c` e `2c05c70c` (long 1d/breakout), `4cdae2fe` (long 4h + short breakout), `ac35a444` (porta macro ema50w + confirm), `9ea2dff4` (alpha + shorts), e uma config gerada para o ramo `short_mode=revert`, que **nenhum experimento existente cobria** — a referência dela foi produzida rodando o motor original extraído do git.
+3. Todas: **idênticas trade a trade**. Varredura final confirmou os **46 experimentos preexistentes intactos**.
+
+**Travado por 4 testes novos** (`TestI2Vetorizacao`, 37 no total): arrays batem com `df.iloc[i][col]` valor a valor; coluna ausente vira array de NaN (reproduzindo o `Series.get(col, np.nan)` dos campos opcionais do merge diário); `nanmin`/`nanmax` reproduzem o `skipna` do pandas na janela de 10 velas do stop; `searchsorted` devolve a mesma barra diária que a máscara booleana — um deslocamento de um dia aqui seria lookahead.
+
+**Por que isto importa mais que conveniência.** O instrumento que falta no laboratório é o **teste de sinal nulo** (entrada aleatória, centenas de rodadas, para medir a distribuição de resultados com edge zero *neste* motor de 4 vagas). A 3,3 min por rodada, 300 rodadas eram 16 horas; a 23s são ~2 horas. O ganho de performance é pré-requisito do teste, não comodidade.
+
+**Nota de método:** uma config selecionada para verificação (`d70b0b95`) era da família cross-sectional (`top_n/mom_days/reb_days`), não do motor de swing. Rodá-la no motor errado sobrescreveu o artefato; restaurado do backup e verificado idêntico. Registrado aqui porque **14 dos 36 experimentos limpos são de famílias alternativas** e não aceitam os params do motor canônico — qualquer script que itere sobre `exp_*.json` precisa filtrar por `'risk_pct' in config`.
 
 ### 24/08 — Fase B item 1: híbrido trend + swing (filtro macro EMA200)
 
@@ -131,6 +180,18 @@ O OOS2 se decompõe assim:
 
 Esses 9 trades não apareceram porque o filtro os aprovou — apareceram porque **bloquear uma entrada libera uma das 4 vagas da carteira**, e a vaga foi ocupada por outra moeda mais tarde. Sem esse único trade de INJ o agregado cai de +12.909 para **−7.080**, e a config perde o critério 1. Sem os 3 maiores, −31.345.
 
+**B4b. A mesma coisa separa h2 de h3.** A única diferença entre a `87233457` (reprovada, −3.542) e a `ac35a444` (que passa nos 4 critérios, +12.909) é a confirmação de 7 dias. Decompondo:
+
+| janela | h2 → h3 | comuns | removidos | novos |
+| :--- | ---: | ---: | ---: | ---: |
+| OOS1 | −14.684 → −13.292 (+1.392) | 32 | 1 | 0 |
+| OOS2 | +2.771 → +17.829 (**+15.058**) | 76 | 7 | 6 |
+| OOS3 / OOS4 | idênticos | 102 | 0 | 0 |
+
+Trocar 7 trades por 6 numa janela move R$15 mil — de novo no OOS2, de novo pela mesma realocação de vagas. Ou seja: a fronteira entre "reprovada" e "passa nos 4 primeiros critérios" é um punhado de vagas sorteadas, não uma diferença de regra. Evidência independente do B5.
+
+**Nota sobre `confirm_days` nos modos semanais:** como a porta semanal só muda de valor na virada da semana, exigir 7 dias consecutivos equivale, na prática, a **uma semana extra de atraso** — não a uma confirmação diária. Nos modos diários (`ema200d`) a leitura literal vale.
+
 **B5. Achado metodológico (vale para toda a Fase B).** Numa carteira com **número fixo de vagas**, o efeito de qualquer filtro **não é decomponível** em "os trades ruins que ele evitou". Remover uma entrada realoca a carteira inteira dali para frente, e o resultado medido mistura duas coisas de naturezas opostas: o mérito do filtro e o sorteio de quem ocupou a vaga liberada. Aqui a segunda parte foi ~1,6× maior que a primeira e tinha sinal **contrário** à lógica do filtro — em OOS2 a porta fechou em cerca de 1% dos dias e o PnL mexeu R$16 mil.
 
 **Consequência prática:** os itens 2, 3 e 4 da seção 2 (vol-targeting, cap de correlação, momentum com hedge) mexem em entradas ou em tamanho e sofrem do mesmo problema. Daqui em diante, todo candidato que passe nos 4 primeiros critérios precisa de uma **decomposição de trades comuns × removidos × novos** antes de ir para o bootstrap. Sem isso, um filtro sem mérito nenhum passa por sorte de realocação.
@@ -182,7 +243,7 @@ Ranking pelo **Sharpe de trading** (a coluna que importa). Note o abismo entre a
 | 2c05c70c | swing | -1,02 | -0,12 | -8.995 | 47 | -0,253 | 1/4 |
 
 - **32 configs limpas | 6 com Sharpe de trading > 0 | 0 passam nos critérios endurecidos** (Sharpe trading > 0 **e** ≥3/4 blocos positivos **e** ≥30 trades).
-- **Nenhuma config tem ≥3/4 blocos OOS positivos** — a melhor marca é 3/4 (`ad61cd70`), e essa tem Sharpe de trading -0,12. O padrão é universal: quase tudo lucra só no OOS2 (alta do ETF 2023-09→2024-09) e sangra nos outros três.
+- **Só uma config chega a 3/4 blocos OOS positivos** (`ad61cd70`), e ela reprova no Sharpe de trading (-0,12) — nenhuma outra passa de 2/4. O padrão é universal: quase tudo lucra só no OOS2 (alta do ETF 2023-09→2024-09) e sangra nos outros três. *(Corrigido em revisão: a redação anterior dizia "nenhuma tem ≥3/4", o que contradizia a própria frase seguinte.)*
 - **DSR na base de trading, 32 tentativas** (piso de ruído SR0 = 0,63): db8f33f6 p=0,736 | 12616cbc p=0,816 | g3 p=0,980. Todos REPROVAM.
 - **O protocolo antigo acertava por sorte, não por desenho.** Reconstituindo os vereditos antigos das duas configs mais perigosas:
 

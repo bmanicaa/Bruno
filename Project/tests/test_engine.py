@@ -554,3 +554,90 @@ class TestCliParams:
         p = bi.params_from_args(self._args())
         for k in ('long_mode', 'macro_filter', 'macro_confirm_days'):
             assert k not in p, f'{k} no padrao mudaria todos os hashes historicos'
+
+
+class TestI2Vetorizacao:
+    """O screener lia cada vela com df.iloc[] — 88% do tempo total do motor.
+
+    A troca por arrays numpy tem de ser NULA: os mesmos float64, lidos do mesmo
+    buffer. A prova de ponta a ponta e o replay (scripts/verify_replay.py, config
+    ad61cd70 identica trade a trade); os testes abaixo travam as tres semanticas
+    que poderiam divergir em silencio numa edicao futura.
+    """
+
+    def _frame(self, n=300, seed=7):
+        rng = np.random.default_rng(seed)
+        close = 100 * np.exp(np.cumsum(rng.normal(0, 0.01, n)))
+        times = pd.to_datetime('2021-01-01') + pd.to_timedelta(np.arange(n) * 4, unit='h')
+        df = pd.DataFrame({
+            'open_time': times,
+            'open': close * 0.999,
+            'high': close * 1.005,
+            'low': close * 0.995,
+            'close': close,
+            'volume': rng.uniform(1e5, 1e6, n),
+            'quote_volume': rng.uniform(1e7, 1e8, n),
+            'taker_buy_base': rng.uniform(5e4, 5e5, n),
+        })
+        return bi.compute_indicators_4h(df)
+
+    def test_arrays_batem_com_iloc_valor_a_valor(self):
+        """Compara contra df.iloc[i][col] — o acesso exato que o motor usava."""
+        df = self._frame()
+        arrays = bi._hot_arrays(df)
+        presentes = [c for c in bi._HOT_COLS_4H if c in df.columns]
+        assert presentes, 'o frame de teste precisa conter colunas quentes'
+        for i in (0, 1, 15, 137, len(df) - 1):
+            linha = df.iloc[i]
+            for c in presentes:
+                antes, agora = linha[c], arrays[c][i]
+                if pd.isna(antes):
+                    assert np.isnan(agora), f'{c}[{i}]: NaN virou {agora!r}'
+                else:
+                    assert antes == agora, f'{c}[{i}]: {antes!r} != {agora!r}'
+
+    def test_coluna_ausente_vira_array_de_nan(self):
+        """Reproduz o Series.get(col, np.nan) dos campos opcionais do merge diario.
+
+        Se uma coluna ausente virasse zero (ou levantasse KeyError), os gatilhos
+        que dependem de `open_1d`/`low_1d_prev` mudariam de veredito calados.
+        """
+        df = self._frame()
+        assert 'open_1d' not in df.columns, 'este teste precisa de uma coluna ausente'
+        arrays = bi._hot_arrays(df)
+        assert len(arrays['open_1d']) == len(df)
+        assert np.isnan(arrays['open_1d']).all()
+
+    def test_nanmin_nanmax_reproduzem_o_skipna_do_pandas(self):
+        """O stop ancora na janela de 10 velas; pandas .min() pula NaN, numpy .min() nao."""
+        df = self._frame()
+        low = df['low'].to_numpy(dtype=float).copy()
+        high = df['high'].to_numpy(dtype=float).copy()
+        low[50] = np.nan
+        high[50] = np.nan
+        s_low, s_high = pd.Series(low), pd.Series(high)
+        for i in (12, 55, 60, 200):
+            sl = slice(max(0, i - 10), i)
+            assert np.nanmin(low[sl]) == s_low.iloc[sl].min()
+            assert np.nanmax(high[sl]) == s_high.iloc[sl].max()
+
+    def test_searchsorted_acha_a_mesma_barra_que_a_mascara_booleana(self):
+        """A porta macro le a ultima barra diaria com open_time < ts.
+
+        A otimizacao trocou uma mascara booleana sobre a serie inteira (refeita a
+        cada vela de 4h) por searchsorted. Tem de devolver a MESMA barra — um
+        deslocamento de um dia aqui seria lookahead.
+        """
+        n = 400
+        times = pd.to_datetime('2020-01-01') + pd.to_timedelta(np.arange(n), unit='D')
+        d = pd.DataFrame({'open_time': times, 'close': np.arange(n, dtype=float)})
+        arr = d['open_time'].to_numpy()
+        alvos = pd.to_datetime('2019-12-31') + pd.to_timedelta(np.arange(0, n * 24, 4), unit='h')
+        for ts in alvos[::37]:
+            sub = d[d['open_time'] < ts]
+            k = int(np.searchsorted(arr, ts.to_datetime64(), side='left'))
+            if sub.empty:
+                assert k == 0, 'sem barra anterior, searchsorted tem de devolver 0'
+            else:
+                assert k > 0
+                assert d.iloc[k - 1]['open_time'] == sub.iloc[-1]['open_time']

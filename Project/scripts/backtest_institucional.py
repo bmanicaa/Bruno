@@ -380,6 +380,10 @@ def build_macro_gate(btc_1d_sorted, mode='off', confirm_days=0):
     confirm_days > 1 exige que a condição tenha valido nos N fechamentos diários
     consecutivos mais recentes (não entrar num regime recém-virado). Sem efeito
     quando mode == 'off'.
+
+    ATENÇÃO nos modos semanais: a porta só muda de valor na virada da semana, então
+    exigir 7 dias consecutivos equivale a UMA SEMANA EXTRA DE ATRASO, não a uma
+    confirmação diária. A leitura literal só vale para `ema200d`.
     """
     if mode not in MACRO_FILTER_MODES:
         raise ValueError(f"macro_filter desconhecido: {mode!r} (esperado um de {MACRO_FILTER_MODES})")
@@ -393,6 +397,11 @@ def build_macro_gate(btc_1d_sorted, mode='off', confirm_days=0):
         gate = d['close'] >= d['ema200_1d']
     else:
         span = 50 if mode == 'ema50w' else 200
+        if mode == 'ema200w':
+            print('AVISO: ema200w exige ~200 semanas de aquecimento e os dados comecam em '
+                  '09/2019 — IS e OOS1 ficam parados POR CONSTRUCAO, nao por decisao. '
+                  'Nao tratar o resultado como edge sem corrigir isso (ver analises.md, Fase B).',
+                  file=sys.stderr)
         week = d['open_time'].dt.to_period('W')
         wk_close = d.groupby(week)['close'].last()
         wk_ema = wk_close.ewm(span=span, adjust=False).mean()
@@ -411,6 +420,39 @@ def build_macro_gate(btc_1d_sorted, mode='off', confirm_days=0):
         gate = held.eq(float(confirm_days)).fillna(False).astype(bool)
 
     return dict(zip(d['open_time'], gate.tolist()))
+
+
+_HOT_COLS_4H = (
+    'open', 'high', 'low', 'close',
+    'ema20', 'ema50', 'ema200', 'rsi14', 'atr14', 'adx14', 'cvd', 'vol_ratio',
+    'return_7d', 'daily_avg_vol_30d',
+    'close_1d', 'open_1d', 'high_1d', 'low_1d', 'ema20_1d', 'ema50_1d',
+    'rsi14_1d', 'atr14_1d',
+    'close_1d_prev', 'high_1d_prev', 'low_1d_prev',
+)
+
+
+def _hot_arrays(df, cols=_HOT_COLS_4H):
+    """Colunas quentes do screener como arrays numpy (otimização I2).
+
+    Os laços de screening liam cada vela com `df.iloc[]`, que constrói uma Series
+    nova a cada acesso — 88% do tempo de execução do motor (1.027.061 chamadas
+    numa janela de 1 ano). Extrair as colunas uma vez por moeda e indexar por
+    posição faz o mesmo trabalho lendo o mesmo float64 do mesmo buffer, então o
+    resultado é idêntico bit a bit.
+
+    Colunas ausentes viram arrays de NaN, reproduzindo o `Series.get(col, np.nan)`
+    que o código usava para os campos opcionais vindos do merge diário.
+    """
+    n = len(df)
+    out = {}
+    for c in cols:
+        if c in df.columns:
+            arr = df[c].to_numpy()
+            out[c] = arr if arr.dtype == np.float64 else arr.astype(np.float64)
+        else:
+            out[c] = np.full(n, np.nan)
+    return out
 
 
 def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.0, params=None, preloaded=None):
@@ -451,17 +493,33 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
     btc_return_7d_map = {}
     macro_gate_by_day = build_macro_gate(btc_1d_sorted, p['macro_filter'], p['macro_confirm_days'])
 
-    for ts in all_timestamps:
-        b1d_sub = btc_1d_sorted[btc_1d_sorted['open_time'] < ts]
-        if b1d_sub.empty or ts not in btc_4h_sorted.index:
+    # I2: o laço abaixo refazia uma máscara booleana sobre a série diária INTEIRA a
+    # cada vela de 4h. searchsorted dá a mesma "última barra com open_time < ts" em
+    # O(log n). As chaves de macro_gate_by_day são pd.Timestamp, então a lista
+    # b1d_ts_list é mantida em tipo pandas de propósito — np.datetime64 não casaria.
+    b1d_times = btc_1d_sorted['open_time'].to_numpy()
+    b1d_ts_list = list(btc_1d_sorted['open_time'])
+    b1d_close = btc_1d_sorted['close'].to_numpy(dtype=np.float64)
+    b1d_ema50 = btc_1d_sorted['ema50_1d'].to_numpy(dtype=np.float64)
+    b1d_ema200 = btc_1d_sorted['ema200_1d'].to_numpy(dtype=np.float64)
+    b1d_adx = btc_1d_sorted['adx14_1d'].to_numpy(dtype=np.float64)
+    b4h_ret7d = btc_4h_sorted['return_7d'].to_numpy(dtype=np.float64)
+    b4h_index = btc_4h_sorted.index
+
+    _ts_np = np.array([t.to_datetime64() for t in all_timestamps], dtype='datetime64[ns]')
+    _n1d_all = np.searchsorted(b1d_times, _ts_np, side='left')
+
+    for _i_ts, ts in enumerate(all_timestamps):
+        n_1d = int(_n1d_all[_i_ts])
+        if n_1d == 0 or ts not in b4h_index:
             btc_macro_map[ts] = False
             btc_return_7d_map[ts] = 0.0
             continue
-        last_1d = b1d_sub.iloc[-1]
-        close_1d = float(last_1d['close'])
-        ema50_1d = float(last_1d['ema50_1d'])
-        ema200_1d = float(last_1d['ema200_1d'])
-        adx_1d = float(last_1d['adx14_1d']) if pd.notna(last_1d['adx14_1d']) else 0.0
+        j1d = n_1d - 1
+        close_1d = float(b1d_close[j1d])
+        ema50_1d = float(b1d_ema50[j1d])
+        ema200_1d = float(b1d_ema200[j1d])
+        adx_1d = float(b1d_adx[j1d]) if not np.isnan(b1d_adx[j1d]) else 0.0
 
         is_strong_bull = (close_1d >= ema50_1d) and (close_1d >= ema200_1d)
         is_bear = (close_1d < ema50_1d) and (close_1d < ema200_1d)
@@ -473,14 +531,14 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             'transition': is_transition,
             'adx_1d': adx_1d,
             # Porta macro opcional: lida da MESMA barra diária já fechada (zero lookahead).
-            'macro_gate': bool(macro_gate_by_day.get(last_1d['open_time'], False)),
+            'macro_gate': bool(macro_gate_by_day.get(b1d_ts_list[j1d], False)),
         }
 
         # ZERO LOOKAHEAD: retorno 7d da vela ANTERIOR à vela corrente
-        pos_idx = btc_4h_sorted.index.get_loc(ts)
+        pos_idx = b4h_index.get_loc(ts)
         if pos_idx >= 1:
-            prev_4h = btc_4h_sorted.iloc[pos_idx - 1]
-            btc_return_7d_map[ts] = prev_4h['return_7d'] if pd.notna(prev_4h['return_7d']) else 0.0
+            _r7 = b4h_ret7d[pos_idx - 1]
+            btc_return_7d_map[ts] = _r7 if not np.isnan(_r7) else 0.0
         else:
             btc_return_7d_map[ts] = 0.0
 
@@ -513,29 +571,42 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
         valid_mask = (idx_times >= start_date) & (idx_times <= end_date)
         valid_indices = np.where(valid_mask)[0]
 
+        # I2: colunas quentes como arrays numpy, uma vez por moeda (ver _hot_arrays).
+        _A = _hot_arrays(df4)
+        v_open, v_high, v_low, v_close = _A['open'], _A['high'], _A['low'], _A['close']
+        v_ema20, v_ema50, v_ema200 = _A['ema20'], _A['ema50'], _A['ema200']
+        v_rsi14, v_atr14, v_adx14 = _A['rsi14'], _A['atr14'], _A['adx14']
+        v_cvd, v_vol_ratio, v_ret7d = _A['cvd'], _A['vol_ratio'], _A['return_7d']
+        v_dvol30 = _A['daily_avg_vol_30d']
+        v_close1d, v_open1d = _A['close_1d'], _A['open_1d']
+        v_high1d, v_low1d = _A['high_1d'], _A['low_1d']
+        v_ema20_1d, v_ema50_1d = _A['ema20_1d'], _A['ema50_1d']
+        v_rsi14_1d, v_atr14_1d = _A['rsi14_1d'], _A['atr14_1d']
+        v_close1d_prev, v_high1d_prev = _A['close_1d_prev'], _A['high_1d_prev']
+
         for loc_idx in valid_indices:
             if loc_idx < MATURITY_CANDLES:
                 continue
             current_time = idx_times[loc_idx]
 
-            prev_candle = df4.iloc[loc_idx - 1]
-            candle_2ago = df4.iloc[loc_idx - 2]
-            candle_3ago = df4.iloc[loc_idx - 3]
+            i1 = loc_idx - 1
+            i2 = loc_idx - 2
+            i3 = loc_idx - 3
 
             # 1. Volume Médio Diário 30d > $25M
-            if prev_candle['daily_avg_vol_30d'] < MIN_DAILY_VOLUME:
+            if v_dvol30[i1] < MIN_DAILY_VOLUME:
                 continue
 
             # 2. FILTRO HIERÁRQUICO DIÁRIO (1D): Close 1D >= EMA20 1D >= EMA50 1D
-            if pd.isna(prev_candle['close_1d']) or (prev_candle['close_1d'] < prev_candle['ema20_1d']) or (prev_candle['ema20_1d'] < prev_candle['ema50_1d']):
+            if np.isnan(v_close1d[i1]) or (v_close1d[i1] < v_ema20_1d[i1]) or (v_ema20_1d[i1] < v_ema50_1d[i1]):
                 continue
 
             # 3. FORÇA RELATIVA (ALPHA 7D VS BTC 7D)
             btc_ret7d = btc_return_7d_map.get(current_time, 0.0)
-            coin_ret7d = prev_candle['return_7d']
+            coin_ret7d = v_ret7d[i1]
 
             if s != 'BTCUSDT':
-                if pd.isna(coin_ret7d) or coin_ret7d < btc_ret7d:
+                if np.isnan(coin_ret7d) or coin_ret7d < btc_ret7d:
                     continue
             else:
                 coin_ret7d = btc_ret7d
@@ -549,31 +620,32 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             # 5. GATILHO DE ENTRADA (4h ou 1D conforme experimento)
             if p['entry_tf'] == '1d':
                 if p['long_mode'] == 'breakout':
-                    tested_support = prev_candle['high_1d'] > prev_candle['high_1d_prev']
-                    rsi_ok = (55 <= prev_candle['rsi14_1d'] <= 72)
-                    close_break = prev_candle['close_1d'] > prev_candle['ema20_1d']
+                    tested_support = v_high1d[i1] > v_high1d_prev[i1]
+                    rsi_ok = (55 <= v_rsi14_1d[i1] <= 72)
+                    close_break = v_close1d[i1] > v_ema20_1d[i1]
                     rejection_turn = True
-                    cvd_ok = prev_candle['cvd'] > 0
+                    cvd_ok = v_cvd[i1] > 0
                     vol_active = True
                 else:
-                    tested_support = prev_candle['low_1d'] <= (prev_candle['ema20_1d'] * 1.02)
-                    rsi_ok = (RSI_LONG_MIN <= prev_candle['rsi14_1d'] <= RSI_LONG_MAX)
-                    close_break = prev_candle['close_1d'] > prev_candle['close_1d_prev']
-                    rejection_turn = (prev_candle['close_1d'] > prev_candle['open_1d'] if pd.notna(prev_candle.get('open_1d', np.nan)) else True) and (prev_candle['close_1d'] >= prev_candle['ema20_1d'])
-                    cvd_ok = prev_candle['cvd'] > 0
+                    tested_support = v_low1d[i1] <= (v_ema20_1d[i1] * 1.02)
+                    rsi_ok = (RSI_LONG_MIN <= v_rsi14_1d[i1] <= RSI_LONG_MAX)
+                    close_break = v_close1d[i1] > v_close1d_prev[i1]
+                    # open_1d ausente/NaN => True, como no antigo .get('open_1d', np.nan)
+                    rejection_turn = ((v_close1d[i1] > v_open1d[i1]) if not np.isnan(v_open1d[i1]) else True) and (v_close1d[i1] >= v_ema20_1d[i1])
+                    cvd_ok = v_cvd[i1] > 0
                     vol_active = True
             else:
                 # 4. ESTRUTURA 4H: EMA20 > EMA50 > EMA200 e ADX >= 22
-                if not (prev_candle['ema20'] > prev_candle['ema50'] > prev_candle['ema200']):
+                if not (v_ema20[i1] > v_ema50[i1] > v_ema200[i1]):
                     continue
-                if prev_candle['adx14'] < 22:
+                if v_adx14[i1] < 22:
                     continue
-                tested_support = min(prev_candle['low'], candle_2ago['low'], candle_3ago['low']) <= (prev_candle['ema20'] * 1.02)
-                rsi_ok = (RSI_LONG_MIN <= prev_candle['rsi14'] <= RSI_LONG_MAX)
-                close_break = prev_candle['close'] > candle_2ago['high']
-                rejection_turn = (prev_candle['close'] > prev_candle['open']) and (prev_candle['close'] >= prev_candle['ema20'])
-                cvd_ok = prev_candle['cvd'] > 0
-                vol_active = prev_candle['vol_ratio'] >= 0.9
+                tested_support = min(v_low[i1], v_low[i2], v_low[i3]) <= (v_ema20[i1] * 1.02)
+                rsi_ok = (RSI_LONG_MIN <= v_rsi14[i1] <= RSI_LONG_MAX)
+                close_break = v_close[i1] > v_high[i2]
+                rejection_turn = (v_close[i1] > v_open[i1]) and (v_close[i1] >= v_ema20[i1])
+                cvd_ok = v_cvd[i1] > 0
+                vol_active = v_vol_ratio[i1] >= 0.9
 
             if not (tested_support and rsi_ok and close_break and rejection_turn and cvd_ok and vol_active):
                 continue
@@ -586,11 +658,11 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             if fr_entry > FUNDING_VETO:
                 continue
 
-            current_open_candle = df4.iloc[loc_idx]
-            entry_price = current_open_candle['open'] * (1 + p['entry_slippage'])
+            entry_price = v_open[loc_idx] * (1 + p['entry_slippage'])
 
-            recent_10_lows = df4.iloc[max(0, loc_idx - 10):loc_idx]['low'].min()
-            raw_stop = recent_10_lows - (1.5 * prev_candle['atr14'])
+            # nanmin reproduz o skipna=True do pandas Series.min()
+            recent_10_lows = np.nanmin(v_low[max(0, loc_idx - 10):loc_idx])
+            raw_stop = recent_10_lows - (1.5 * v_atr14[i1])
             raw_dist_pct = (entry_price - raw_stop) / entry_price
             stop_dist_pct = min(max(raw_dist_pct, 0.035 if s == 'BTCUSDT' else 0.040), 0.080)
             stop_loss = entry_price * (1 - stop_dist_pct)
@@ -600,7 +672,7 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             target_partial = entry_price + (PARTIAL_R * stop_dist)
 
             btc_bonus = 15 if s == 'BTCUSDT' else 0
-            score = 100 + (coin_ret7d - btc_ret7d) * 100 + (prev_candle['adx14'] - 20) + btc_bonus
+            score = 100 + (coin_ret7d - btc_ret7d) * 100 + (v_adx14[i1] - 20) + btc_bonus
 
             btc_macro_now = btc_macro_map.get(current_time)
             btc_adx_1d = btc_macro_now.get('adx_1d', 0.0) if isinstance(btc_macro_now, dict) else 0.0
@@ -615,12 +687,12 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                 'breakeven_trigger': breakeven_trigger,
                 'target_partial': target_partial,
                 'alpha_7d': coin_ret7d - btc_ret7d,
-                'daily_avg_vol_30d': float(prev_candle['daily_avg_vol_30d']),
+                'daily_avg_vol_30d': float(v_dvol30[i1]),
                 'regime': "Trend Following (BE/Par. 2.0R / Runner 50%)",
-                'adx_val': prev_candle['adx14'],
+                'adx_val': v_adx14[i1],
                 'direction': 'LONG',
-                'rsi_1d': float(prev_candle['rsi14_1d']) if pd.notna(prev_candle['rsi14_1d']) else 0.0,
-                'atr_1d_pct': float(prev_candle['atr14_1d'] / (prev_candle['close_1d'] + 1e-9)) if pd.notna(prev_candle.get('atr14_1d', np.nan)) else 0.0,
+                'rsi_1d': float(v_rsi14_1d[i1]) if not np.isnan(v_rsi14_1d[i1]) else 0.0,
+                'atr_1d_pct': float(v_atr14_1d[i1] / (v_close1d[i1] + 1e-9)) if not np.isnan(v_atr14_1d[i1]) else 0.0,
                 'btc_adx_1d': btc_adx_1d,
             })
 
@@ -658,6 +730,15 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
         valid_mask = (idx_times >= start_date) & (idx_times <= end_date)
         valid_indices = np.where(valid_mask)[0]
 
+        # I2: mesmas colunas quentes em numpy (ver _hot_arrays).
+        _A = _hot_arrays(df4)
+        v_open, v_high, v_low, v_close = _A['open'], _A['high'], _A['low'], _A['close']
+        v_ema20, v_ema50 = _A['ema20'], _A['ema50']
+        v_rsi14, v_atr14, v_adx14, v_cvd = _A['rsi14'], _A['atr14'], _A['adx14'], _A['cvd']
+        v_dvol30 = _A['daily_avg_vol_30d']
+        v_close1d, v_ema20_1d, v_ema50_1d = _A['close_1d'], _A['ema20_1d'], _A['ema50_1d']
+        v_atr14_1d, v_low1d_prev = _A['atr14_1d'], _A['low_1d_prev']
+
         for loc_idx in valid_indices:
             if loc_idx < MATURITY_CANDLES:
                 continue
@@ -667,34 +748,35 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             if not regime.get('bear', False):
                 continue
 
-            prev_candle = df4.iloc[loc_idx - 1]
-            candle_2ago = df4.iloc[loc_idx - 2]
-            candle_3ago = df4.iloc[loc_idx - 3]
+            i1 = loc_idx - 1
+            i2 = loc_idx - 2
+            i3 = loc_idx - 3
 
-            if prev_candle['daily_avg_vol_30d'] < MIN_DAILY_VOLUME:
+            if v_dvol30[i1] < MIN_DAILY_VOLUME:
                 continue
 
-            if pd.isna(prev_candle.get('close_1d')) or pd.isna(prev_candle.get('ema20_1d')):
+            if np.isnan(v_close1d[i1]) or np.isnan(v_ema20_1d[i1]):
                 continue
-            if not (prev_candle['close_1d'] < prev_candle['ema20_1d'] < prev_candle['ema50_1d']):
+            if not (v_close1d[i1] < v_ema20_1d[i1] < v_ema50_1d[i1]):
                 continue
 
-            if not (prev_candle['ema20'] < prev_candle['ema50']):
+            if not (v_ema20[i1] < v_ema50[i1]):
                 continue
 
             if p['short_mode'] == 'breakout':
                 # e4: rompimento de fundo diário (trend-following short)
                 tested_resistance = True
-                close_break_down = prev_candle['close_1d'] < prev_candle['low_1d_prev'] if pd.notna(prev_candle.get('low_1d_prev', np.nan)) else False
-                bearish_candle = prev_candle['close_1d'] < prev_candle['ema20_1d']
-                rsi_rejection = (30 <= prev_candle['rsi14'] <= RSI_SHORT_MAX)
-                cvd_negative = prev_candle['cvd'] < 0
+                # low_1d_prev ausente/NaN => False, como no antigo .get('low_1d_prev', np.nan)
+                close_break_down = (v_close1d[i1] < v_low1d_prev[i1]) if not np.isnan(v_low1d_prev[i1]) else False
+                bearish_candle = v_close1d[i1] < v_ema20_1d[i1]
+                rsi_rejection = (30 <= v_rsi14[i1] <= RSI_SHORT_MAX)
+                cvd_negative = v_cvd[i1] < 0
             else:
-                tested_resistance = max(prev_candle['high'], candle_2ago['high'], candle_3ago['high']) >= (prev_candle['ema20'] * 0.98)
-                rsi_rejection = (RSI_SHORT_MIN <= prev_candle['rsi14'] <= RSI_SHORT_MAX)
-                close_break_down = prev_candle['close'] < candle_2ago['low']
-                bearish_candle = (prev_candle['close'] < prev_candle['open']) and (prev_candle['close'] <= prev_candle['ema20'])
-                cvd_negative = prev_candle['cvd'] < 0
+                tested_resistance = max(v_high[i1], v_high[i2], v_high[i3]) >= (v_ema20[i1] * 0.98)
+                rsi_rejection = (RSI_SHORT_MIN <= v_rsi14[i1] <= RSI_SHORT_MAX)
+                close_break_down = v_close[i1] < v_low[i2]
+                bearish_candle = (v_close[i1] < v_open[i1]) and (v_close[i1] <= v_ema20[i1])
+                cvd_negative = v_cvd[i1] < 0
 
             if not (tested_resistance and rsi_rejection and close_break_down and bearish_candle and cvd_negative):
                 continue
@@ -703,11 +785,11 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             if fr_entry < -FUNDING_VETO:
                 continue
 
-            current_open_candle = df4.iloc[loc_idx]
-            entry_price = current_open_candle['open'] * (1 - p['entry_slippage'])
+            entry_price = v_open[loc_idx] * (1 - p['entry_slippage'])
 
-            recent_10_highs = df4.iloc[max(0, loc_idx - 10):loc_idx]['high'].max()
-            raw_stop = recent_10_highs + (1.5 * prev_candle['atr14'])
+            # nanmax reproduz o skipna=True do pandas Series.max()
+            recent_10_highs = np.nanmax(v_high[max(0, loc_idx - 10):loc_idx])
+            raw_stop = recent_10_highs + (1.5 * v_atr14[i1])
             raw_dist_pct = (raw_stop - entry_price) / entry_price
             stop_dist_pct = min(max(raw_dist_pct, 0.035), 0.080)
             stop_loss = entry_price * (1 + stop_dist_pct)
@@ -716,7 +798,7 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             breakeven_trigger = entry_price - (BREAKEVEN_R * stop_dist)
             target_partial = entry_price - (PARTIAL_R * stop_dist)
 
-            score = 100 + (prev_candle['adx14'] - 20)
+            score = 100 + (v_adx14[i1] - 20)
 
             btc_macro_now = btc_macro_map.get(current_time)
             btc_adx_1d = btc_macro_now.get('adx_1d', 0.0) if isinstance(btc_macro_now, dict) else 0.0
@@ -731,12 +813,12 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                 'breakeven_trigger': breakeven_trigger,
                 'target_partial': target_partial,
                 'alpha_7d': 0.0,
-                'daily_avg_vol_30d': float(prev_candle['daily_avg_vol_30d']),
+                'daily_avg_vol_30d': float(v_dvol30[i1]),
                 'regime': "Short Bear (BE/Par. 2.0R / Runner 50%)",
-                'adx_val': prev_candle['adx14'],
+                'adx_val': v_adx14[i1],
                 'direction': 'SHORT',
-                'rsi_1d': float(prev_candle['rsi14']) if pd.notna(prev_candle['rsi14']) else 0.0,
-                'atr_1d_pct': float(prev_candle['atr14_1d'] / (prev_candle['close_1d'] + 1e-9)) if pd.notna(prev_candle.get('atr14_1d', np.nan)) else 0.0,
+                'rsi_1d': float(v_rsi14[i1]) if not np.isnan(v_rsi14[i1]) else 0.0,
+                'atr_1d_pct': float(v_atr14_1d[i1] / (v_close1d[i1] + 1e-9)) if not np.isnan(v_atr14_1d[i1]) else 0.0,
                 'btc_adx_1d': btc_adx_1d,
             })
 

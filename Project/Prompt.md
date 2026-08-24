@@ -186,7 +186,7 @@ FUNIL QUANTITATIVO BI-DIRECIONAL (DIÁRIO COMANDA / 4H REFINA O TIMING)
 
 ### Motor Canônico de Simulação
 
-> **Motor Único Oficial:** `scripts/backtest_institucional.py` (versão **V2.3.1** — zero lookahead, 33 testes de regressão). Este é o ÚNICO motor que gera os artefatos de auditoria. Qualquer divergência entre este motor e o Prompt.md deve ser tratada como bug (corrigir o código ou o prompt). Motores antigos/experimentais ficam arquivados em `scripts/legado/` e NÃO devem ser usados em novos testes.
+> **Motor Único Oficial:** `scripts/backtest_institucional.py` (versão **V2.3.1** — zero lookahead, 37 testes de regressão). Este é o ÚNICO motor que gera os artefatos de auditoria. Qualquer divergência entre este motor e o Prompt.md deve ser tratada como bug (corrigir o código ou o prompt). Motores antigos/experimentais ficam arquivados em `scripts/legado/` e NÃO devem ser usados em novos testes.
 >
 > ```bash
 > python scripts/backtest_institucional.py --mode full           # Auditoria Completa (7 anos: 2019-2026)

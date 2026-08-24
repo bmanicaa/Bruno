@@ -355,6 +355,64 @@ def funding_charge(is_long, allocated_capital, remaining_pct, entry_price, c_clo
     return -notional * fr_val
 
 
+MACRO_FILTER_MODES = ('off', 'ema200d', 'ema50w', 'ema200w')
+
+
+def build_macro_gate(btc_1d_sorted, mode='off', confirm_days=0):
+    """Porta macro OPCIONAL para NOVAS entradas (Fase B — híbrido trend + swing).
+
+    Devolve {open_time_do_dia: bool}. O consumidor sempre lê a última barra diária
+    com open_time < ts (mesma regra do regime bull/bear do motor), portanto o valor
+    de um dia só passa a ser usado no dia seguinte — zero lookahead.
+
+    Modos:
+      off      — sem filtro. Comportamento histórico do motor, bit a bit.
+      ema200d  — close 1D >= EMA200 1D (o "airbag" do PLANO_OPERACIONAL_REAL).
+                 ATENÇÃO: para LONGS isto é REDUNDANTE — o regime bull do motor já
+                 exige close >= EMA50 E close >= EMA200. O efeito prático deste modo
+                 é desligar os SHORTS (que só existem abaixo da EMA200). Ver analises.md.
+      ema50w   — fechamento da última semana COMPLETA >= EMA50 semanal (airbag lento).
+      ema200w  — idem com EMA200 semanal. Exige ~200 semanas de aquecimento; com dados
+                 desde 2019 só fica confiável a partir de meados de 2023, o que torna
+                 os blocos IS/OOS1 "parados por construção" e não por decisão. Não
+                 usar como candidato sem tratar essa limitação.
+
+    confirm_days > 1 exige que a condição tenha valido nos N fechamentos diários
+    consecutivos mais recentes (não entrar num regime recém-virado). Sem efeito
+    quando mode == 'off'.
+    """
+    if mode not in MACRO_FILTER_MODES:
+        raise ValueError(f"macro_filter desconhecido: {mode!r} (esperado um de {MACRO_FILTER_MODES})")
+
+    d = btc_1d_sorted[['open_time', 'close', 'ema200_1d']].copy().reset_index(drop=True)
+
+    if mode == 'off':
+        return {t: True for t in d['open_time']}
+
+    if mode == 'ema200d':
+        gate = d['close'] >= d['ema200_1d']
+    else:
+        span = 50 if mode == 'ema50w' else 200
+        week = d['open_time'].dt.to_period('W')
+        wk_close = d.groupby(week)['close'].last()
+        wk_ema = wk_close.ewm(span=span, adjust=False).mean()
+        # Só a semana ANTERIOR completa decide (checagem semanal, como no plano real).
+        prev_ok = wk_close.shift(1) >= wk_ema.shift(1)
+        # Sem aquecimento suficiente da EMA semanal a porta fica FECHADA (fora do mercado),
+        # em vez de usar uma média ainda dominada pelo valor inicial.
+        warmed = pd.Series(np.arange(len(wk_close)) >= span, index=wk_close.index)
+        prev_ok = prev_ok & warmed
+        gate = week.map(prev_ok)
+
+    gate = gate.fillna(False).astype(bool)
+
+    if confirm_days and confirm_days > 1:
+        held = gate.astype(float).rolling(confirm_days, min_periods=confirm_days).sum()
+        gate = held.eq(float(confirm_days)).fillna(False).astype(bool)
+
+    return dict(zip(d['open_time'], gate.tolist()))
+
+
 def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.0, params=None, preloaded=None):
     if params is None:
         params = {}
@@ -371,6 +429,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
         'runner_mode': params.get('runner_mode', 'ema20_1d'),
         'short_mode': params.get('short_mode', 'breakout'),
         'universe': params.get('universe', 'alpha'),
+        'macro_filter': params.get('macro_filter', 'off'),
+        'macro_confirm_days': params.get('macro_confirm_days', 0),
     }
     p.update({k: v for k, v in params.items() if k in p})
 
@@ -389,6 +449,7 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
 
     btc_macro_map = {}
     btc_return_7d_map = {}
+    macro_gate_by_day = build_macro_gate(btc_1d_sorted, p['macro_filter'], p['macro_confirm_days'])
 
     for ts in all_timestamps:
         b1d_sub = btc_1d_sorted[btc_1d_sorted['open_time'] < ts]
@@ -410,7 +471,9 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
             'bull': is_strong_bull,
             'bear': is_bear,
             'transition': is_transition,
-            'adx_1d': adx_1d
+            'adx_1d': adx_1d,
+            # Porta macro opcional: lida da MESMA barra diária já fechada (zero lookahead).
+            'macro_gate': bool(macro_gate_by_day.get(last_1d['open_time'], False)),
         }
 
         # ZERO LOOKAHEAD: retorno 7d da vela ANTERIOR à vela corrente
@@ -684,9 +747,11 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
         if isinstance(btc_regime, dict):
             btc_bull = btc_regime['bull']
             btc_bear = btc_regime['bear']
+            macro_gate_ok = btc_regime.get('macro_gate', True)
         else:
             btc_bull = btc_regime
             btc_bear = False
+            macro_gate_ok = True
 
         effective_risk = p['risk_pct']
         skip_new_entries = False
@@ -839,7 +904,8 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                     continue
 
         raw_candidates = candidates_by_time.get(current_time, [])
-        if btc_bull and raw_candidates and not skip_new_entries and len(active_positions) < p['max_positions']:
+        # A porta macro veta NOVAS entradas; posições já abertas seguem as saídas normais.
+        if btc_bull and macro_gate_ok and raw_candidates and not skip_new_entries and len(active_positions) < p['max_positions']:
             eligible = [c for c in raw_candidates if c['symbol'] not in active_positions]
             eligible = [c for c in eligible if c['symbol'] not in recent_loss_exits or (current_time - recent_loss_exits[c['symbol']]).total_seconds() >= cooldown_seconds]
             if eligible:
@@ -872,7 +938,7 @@ def run_portfolio_backtest(start_date_str, end_date_str, initial_capital=100000.
                         'status': 'OPEN'
                     }
 
-        if btc_bear and not skip_new_entries and len(active_positions) < p['max_positions']:
+        if btc_bear and macro_gate_ok and not skip_new_entries and len(active_positions) < p['max_positions']:
             short_raw = short_candidates_by_time.get(current_time, [])
             short_eligible = [c for c in short_raw if c['symbol'] not in active_positions]
             short_eligible = [c for c in short_eligible if c['symbol'] not in recent_loss_exits or (current_time - recent_loss_exits[c['symbol']]).total_seconds() >= cooldown_seconds]
@@ -1422,6 +1488,10 @@ if __name__ == '__main__':
     parser.add_argument('--short-mode', type=str, default='breakout', choices=['revert', 'breakout', 'none'], help='e4: modo do short')
     parser.add_argument('--universe', type=str, default='alpha', choices=['alpha', 'top20', 'btceth'], help='e5: seleção de líderes')
     parser.add_argument('--fee', type=float, default=0.00075, help='e6: taxa de corretagem')
+    parser.add_argument('--macro-filter', type=str, default='off', choices=list(MACRO_FILTER_MODES),
+                        help='Fase B: porta macro opcional para novas entradas (ver build_macro_gate)')
+    parser.add_argument('--macro-confirm-days', type=int, default=0,
+                        help='Fase B: exige a porta macro ligada por N fechamentos diarios seguidos (0=off)')
     parser.add_argument('--no-append', action='store_true', help='Nao registra a execucao no analises.md (re-runs de validacao)')
     args = parser.parse_args()
 
@@ -1444,6 +1514,17 @@ if __name__ == '__main__':
         'short_mode': args.short_mode,
         'universe': args.universe
     }
+    # Chaves opcionais entram no dict SÓ quando saem do padrão. Assim o config_hash
+    # das 32 configs já registradas continua reproduzível pela CLI (acrescentar uma
+    # chave nova a todo mundo mudaria todos os hashes históricos).
+    # `long_mode` estava sendo parseado e jogado fora — os experimentos de breakout
+    # só rodaram porque batch_experiments.py monta o dict à mão.
+    if args.long_mode != 'pullback':
+        params['long_mode'] = args.long_mode
+    if args.macro_filter != 'off':
+        params['macro_filter'] = args.macro_filter
+    if args.macro_confirm_days:
+        params['macro_confirm_days'] = args.macro_confirm_days
 
     if args.walkforward:
         run_walkforward(params, args.capital, append=not args.no_append)

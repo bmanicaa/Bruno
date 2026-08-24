@@ -407,3 +407,108 @@ class TestValidationIntegrity:
             f'motor usa {bi.CASH_YIELD_ANNUAL:.4f} a.a., validador usa '
             f'{sv.CASH_YIELD_PER_BAR * 2190.0:.4f} a.a.')
         assert sv.ANNUAL_FACTOR == 2190.0
+
+
+class TestMacroFilter:
+    """Porta macro opcional (Fase B, item 1: hibrido trend + swing).
+
+    A hipotese era "so operar swing com o BTC acima da EMA200 diaria". Os testes
+    abaixo travam duas coisas: (a) a porta e opcional de verdade — desligada, o
+    motor roda bit a bit como antes; (b) o modo ema200d e REDUNDANTE para longs,
+    porque o regime bull ja exige close >= EMA200. Este segundo teste existe para
+    impedir que uma sessao futura "reimplemente" o filtro achando que e novo.
+    """
+
+    def _daily(self, closes, start='2019-09-01'):
+        times = pd.to_datetime(start) + pd.to_timedelta(np.arange(len(closes)), unit='D')
+        close = np.asarray(closes, dtype=float)
+        df = pd.DataFrame({
+            'open_time': times,
+            'open': close,
+            'high': close * 1.001,
+            'low': close * 0.999,
+            'close': close,
+        })
+        return bi.compute_indicators_1d(df).sort_values('open_time')
+
+    def test_off_nao_altera_nada(self):
+        """macro_filter='off' deve abrir a porta em todos os dias."""
+        d = self._daily(100 + np.arange(400) * 0.1)
+        gate = bi.build_macro_gate(d, 'off')
+        assert len(gate) == len(d)
+        assert all(gate.values())
+        # confirm_days nao pode ligar sozinho quando o filtro esta desligado.
+        assert all(bi.build_macro_gate(d, 'off', confirm_days=7).values())
+
+    def test_ema200d_fecha_a_porta_abaixo_da_media(self):
+        subida = 100 * np.exp(np.cumsum(np.full(400, 0.004)))
+        queda = subida[-1] * np.exp(np.cumsum(np.full(200, -0.006)))
+        d = self._daily(np.concatenate([subida, queda]))
+        gate = bi.build_macro_gate(d, 'ema200d')
+        flags = np.array([gate[t] for t in d['open_time']])
+        acima = (d['close'] >= d['ema200_1d']).to_numpy()
+        assert (flags == acima).all()
+        assert not flags[-1], 'no fim da queda o BTC esta abaixo da EMA200'
+
+    def test_ema200d_e_redundante_para_longs(self):
+        """O regime bull ja exige close >= EMA200 — o filtro nao pode mudar trade algum.
+
+        Se este teste falhar, ou o regime bull mudou, ou a porta passou a vetar
+        entradas que o motor ja permitia. Nos dois casos e preciso reler o
+        analises.md antes de tratar o resultado como um edge novo.
+        """
+        world = wb.build_world()
+        start, end = wb.window_dates()
+        base = dict(DEFAULT_PARAMS, short_mode='none')
+        _, trades_off, _ = bi.run_portfolio_backtest(start, end, 100000.0, params=base, preloaded=world)
+        _, trades_gate, _ = bi.run_portfolio_backtest(
+            start, end, 100000.0, params=dict(base, macro_filter='ema200d'), preloaded=world)
+
+        assert len(trades_off) > 0, 'mundo sintetico sem trades nao testa nada'
+        assert len(trades_off) == len(trades_gate)
+        for a, b in zip(trades_off, trades_gate):
+            assert a['entry_date'] == b['entry_date'] and a['symbol'] == b['symbol']
+            assert abs(a['pnl_brl'] - b['pnl_brl']) < 1e-9
+
+    def test_confirm_days_exige_persistencia(self):
+        """A porta so abre depois de N fechamentos diarios seguidos com a condicao."""
+        d = self._daily(100 * np.exp(np.cumsum(np.full(500, 0.003))))
+        crua = bi.build_macro_gate(d, 'ema200d')
+        firme = bi.build_macro_gate(d, 'ema200d', confirm_days=7)
+
+        dias = list(d['open_time'])
+        assert not any(firme[t] and not crua[t] for t in dias), 'confirmacao nao pode abrir porta fechada'
+        primeira_crua = next(i for i, t in enumerate(dias) if crua[t])
+        primeira_firme = next(i for i, t in enumerate(dias) if firme[t])
+        assert primeira_firme == primeira_crua + 6, 'a porta confirmada abre exatamente 7 dias depois'
+
+    def test_semanal_fica_fechado_durante_aquecimento(self):
+        """Sem 50 semanas de historico a EMA semanal nao decide nada — porta fechada."""
+        d = self._daily(100 * np.exp(np.cumsum(np.full(700, 0.003))))
+        gate = bi.build_macro_gate(d, 'ema50w')
+        flags = np.array([gate[t] for t in d['open_time']])
+        # Contagem em semanas fechadas, nao em dias: a primeira semana do arquivo
+        # costuma ser parcial e nao vale como observacao.
+        semana = d['open_time'].dt.to_period('W')
+        ordem = semana.map({w: i for i, w in enumerate(sorted(semana.unique()))}).to_numpy()
+        assert not flags[ordem < 50].any(), 'porta semanal abriu antes de 50 semanas fechadas'
+        assert flags.any(), 'em tendencia de alta a porta precisa abrir depois do aquecimento'
+
+    def test_semanal_nao_olha_o_futuro(self):
+        """A decisao de um dia so pode usar semanas ja fechadas.
+
+        Truncar a serie no dia D nao pode mudar o valor da porta em D — se mudar,
+        alguma barra futura estava entrando no calculo.
+        """
+        d = self._daily(100 * np.exp(np.cumsum(np.concatenate([
+            np.full(500, 0.004), np.full(300, -0.005)]))))
+        completo = bi.build_macro_gate(d, 'ema50w')
+        for corte in (560, 640, 720):
+            parcial = bi.build_macro_gate(d.iloc[:corte].copy(), 'ema50w')
+            alvo = d['open_time'].iloc[corte - 1]
+            assert parcial[alvo] == completo[alvo], f'porta semanal mudou ao truncar em {alvo}'
+
+    def test_modo_invalido_falha_alto(self):
+        d = self._daily(100 + np.arange(300) * 0.1)
+        with pytest.raises(ValueError, match='macro_filter desconhecido'):
+            bi.build_macro_gate(d, 'ema200_mensal')

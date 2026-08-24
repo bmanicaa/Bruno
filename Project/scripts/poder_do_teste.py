@@ -205,11 +205,20 @@ def gerar_janela(rng, n_trades, n_bars, expectancia, forma):
     return trades, equity
 
 
-def simular_config(rng, expectancia, forma, escala_trades=1.0):
+def simular_config(rng, expectancia, forma, escala_trades=1.0, escala_barras=None):
+    """`escala_trades` multiplica o numero de trades; `escala_barras`, o de barras.
+
+    Para simular MAIS ANOS DE DADOS os dois tem de escalar juntos: o DSR usa
+    `n_obs` (barras) no termo sqrt(n_obs - 1), entao escalar so os trades
+    responde "e se a estrategia operasse mais vezes no MESMO periodo?" — que e
+    outra pergunta. Quando `escala_barras` e None, ela acompanha `escala_trades`.
+    """
+    if escala_barras is None:
+        escala_barras = escala_trades
     janelas = {}
     for w in OOS_NAMES:
         n_t = max(1, int(round(forma['trades_por_janela'][w] * escala_trades)))
-        n_b = forma['barras_por_janela'][w]
+        n_b = max(60, int(round(forma['barras_por_janela'][w] * escala_barras)))
         tr, eq = gerar_janela(rng, n_t, n_b, expectancia, forma)
         janelas[w] = {'trades': tr, 'equity_curve': eq}
     return janelas
@@ -266,7 +275,7 @@ def avaliar_protocolo(janelas, sharpe_trials, n_trials, n_iter=2000, seed=42):
 # --------------------------------------------------------------------------
 
 def curva_de_poder(forma, niveis, rodadas, n_trials=None, sharpe_trials=None,
-                   escala_trades=1.0, n_iter=2000, seed=7):
+                   escala_trades=1.0, escala_barras=None, n_iter=2000, seed=7):
     sharpe_trials = forma['sharpe_trials'] if sharpe_trials is None else sharpe_trials
     n_trials = len(sharpe_trials) if n_trials is None else n_trials
     linhas = []
@@ -274,7 +283,7 @@ def curva_de_poder(forma, niveis, rodadas, n_trials=None, sharpe_trials=None,
         rng = np.random.default_rng(seed + int(exp_r * 10_000))
         res = []
         for i in range(rodadas):
-            jan = simular_config(rng, exp_r, forma, escala_trades)
+            jan = simular_config(rng, exp_r, forma, escala_trades, escala_barras)
             res.append(avaliar_protocolo(jan, sharpe_trials, n_trials,
                                          n_iter=n_iter, seed=int(rng.integers(1, 2**31))))
         linhas.append({
@@ -350,8 +359,9 @@ def main():
 
     if args.varrer_amostra:
         out['varredura_amostra'] = {}
-        for esc, rot in ((1.0, '3,4 anos OOS (atual)'), (2.0, '~7 anos'), (4.0, '~14 anos')):
-            print('\n[3] Tamanho de amostra: %s' % rot)
+        for esc, rot in ((1.0, '3,4 anos (atual)'), (2.0, '~7 anos'),
+                         (4.0, '~14 anos'), (10.0, '~34 anos')):
+            print('\n[3] Tamanho de amostra: %s — trades E barras x%.0f' % (rot, esc))
             out['varredura_amostra'][rot] = curva_de_poder(
                 forma, niveis, args.rodadas, escala_trades=esc, n_iter=args.n_iter)
 

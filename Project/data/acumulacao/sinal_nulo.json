@@ -1,0 +1,96 @@
+{
+ "params": {
+  "risk_pct": 0.015,
+  "max_positions": 4,
+  "fee_pct": 0.00075,
+  "btc_adx_min": 0.0,
+  "entry_tf": "1d",
+  "runner_mode": "ema20_1d",
+  "short_mode": "none",
+  "universe": "alpha"
+ },
+ "rodadas": 2,
+ "janelas": [
+  "OOS4"
+ ],
+ "referencia_real": {
+  "trading_pnl_sum": 1956.29,
+  "sharpe_trading_mean": 0.28,
+  "trades_total": 12,
+  "por_janela": {
+   "OOS4": {
+    "window": "2025-09-01 -> 2026-02-01",
+    "trades": 12,
+    "return_pct": 4.18,
+    "trading_pnl": 1956.29,
+    "pf": 1.16,
+    "win_rate": 33.3,
+    "dd_pct": 13.58,
+    "sharpe": 0.5,
+    "sharpe_trading": 0.28,
+    "cash_yield_brl": 2226.65,
+    "expectancy_r": 0.153,
+    "bnh_btc_pct": -26.75
+   }
+  }
+ },
+ "nulo": {
+  "trading_pnl": {
+   "p5": -12376.265,
+   "mediana": -6280.34,
+   "p95": -184.4150000000006,
+   "media": -6280.34,
+   "p_maior_zero": 0.5
+  },
+  "sharpe_trading": {
+   "p5": -2.1225,
+   "mediana": -1.0650000000000002,
+   "p95": -0.007500000000000104,
+   "media": -1.0650000000000002,
+   "p_maior_zero": 0.5
+  },
+  "trades": {
+   "mediana": 13.0,
+   "media": 13.0
+  },
+  "p_3_de_4_blocos": 0.0
+ },
+ "percentil_do_real": {
+  "trading_pnl": 100.0,
+  "sharpe_trading": 100.0
+ },
+ "rodadas_detalhe": [
+  {
+   "seed": 20261824,
+   "trading_pnl_sum": -13053.59,
+   "sharpe_trading_mean": -2.24,
+   "trades_total": 14,
+   "blocos_positivos": 0,
+   "pnl_por_janela": {
+    "OOS4": -13053.59
+   },
+   "sharpe_por_janela": {
+    "OOS4": -2.24
+   },
+   "pf_por_janela": {
+    "OOS4": 0.15
+   }
+  },
+  {
+   "seed": 20261825,
+   "trading_pnl_sum": 492.91,
+   "sharpe_trading_mean": 0.11,
+   "trades_total": 12,
+   "blocos_positivos": 1,
+   "pnl_por_janela": {
+    "OOS4": 492.91
+   },
+   "sharpe_por_janela": {
+    "OOS4": 0.11
+   },
+   "pf_por_janela": {
+    "OOS4": 1.05
+   }
+  }
+ ]
+}

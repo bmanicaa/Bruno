@@ -201,3 +201,37 @@ class TestAlocacaoOtima:
             vals = sorted(simular(datas, p, pol, **kw())['valor_final'] for p in cam)
             p5[w] = vals[int(0.05 * len(vals))]
         assert p5[1.0] < p5[0.4], 'a cauda ruim deveria piorar com mais exposicao'
+
+
+class TestDefeitosCorrigidos:
+    """Travas para dois defeitos latentes encontrados em revisao adversarial."""
+
+    def test_atraso_e_em_dias_e_nao_em_semanas(self, btc):
+        """Guardar so o sinal pendente e aplica-lo na proxima checagem daria um
+        atraso de uma SEMANA em vez de `atraso` dias. Os dois se parecem quando
+        atraso=0, entao o bug passaria despercebido em todos os alvos da Fase C."""
+        datas, precos = btc
+        a0 = simular(datas, precos, Airbag('EMA200', 6, 0), **kw())['valor_final']
+        a1 = simular(datas, precos, Airbag('EMA200', 6, 1), **kw())['valor_final']
+        a7 = simular(datas, precos, Airbag('EMA200', 6, 7), **kw())['valor_final']
+        # atraso de 1 dia tem de ficar mais perto de atraso 0 do que de atraso 7
+        assert abs(a1 - a0) < abs(a1 - a7), (
+            f'atraso=1 ({a1:.0f}) parece uma semana, nao um dia (a0={a0:.0f}, a7={a7:.0f})')
+
+    def test_isencao_mensal_conta_volume_e_nao_ganho(self):
+        """O limite de isencao brasileiro incide sobre o VOLUME de vendas do mes.
+        Uma venda com prejuizo tambem consome o limite. Contar so as vendas com
+        ganho isentaria vendas que na verdade estao acima do teto."""
+        from scripts.acumulacao.imposto import Livro
+        import datetime as d
+        L = Livro(aliquota=0.15, isencao_mensal=35000.0)
+        L.comprar(1.0, 30000.0)
+        dia = d.date(2024, 5, 10)
+        # venda 1: prejuizo de 30k de volume — nao paga IR, mas consome o limite
+        g1 = L.vender(0.5, 25000.0, data=dia)
+        assert L.imposto_da_venda(12500.0, g1, dia) == 0.0
+        # venda 2: com ganho; o limite do mes ja foi consumido pela venda 1
+        L.comprar(0.5, 10000.0)
+        g2 = L.vender(0.5, 90000.0, data=dia)
+        assert L.imposto_da_venda(45000.0, g2, dia) > 0, (
+            'a segunda venda deveria ser tributada: o teto mensal ja foi ultrapassado')

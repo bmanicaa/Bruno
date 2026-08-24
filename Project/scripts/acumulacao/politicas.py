@@ -35,8 +35,13 @@ class DCAFixo:
 class Airbag:
     """Fora do ativo quando o preco fecha abaixo da media longa; dentro acima.
 
-    Reage, nao preve. `dia_checagem` = 0..6 (segunda..domingo). `atraso` = 0
-    executa no mesmo fechamento observado; 1 executa no dia seguinte.
+    Reage, nao preve. `dia_checagem` = 0..6 (segunda..domingo).
+
+    `atraso` = numero de DIAS entre observar o fechamento e executar a troca.
+    0 executa no mesmo fechamento observado (defensavel: cripto e continuo, voce
+    ve o fechamento das 00:00 UTC e negocia em seguida); 1 executa no dia
+    seguinte. E um parametro explicito de propósito — a Fase C mediu diferenca
+    material entre os dois, entao os dois precisam entrar no grid.
     """
     nome = 'Airbag'
 
@@ -57,15 +62,20 @@ class Airbag:
         self._datas = datas
 
     def exposicao_alvo(self, i, data, **estado):
+        # Aplica o sinal pendente quando o atraso em DIAS vence. Guardar so o
+        # valor pendente e aplica-lo na proxima checagem daria um atraso de uma
+        # SEMANA, nao de `atraso` dias — bug sutil, porque os dois se parecem
+        # quando `atraso` vale 0.
+        if self._pendente is not None and i >= self._pendente[1]:
+            self._estado = self._pendente[0]
+            self._pendente = None
         ma = self._ma[i]
         if data.weekday() == self.dia_checagem and ma is not None:
             sinal = self._precos[i] > ma
             if self.atraso == 0:
                 self._estado = sinal
             else:
-                if self._pendente is not None:
-                    self._estado = self._pendente
-                self._pendente = sinal
+                self._pendente = (sinal, i + self.atraso)
         if self._estado is None:
             return 0.0
         return self.fatia if self._estado else (1.0 - self.fatia)

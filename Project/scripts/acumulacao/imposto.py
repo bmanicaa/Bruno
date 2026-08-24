@@ -43,14 +43,19 @@ class Livro:
         regra brasileira para pessoa fisica). Com 0.0 vale "15% liso", que e a
         ordem de grandeza usada na Fase C.
         """
-        if self.aliquota <= 0 or ganho <= 0:
+        if self.aliquota <= 0:
             return 0.0
+        # O limite de isencao incide sobre o VOLUME DE VENDAS do mes, nao sobre o
+        # ganho: uma venda com prejuizo tambem consome o limite. Por isso o volume
+        # e acumulado ANTES de checar se ha ganho tributavel.
+        isento = False
         if self.isencao_mensal > 0 and data is not None:
             chave = (data.year, data.month)
             vol = self._volume_mes.get(chave, 0.0) + receita
             self._volume_mes[chave] = vol
-            if vol <= self.isencao_mensal:
-                return 0.0
+            isento = vol <= self.isencao_mensal
+        if ganho <= 0 or isento:
+            return 0.0
         return ganho * self.aliquota
 
     def imposto_devido(self):

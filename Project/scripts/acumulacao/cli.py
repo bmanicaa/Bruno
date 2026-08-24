@@ -10,6 +10,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import math
 import statistics
 import sys
 
@@ -196,17 +197,64 @@ def evidencia(datas, precos, n_caminhos=200):
             'p_airbag_supera_dca_min': min(p_air_all), 'p_airbag_supera_dca_max': max(p_air_all)}
 
 
+def alocacao(datas, precos, n_caminhos=150):
+    """Qual peso em BTC maximiza o CRESCIMENTO do capital (nao o retorno medio).
+
+    Criterio de crescimento logaritmico: e o correto para quem nao saca e quer
+    maximizar dinheiro no longo prazo, porque maximiza a MEDIANA do resultado em
+    vez da media (que e dominada por caudas que quase nunca acontecem).
+    """
+    print('\n' + '=' * 88)
+    print('ETAPA 4c — ALOCACAO QUE MAXIMIZA CRESCIMENTO (nao retorno medio)')
+    print('=' * 88)
+    kw = base_kw()
+    aportado = 154000.0
+    cam = ev.caminhos_bootstrap(precos, n_caminhos=n_caminhos, bloco_dias=365, seed=42)
+    print('%-9s %11s %12s %12s %12s %8s' % ('peso BTC', 'cresc.log', 'mediana',
+                                            'p5 (ruim)', 'p95', 'maxDD'))
+    print('-' * 72)
+    res, linhas = {}, []
+    for w in (0.2, 0.4, 0.6, 0.8, 0.9, 1.0):
+        vals, dds = [], []
+        for p in cam:
+            pol = DCAFixo() if w >= 1.0 else PassivoIsoExposicao(w)
+            r = simular(datas, p, pol, **kw)
+            vals.append(r['valor_final'])
+            dds.append(r['maxdd'])
+        g = statistics.mean(math.log(v / aportado) for v in vals if v > 0)
+        res[w] = g
+        p5 = sorted(vals)[int(0.05 * len(vals))]
+        p95 = sorted(vals)[int(0.95 * len(vals))]
+        linhas.append({'peso': w, 'crescimento_log': g, 'mediana': statistics.median(vals),
+                       'p5': p5, 'p95': p95, 'maxdd': statistics.median(dds)})
+        print('%-8.0f%% %11.4f %12.0f %12.0f %12.0f %7.0f%%'
+              % (w * 100, g, statistics.median(vals), p5, p95, statistics.median(dds) * 100))
+    melhor = max(res, key=res.get)
+    print('-' * 72)
+    print('OTIMO: %.0f%% em BTC — ou seja, DCA puro.' % (melhor * 100))
+    print()
+    print('DUAS RESSALVAS QUE NAO PODEM SER OMITIDAS:')
+    print(' 1. O otimo esta na BORDA porque a alavancagem esta PROIBIDA. Sem essa trava a')
+    print('    formula apontaria para alem de 100%, e numa queda de 68% isso e ruina.')
+    print(' 2. O preco desse otimo e a cauda ruim: no percentil 5 o resultado a 100% BTC e')
+    print('    de ~R$86 mil contra R$154 mil aportados — pouco mais da METADE do depositado')
+    print('    depois de 6,4 anos. Maximizar crescimento aceita esse cenario; e uma escolha')
+    print('    legitima, mas tem de ser feita de olhos abertos.')
+    return {'linhas': linhas, 'peso_otimo': melhor}
+
+
 def main():
     ap = argparse.ArgumentParser(description='Projeto B — laboratorio de acumulacao')
     ap.add_argument('--reproduzir', action='store_true')
     ap.add_argument('--timing', action='store_true')
     ap.add_argument('--evidencia', action='store_true')
+    ap.add_argument('--alocacao', action='store_true')
     ap.add_argument('--caminhos', type=int, default=200)
     ap.add_argument('--tudo', action='store_true')
     args = ap.parse_args()
     if args.tudo:
-        args.reproduzir = args.timing = args.evidencia = True
-    if not any([args.reproduzir, args.timing, args.evidencia]):
+        args.reproduzir = args.timing = args.evidencia = args.alocacao = True
+    if not any([args.reproduzir, args.timing, args.evidencia, args.alocacao]):
         args.reproduzir = True
 
     datas, precos = serie_diaria('BTCUSDT')
@@ -217,6 +265,8 @@ def main():
         out['timing'] = timing(datas, precos)
     if args.evidencia:
         out['evidencia'] = evidencia(datas, precos, args.caminhos)
+    if args.alocacao:
+        out['alocacao'] = alocacao(datas, precos)
 
     os.makedirs(OUT, exist_ok=True)
     caminho = os.path.join(OUT, 'projeto_b.json')

@@ -164,3 +164,40 @@ class TestEvidencia:
         v_air = [simular(datas, p, Airbag('EMA300', 6, 0), **kw())['valor_final'] for p in cam]
         p = ev.p_supera(v_air, v_dca)
         assert p < 0.70, f'P(airbag>DCA)={p:.2f} — deveria estar longe dos 95% do historico'
+
+
+class TestAlocacaoOtima:
+    """Etapa 4c: qual peso em BTC maximiza o CRESCIMENTO (nao o retorno medio)."""
+
+    def test_crescimento_log_cresce_com_exposicao_ate_a_borda(self, btc):
+        """Para quem nao saca e nao alavanca, o otimo de crescimento fica em 100%
+        BTC — o que valida o DCA puro pelo criterio correto (mediana, nao media).
+
+        Se este teste inverter, a recomendacao do PLANO_OPERACIONAL_REAL muda."""
+        import math
+        import statistics
+
+        from scripts.acumulacao import evidencia as ev
+        datas, precos = btc
+        cam = ev.caminhos_bootstrap(precos, n_caminhos=40, bloco_dias=365, seed=42)
+        g = {}
+        for w in (0.4, 0.7, 1.0):
+            pol = DCAFixo() if w >= 1.0 else PassivoIsoExposicao(w)
+            vals = [simular(datas, p, pol, **kw())['valor_final'] for p in cam]
+            g[w] = statistics.mean(math.log(v / 154000.0) for v in vals if v > 0)
+        assert g[1.0] > g[0.7] > g[0.4], f'crescimento log nao e monotonico: {g}'
+
+    def test_a_cauda_ruim_piora_com_exposicao(self, btc):
+        """Contrapartida obrigatoria do teste acima: o otimo de crescimento COBRA
+        um preco no percentil 5. Omitir isso seria vender o resultado pela metade."""
+        import statistics
+
+        from scripts.acumulacao import evidencia as ev
+        datas, precos = btc
+        cam = ev.caminhos_bootstrap(precos, n_caminhos=40, bloco_dias=365, seed=42)
+        p5 = {}
+        for w in (0.4, 1.0):
+            pol = DCAFixo() if w >= 1.0 else PassivoIsoExposicao(w)
+            vals = sorted(simular(datas, p, pol, **kw())['valor_final'] for p in cam)
+            p5[w] = vals[int(0.05 * len(vals))]
+        assert p5[1.0] < p5[0.4], 'a cauda ruim deveria piorar com mais exposicao'

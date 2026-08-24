@@ -12,6 +12,8 @@ Este documento contém os 3 setores operacionais estruturados para alta assimetr
 > - Sob o protocolo corrigido, **36 configurações limpas em 4 famílias de sinal foram testadas e nenhuma passou.** A que chegou mais perto (`ac35a444`, com filtro macro semanal) passa nos 4 primeiros critérios e reprova nos testes estatísticos — e a autópsia mostra que o lucro dela vinha de realocação de vagas da carteira, não do filtro.
 > - O que o sistema realmente faz: **ganha dinheiro em alta confirmada** (bull 6m: +R$37.493 de trading, Sharpe de trading +1,99) e **perde ou empata em todo o resto**. Nos outros períodos o "lucro" que aparece é o rendimento do caixa (6% a.a.), não a operação.
 > - **Não adianta "só operar na alta": isso já é o que o motor faz.** O regime BULL do Setor 2 (BTC ≥ EMA50 1D **e** ≥ EMA200 1D) é a única condição que libera compras. No mercado lateral de 2024 — o pior período do sistema — o BTC passou 78% dos dias acima da EMA200, e o regime BULL já estava ligado em 46% dos dias. Posição em relação à média não distingue rali de lateralização (Fase B, `analises.md`).
+> - **Fase E (24/08/2026) — a régua foi auditada e é cega abaixo de Sharpe ~1,2.** O protocolo de aceite tem **poder zero** para aprovar qualquer coisa com edge real de Sharpe de trading abaixo de ~1,2; uma estratégia de Sharpe 1,0 (que ganharia dinheiro de verdade) é reprovada em 100% das simulações. Logo **"36 configs, zero aprovadas" NÃO é evidência de que nada funciona** — é o resultado esperado de um instrumento sem resolução. O gargalo não é o método nem as estratégias: é a **quantidade de dados** (46 a 326 trades em 3,4 anos). Reduzir `n_trials` de 36 para 10 quase não muda o poder. Ver `analises.md`, Fase E.
+> - **O Projeto A (motor de swing) está CONGELADO** desde 24/08/2026 — não por refutação, mas porque nenhuma decisão pode ser tomada com este tamanho de amostra. O plano em vigor é o **`Plan.md`** (Projeto B — acumulação). Não modificar `backtest_institucional.py` nem os demais scripts congelados sem ler `Plan.md` seção 2.
 > - Estado atual, próximos passos e protocolo em vigor: **`analises.md` (seções 1 a 3)**. Recomendação para dinheiro real: **`PLANO_OPERACIONAL_REAL.md`**.
 >
 > *Mudanças de desenho da V2.2 vs V2.1 (mantidas, mas sem validação estatística): (1) gatilho LONG confirmado no 1D em vez do gatilho 4h; (2) short por rompimento de fundo diário em vez de repique contra-tendência.*
@@ -186,7 +188,7 @@ FUNIL QUANTITATIVO BI-DIRECIONAL (DIÁRIO COMANDA / 4H REFINA O TIMING)
 
 ### Motor Canônico de Simulação
 
-> **Motor Único Oficial:** `scripts/backtest_institucional.py` (versão **V2.3.1** — zero lookahead, 37 testes de regressão). Este é o ÚNICO motor que gera os artefatos de auditoria. Qualquer divergência entre este motor e o Prompt.md deve ser tratada como bug (corrigir o código ou o prompt). Motores antigos/experimentais ficam arquivados em `scripts/legado/` e NÃO devem ser usados em novos testes.
+> **Motor Único Oficial:** `scripts/backtest_institucional.py` (versão **V2.3.1** — zero lookahead, 37 testes de regressão; **CONGELADO na Fase E**). Este é o ÚNICO motor que gera os artefatos de auditoria. Qualquer divergência entre este motor e o Prompt.md deve ser tratada como bug (corrigir o código ou o prompt). Motores antigos/experimentais ficam arquivados em `scripts/legado/` e NÃO devem ser usados em novos testes.
 >
 > ```bash
 > python scripts/backtest_institucional.py --mode full           # Auditoria Completa (7 anos: 2019-2026)

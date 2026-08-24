@@ -63,7 +63,7 @@ Cada execução sobrescreve o trio padrão: `data/resumo_{modo}.json`, `data/tra
 
 ## 📊 Resultados Atuais (V2.3.1 — motor corrigido, zero lookahead)
 
-*Última auditoria: 24/08/2026 | 552 moedas | R$100k | custos reais Binance*
+*Última auditoria: 24/08/2026 (Fase E) | 552 moedas | R$100k | custos reais Binance*
 
 > **Para o seu dinheiro real:** o documento [**`PLANO_OPERACIONAL_REAL.md`**](PLANO_OPERACIONAL_REAL.md) contém o passo a passo simples (núcleo Bitcoin + airbag EMA200) baseado na evidência desta auditoria.
 
@@ -99,7 +99,11 @@ As duas últimas colunas separam o que veio de **operar** do que veio de **dinhe
 
 **Conclusão de uma linha:** o sistema só ganha dinheiro em bull confirmado; em todo o resto, o "lucro" é o juro do dinheiro parado.
 
-**Leitura honesta:** após 36 configurações limpas e distintas em 4 famílias de sinal (swing pullback, meta-labeling ML, momentum cross-sectional, trend time-series), **nenhuma tem edge OOS estatisticamente significativo** sob o protocolo (walk-forward + bootstrap + Deflated Sharpe). O B&H BTC não foi batido em retorno total; o valor demonstrável dos sistemas é **redução de risco** (trend-timing BTC EMA200/252 corta o DD pela metade). Recomendação: núcleo B&H BTC + camada opcional de trend-timing + sistemas de swing apenas como satélite de observação, até nova validação.
+**Leitura honesta (revista na Fase E):** após 36 configurações limpas e distintas em 4 famílias de sinal (swing pullback, meta-labeling ML, momentum cross-sectional, trend time-series), **nenhuma tem edge OOS estatisticamente significativo** sob o protocolo (walk-forward + bootstrap + Deflated Sharpe).
+
+> ⚠️ **Essa frase diz menos do que parece.** A Fase E mediu o **poder** do protocolo pela primeira vez e encontrou **poder zero abaixo de Sharpe de trading ~1,2**: uma estratégia com edge real de Sharpe 1,0 é reprovada em **100%** das simulações. "Zero aprovadas" é o resultado *esperado* de uma régua cega, não evidência de que nada funciona. O correto é **"nenhuma tem edge grande o suficiente para ser detectável com 3,4 anos de dados"** — afirmação bem mais fraca. Ver seção Fase E.
+
+O B&H BTC não foi batido em retorno total; o valor demonstrável dos sistemas é **redução de risco** (trend-timing BTC EMA200/252 corta o DD pela metade). Recomendação: núcleo B&H BTC + sistemas de swing apenas como satélite de observação, até nova validação.
 
 ### Fase A (24/08/2026) — auditoria da régua estatística
 
@@ -151,7 +155,7 @@ No OOS2 a porta fechou em ~1% dos dias, mas o PnL mexeu R$16 mil: os 73 trades c
 
 ### Infraestrutura de validação (entregável principal desta fase)
 
-- `tests/` — **33 testes** unitários de regressão (sizing, stops, BE/parcial, funding, breakers, identidade contábil, merge point-in-time + 7 blindagens da régua estatística da Fase A + 7 da porta macro e 4 da CLI da Fase B).
+- `tests/` — **67 testes** unitários de regressão (sizing, stops, BE/parcial, funding, breakers, identidade contábil, merge point-in-time + 7 blindagens da régua estatística da Fase A + 7 da porta macro e 4 da CLI da Fase B).
 - `scripts/statistical_validation.py` — bootstrap em blocos, leave-one-out, Deflated Sharpe Ratio (escala corrigida).
 - `scripts/meta_label.py` — screening de filtro ML (AUC IS = 0.48: sem sinal aprendível).
 - `scripts/batch_experiments.py` — baterias de experimentos com 1 carga de dados.

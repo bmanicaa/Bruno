@@ -162,13 +162,14 @@ sustento, horizonte longo, objetivo de maximizar dinheiro):
 | **Câmbio BRL/USD** | **Não modelado.** Os preços estão em dólar e seu benchmark (CDB) é em reais. A desvalorização do real no período torna os números acima **conservadores** — mas o correto é medir. |
 | **Regras tributárias exatas** | Usamos 15% liso como ordem de grandeza. Domicílio da corretora, isenção de R$ 35.000/mês e a Lei 14.754/2023 mudam a conta. **Confirmar com contador antes de virar recomendação.** |
 | **O Bitcoin continuar subindo** | É a aposta de fundo de tudo isto, e **não é comprovável**. Reamostrando o histórico, o DCA em BTC vence o CDB em 71% a 82% das vezes — favorável, não garantido. |
+| **O Bitcoin ser o ativo certo** | **Nunca testado.** O projeto inteiro assumiu que o ativo é o BTC e mediu apenas *regras em volta dele*. Para quem maximiza crescimento, a escolha do ativo pesa mais que qualquer regra. É a pergunta nº 1 do `Plan.md`. **Enquanto não for medida, "Bitcoin" nesta página é uma escolha herdada, não uma conclusão.** |
 | **Trading de swing funcionar** | **Indeterminado**, não refutado. Ver seção 1, item 2. |
 
 ---
 
 ## 8. Estado do laboratório
 
-- Motor de testes **matematicamente íntegro** (V2.3.1): zero lookahead, **67 testes automáticos**,
+- Motor de testes **matematicamente íntegro** (V2.3.1): zero lookahead, **73 testes automáticos**,
   validação estatística com bootstrap e correção de múltiplos testes.
 - **36 configurações** de 4 famílias testadas: nenhuma aprovada — mas a Fase E mostrou que **a régua
   não tinha poder para aprovar nada abaixo de Sharpe ~1,2**, então esse "nenhuma" diz menos do que
@@ -184,3 +185,5 @@ sustento, horizonte longo, objetivo de maximizar dinheiro):
 ## 9. Resumo de uma linha
 
 > **Compre Bitcoin todo mês, no mesmo dia, sem olhar o preço, e não venda. Nunca alavanque.**
+
+*(A única parte desta frase que ainda não foi medida é a palavra "Bitcoin" — ver seção 7.)*

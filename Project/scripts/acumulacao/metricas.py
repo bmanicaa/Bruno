@@ -13,7 +13,7 @@ def max_drawdown(curva):
 def tempo_submerso(curva, aportado_acumulado):
     """Fracao do tempo com a carteira valendo MENOS que o total ja depositado.
 
-    Plan.md Etapa 5 item 6: provavelmente mais decisivo para a desistencia do
+    Pergunta aberta ate a Fase E: provavelmente mais decisivo para a desistencia do
     investidor que a profundidade da queda — e nunca foi medido no projeto.
     """
     if not curva:

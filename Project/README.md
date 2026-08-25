@@ -1,179 +1,101 @@
-# Sistema Quantitativo de Swing Trade em Criptoativos — Manual Mestre V2.3.1
+# Sistema Quantitativo de Criptoativos — Índice do Projeto
 
-Este repositório contém a arquitetura completa, o protocolo de auditoria e o **motor de simulação canônico** *point-in-time* (zero lookahead bias) para a estratégia de **Swing Trade Quantitativo Multidimensional** em timeframes de 4h e 1D, operando bi-direcionalmente (Long/Short) sobre o mercado total da Binance (~550 moedas + delistados), com **validação walk-forward out-of-sample**.
+> **Este arquivo é um mapa, não um relatório.** Ele não repete números: cada fato medido vive em
+> **um** lugar só, e este documento diz qual. Se você encontrar um número aqui, é bug.
 
 ---
 
-## 📁 Estrutura Organizada do Projeto
+## Qual arquivo ler, para quê
+
+| você quer... | leia |
+| :--- | :--- |
+| **investir seu dinheiro** | [`PLANO_OPERACIONAL_REAL.md`](PLANO_OPERACIONAL_REAL.md) — o passo a passo, em linguagem simples |
+| **saber o que fazer a seguir** | [`Plan.md`](Plan.md) — só trabalho pendente; se estiver vazio, não há |
+| **conferir qualquer número** | [`analises.md`](analises.md) — **fonte única de todos os fatos medidos** |
+| **entender o motor de swing** | [`Prompt.md`](Prompt.md) — manual do Projeto A (**congelado**) |
+
+**Entrando agora numa sessão nova?** Leia `analises.md` seções 1 a 3, depois `Plan.md`. Nada mais.
+
+---
+
+## Estado em uma tela
+
+- **Projeto A — motor de swing: CONGELADO.** Não por refutação. O protocolo de aceite não tem poder
+  estatístico para aprovar nada realista, e o lucro **bruto** da melhor configuração é praticamente
+  zero. Testar mais configurações piora a régua sem produzir resposta. *(Fase E)*
+- **Projeto B — acumulação: MEDIDO E CONCLUÍDO.** Reproduzido no repositório, com testes. A
+  recomendação de dinheiro real é **DCA puro em Bitcoin, sem airbag e sem alavancagem**.
+- **Pendente:** três perguntas em `Plan.md` — qual ativo, câmbio BRL/USD, aporte único vs. mensal.
+
+---
+
+## Estrutura
 
 ```
 Project/
-├── Prompt.md                     # Manual Mestre V2.3.1 (Protocolo de Teste + Operação + Engenharia)
-├── README.md                     # Guia Geral e Documentação Executiva
-├── analises.md                   # Registro histórico de análises, experimentos e diagnósticos
+├── PLANO_OPERACIONAL_REAL.md   # dinheiro real
+├── Plan.md                     # trabalho pendente
+├── analises.md                 # fonte única dos fatos medidos
+├── Prompt.md                   # manual do Projeto A (congelado)
 ├── data/
-│   ├── raw/                      # 🌟 DADOS BRUTOS IMUTÁVEIS (2019-09 → 2026-08 / Binance Futures)
-│   │   ├── universe_metadata.json# Metadados globais + cobertura por ativo
-│   │   ├── macro/                # BTCUSDT 4h/1d + Funding + Fear & Greed Index
-│   │   └── coins/{SYMBOL}/       # klines_4h.csv | klines_1d.csv | funding_rates.csv (inclui delistados)
-│   ├── resumo_{modo}.json        # Resumo estatístico da modalidade (1 arquivo por modo)
-│   ├── trades_{modo}.csv         # Tabela de trades com instrumentação (MAE/MFE, regime, classe)
-│   ├── experimentos/             # Resultados walk-forward (exp_{hash}.json)
-│   └── legado/                   # Artefatos de estratégias antigas (apenas histórico)
-├── reports/                      # relatorio_{modo}.md (Relatórios Executivos de Auditoria)
-└── scripts/
-    ├── backtest_institucional.py # ⚙️ MOTOR CANÔNICO ÚNICO (V2.3.1 + walk-forward + experimentos)
-    ├── download_raw_market_data.py # Downloader de Dados Brutos (~7 anos + delistados)
-    └── legado/                   # Motores antigos/experimentais (NÃO usar em novos testes)
+│   ├── raw/                    # dados brutos imutáveis (2019-09 → hoje, Binance, 550 moedas)
+│   ├── experimentos/           # PROJETO A — registro histórico, não escrever
+│   └── acumulacao/             # PROJETO B + Fase E — artefatos
+├── reports/                    # relatórios executivos por modalidade
+├── scripts/
+│   ├── backtest_institucional.py   # ⛔ PROJETO A — CONGELADO
+│   ├── backtest_cs_momentum.py     # ⛔ CONGELADO
+│   ├── backtest_trend_bh.py        # ⛔ CONGELADO
+│   ├── batch_experiments.py        # ⛔ CONGELADO
+│   ├── meta_label.py               # ⛔ CONGELADO
+│   ├── reprocess_experiments.py    # ⛔ CONGELADO
+│   ├── statistical_validation.py   # compartilhado — importar, nunca editar
+│   ├── verify_replay.py            # prova que uma mudança é NULA (igualdade trade a trade)
+│   ├── poder_do_teste.py           # Fase E — a régua consegue aprovar algo?
+│   ├── sinal_nulo.py               # Fase E — o que entradas aleatórias fazem neste motor
+│   ├── criterio_de_decisao.py      # Fase E — "vale apostar?" separado de "existe efeito?"
+│   ├── acumulacao/                 # PROJETO B — pacote do laboratório de acumulação
+│   └── legado/                     # arquivado, não usar
+└── tests/
+    ├── test_engine.py          # ⛔ PROJETO A — NÃO TOCAR
+    ├── test_poder.py           # Fase E
+    └── test_acumulacao.py      # Projeto B
 ```
 
----
-
-## 🎯 As Regras Estruturais do Protocolo ([Prompt.md](Prompt.md))
-
-1. **Universo:** ~550 moedas da Binance (Volume Médio Diário 30d > $25M, Maturidade > 180 dias) + delistados históricos (LUNA, FTT, SRM, ANC, MIR, DODO, EOS, YFII, BZRX, BTS, COCOS, GTO, TORN, VGX, TCT, REP).
-2. **Regime Macro (1D):** Long apenas com BTC ≥ EMA50 e EMA200; Short (só BTC/ETH) apenas com BTC < EMA50 e EMA200; Transição = caixa remunerado.
-3. **Seleção de Líderes:** Top 10% de Força Relativa (Alpha 7d vs BTC) + estrutura diária alinhada (Close 1D ≥ EMA20 ≥ EMA50).
-4. **Gatilho LONG (1D — V2.2):** Pullback na EMA20 1D + confirmação diária (Close > dia anterior) + RSI 1D 44-62 + CVD 4h > 0.
-   **Gatilho SHORT (V2.2):** Rompimento de fundo diário (Close 1D < mínima do dia anterior) + RSI 30-56 + CVD < 0 (trend-following).
-5. **Stop Estrutural:** mín/máx dos últimos 10 candles 4h ± 1,5×ATR14 (faixa 3,5%–8%).
-6. **Gestão de Risco:** 1,50% por trade | até 4 posições | Circuit Breaker (3 perdas → 0,75%; 5 perdas → pausa 5 dias) | Cooldown 2,5 dias por ativo.
-7. **Condução Assimétrica:** em +2.0R → Breakeven (0x0) + Parcial de 50%; Runner (50%) sem teto, trailing na EMA20 1D. Time-Stop de 21 dias.
-8. **Vetos:** Vesting > 1% em 7 dias; Funding > 0,03% (long) / < -0,03% (short).
-9. **Custos Reais:** Binance 0,075% maker/taker, slippage 5 bps (entrada) e 8 bps (stop), Funding a cada 8h, Cash Yield 6% a.a. no caixa livre.
-10. **Validação:** Walk-Forward deslizante (4 blocos OOS + holdout final intocado) obrigatório para qualquer mudança — aceite com melhora em ≥3/5 métricas OOS e PF OOS > 1.0.
+> **⛔ Regra de congelamento.** Os arquivos marcados sustentam a reprodutibilidade bit-a-bit de 36
+> experimentos registrados. Um refactor pode quebrá-la **sem quebrar nenhum teste**. Não modifique —
+> se achar que precisa, pare e pergunte. Detalhes e a única condição para reabrir: `analises.md`.
 
 ---
 
-## 🚀 Como Executar o Motor Canônico
+## Como rodar
 
 ```bash
-python scripts/backtest_institucional.py --mode full           # Auditoria Completa (7 anos)
-python scripts/backtest_institucional.py --mode preliminar     # 1 ano (rápido)
-python scripts/backtest_institucional.py --mode estresse_bear  # Bear 2022 (Luna/FTX)
-python scripts/backtest_institucional.py --mode estresse_bull  # Bull ETF/Halving
-python scripts/backtest_institucional.py --mode estresse_chop  # Lateral 2024
-python scripts/backtest_institucional.py --mode all            # Todas em sequência
-python scripts/backtest_institucional.py --walkforward         # Validação OOS de qualquer mudança
+# Projeto B — acumulação (a frente viva)
+python -m scripts.acumulacao.cli --tudo          # reprodução + timing + evidência + alocação
+
+# Fase E — auditoria da régua
+python scripts/poder_do_teste.py --varrer-amostra
+python scripts/sinal_nulo.py --rodadas 300 --incluir-bull
+python scripts/criterio_de_decisao.py --todas
+
+# Projeto A — congelado, só para reproduzir o histórico
+python scripts/backtest_institucional.py --mode all
+python scripts/backtest_institucional.py --walkforward
+
+# Sempre antes de confirmar qualquer mudança
+pytest tests/
 ```
 
-Cada execução sobrescreve o trio padrão: `data/resumo_{modo}.json`, `data/trades_{modo}.csv` e `reports/relatorio_{modo}.md`.
+Ambiente: Python 3.11, pandas 3.0.5, numpy 2.4.6, pytest.
 
 ---
 
-## 📊 Resultados Atuais (V2.3.1 — motor corrigido, zero lookahead)
+## As três regras de trabalho que não se negociam
 
-*Última auditoria: 24/08/2026 (Fase E) | 552 moedas | R$100k | custos reais Binance*
-
-> **Para o seu dinheiro real:** o documento [**`PLANO_OPERACIONAL_REAL.md`**](PLANO_OPERACIONAL_REAL.md) contém o passo a passo simples (núcleo Bitcoin + airbag EMA200) baseado na evidência desta auditoria.
-
-### Auditoria de integridade (achado crítico da Fase 0)
-
-A auditoria estatística (bootstrap + testes de regressão) descobriu que a V2.2 usava o fechamento diário do **mesmo dia** (lookahead intra-diário) no gatilho de entrada. A correção (V2.3, merge diário usa apenas o dia completo anterior + notional do short corrigido) **eliminou o edge OOS**:
-
-| Métrica OOS (4 blocos) | V2.2 (bug) | V2.3 (corrigido) |
-| :--- | :---: | :---: |
-| Trading PnL | +R$73.098 | **-R$12.064** |
-| PF / Sharpe | 1.18 / 0.63 | **0.99 / 0.11** |
-| P(PF>1) bootstrap | 93,6% | **38,0%** |
-
-### Modalidades Oficiais (motor V2.3.1 limpo)
-
-As duas últimas colunas separam o que veio de **operar** do que veio de **dinheiro parado rendendo 6% a.a.** — sem essa separação, três das seis linhas se leem ao contrário do que realmente aconteceram.
-
-| Modalidade | Período | Retorno | PF | DD Máx | B&H BTC | PnL de trading | Cash yield | **Sharpe de trading** |
-| :--- | :--- | :---: | :---: | :---: | :---: | ---: | ---: | :---: |
-| Full (7 anos) | 2019-09 → 2026-08 | +92.8% | 1.06 | 34.3% | +569.1% | +R$36.776 | +R$56.025 | **+0.26** |
-| 5 anos | 2021-11 → 2026-08 | +1.9% | 0.92 | 32.5% | +5.2% | **-R$19.405** | +R$21.294 | **-0.14** |
-| Preliminar (1 ano) | 2023-10 → 2024-10 | +7.8% | 1.03 | 29.5% | +135.7% | +R$2.755 | +R$5.029 | **+0.19** |
-| Bull (6m) | 2023-10 → 2024-03 | +39.6% | 1.79 | 18.4% | +158.9% | +R$37.493 | +R$2.112 | **+1.99** |
-| Bear (1 ano) | 2022 | +4.1% | 0.94 | 11.7% | -64.6% | **-R$1.399** | +R$5.541 | **-0.12** |
-| Chop (6m) | 2024-04 → 2024-09 | -20.6% | 0.17 | 21.4% | -8.7% | -R$22.713 | +R$2.142 | **-3.70** |
-
-**Como ler esta tabela (revisão da Fase A):**
-
-- **Bull é o único resultado genuíno.** +R$37,5k de trading contra R$2,1k de caixa, Sharpe de trading +1,99. Em alta confirmada o sistema funciona.
-- **"Bear +4,1%" não foi defesa por habilidade.** O trading *perdeu* R$1.399; os +4,1% são o rendimento do caixa. A proteção contra os -64,6% do BTC é real — mas vem de **ficar fora do mercado**, não de operar bem. Isso é o filtro de regime funcionando, não edge.
-- **"5 anos +1,9%" esconde uma perda.** O trading queimou R$19.405; o caixa cobriu.
-- **Nos 7 anos, 60% do retorno é o caixa** (R$56k de R$92,8k).
-
-**Conclusão de uma linha:** o sistema só ganha dinheiro em bull confirmado; em todo o resto, o "lucro" é o juro do dinheiro parado.
-
-**Leitura honesta (revista na Fase E):** após 36 configurações limpas e distintas em 4 famílias de sinal (swing pullback, meta-labeling ML, momentum cross-sectional, trend time-series), **nenhuma tem edge OOS estatisticamente significativo** sob o protocolo (walk-forward + bootstrap + Deflated Sharpe).
-
-> ⚠️ **Essa frase diz menos do que parece.** A Fase E mediu o **poder** do protocolo pela primeira vez e encontrou **poder zero abaixo de Sharpe de trading ~1,2**: uma estratégia com edge real de Sharpe 1,0 é reprovada em **100%** das simulações. "Zero aprovadas" é o resultado *esperado* de uma régua cega, não evidência de que nada funciona. O correto é **"nenhuma tem edge grande o suficiente para ser detectável com 3,4 anos de dados"** — afirmação bem mais fraca. Ver seção Fase E.
-
-O B&H BTC não foi batido em retorno total; o valor demonstrável dos sistemas é **redução de risco** (trend-timing BTC EMA200/252 corta o DD pela metade). Recomendação: núcleo B&H BTC + sistemas de swing apenas como satélite de observação, até nova validação.
-
-### Fase A (24/08/2026) — auditoria da régua estatística
-
-Antes de gastar mais orçamento de múltiplos testes, os instrumentos de validação foram auditados. Quatro defeitos, todos no sentido de **aprovar demais**:
-
-| Defeito | Efeito medido | Correção |
-| :--- | :--- | :--- |
-| DSR misturava Sharpe **anualizado** com `n_obs` em **barras de 4h** | Z inflado ~46,8× → g3 marcava **p=1e-12 (PASSA)** contra 60,7% no bootstrap | Desanualiza para a escala por barra → g3 marca **p=0,229 (REPROVA)** |
-| Sharpe calculado sobre a curva **com o cash yield dentro** | g3: Sharpe **1,20 → -0,47** ao medir só o trading | `sharpe_trading` (excesso sobre o cash yield) em todo o pipeline |
-| Block bootstrap com bloco > n/3 | Família trend marcava **P(PF>1)=100%** com 10 trades | Bloco limitado a n/3 + flag `insufficient_sample` (< 30 trades) |
-| 9 experimentos pré-V2.3 sem marcação | Ordenando por PnL, o 1º lugar era contaminado (`b415fc06`, +R$80k) | `invalid_lookahead: true` + exclusão do universo do DSR + dedup por hash |
-
-**A config g3 (`45c0eb3c`) foi reprovada e deixou de ser candidata.** Com a régua corrigida: Sharpe de trading **-0,47**, expectância **-0,049R**, PF mediano **0,64**, perde em **3 dos 4 blocos OOS**, e **82% do retorno era o rendimento do caixa** (R$20,3k de cash yield vs R$4,5k de trading). Não foi uma estratégia que piorou — foi uma medição que ficou honesta.
-
-Também corrigido: `backtest_trend_bh.py` descartava o ETH em silêncio (procurava só em `raw/macro/`), tornando as configs "BTC+ETH" duplicatas das BTC-only. Com o ETH entrando de fato, a família trend melhorou no bruto (+R$64k → +R$116k) — e continua reprovando por amostra insuficiente.
-
-**As 32 configs limpas foram reprocessadas com a métrica correta.** Resultado: **6 têm Sharpe de trading > 0 e zero passam** nos critérios endurecidos — quase tudo lucra só na alta do ETF (2023-09→2024-09) e sangra nos outros três blocos. Só uma (`ad61cd70`) chega a 3/4 blocos positivos, e com Sharpe de trading −0,12.
-
-**Nada foi aprovado indevidamente pelo protocolo antigo — mas por sorte, não por desenho.** Reconstituindo os vereditos antigos das duas configs mais perigosas:
-
-| config | DSR antigo | bootstrap | o que a barrou |
-| :--- | :--- | :--- | :--- |
-| g3 `45c0eb3c` | p=0,0000 **PASSA** | 60,5% reprova | o bootstrap |
-| trend `12616cbc` | p=1,0000 reprova | 97,4% **passa** | o DSR |
-
-Os dois filtros estavam desalinhados em direções opostas e cada um cobriu o buraco do outro. Um teste que discorda do outro por 10 ordens de grandeza na mesma config acerta por acidente. Depois da Fase A os dois **concordam**, e a `12616cbc` passa a ser barrada por três motivos independentes (amostra de 20 trades, concentração em 2/4 blocos, DSR p=0,82) em vez de um acaso.
-
-### Fase B item 1 (24/08/2026) — híbrido trend + swing: REPROVADO
-
-A hipótese era usar o airbag EMA200 como filtro macro do swing: *"só operar quando o BTC está acima da EMA200 diária"*. Três achados, em ordem de importância:
-
-**1. O filtro já existia.** O regime `bull` do motor — a única condição que libera compras — já exige `close_1d >= EMA50_1d` **E** `close_1d >= EMA200_1d`. Controle em dados reais: ligar `macro_filter=ema200d` com shorts habilitados produz trades **idênticos, um a um, nas 5 janelas** a simplesmente desligar os shorts. Travado por teste de regressão.
-
-**2. Posição vs. média não separa rali de lateralização.** No chop de 2024 (pior período do sistema, Sharpe de trading −3,70) o BTC passou **78% dos dias acima da EMA200** e o regime bull já estava ligado em 46% dos dias. No rali de 2023-24 (Sharpe +1,99) os números são 97,8% e 92,9%. Um filtro de posição não consegue distinguir os dois.
-
-**3. O candidato que passou nos 4 primeiros critérios passou por sorte de realocação.** A `ac35a444` (EMA50 semanal + confirmação de 7 dias) é a **primeira das 36 configs** a bater Sharpe de trading > 0 (+0,10), ≥3/4 blocos, ≥30 trades e PF > 1 — com Trading PnL OOS de **+R$12.909**, o primeiro positivo sem cash yield. Reprova mesmo assim: bootstrap **P(PF>1)=58,8%** (exigido 90%) e DSR **p=0,84** (exigido <0,10). A autópsia explica por quê:
-
-| janela | baseline | candidata | delta | o que aconteceu |
-| :--- | ---: | ---: | ---: | :--- |
-| OOS1 | −23.201 | −13.292 | +9.909 | **genuíno** — o filtro cortou 55→32 trades |
-| OOS2 | +1.546 | +17.829 | +16.283 | **artefato de realocação** |
-| OOS3 / OOS4 | +6.415 / +1.956 | idênticos | 0 | a porta nunca fechou |
-
-No OOS2 a porta fechou em ~1% dos dias, mas o PnL mexeu R$16 mil: os 73 trades comuns **pioraram**, os 13 trades removidos eram **vencedores** (+16.793), e apareceram 9 trades **novos** (+36.796) — dominados por um único INJUSDT de **+R$19.988**. Sem esse trade o agregado cai para **−R$7.080**.
-
-**Achado metodológico (B5):** numa carteira de **4 vagas fixas**, bloquear uma entrada libera a vaga para outra moeda mais tarde. O efeito medido de qualquer filtro mistura o mérito dele com o sorteio de quem ocupou a vaga — aqui a segunda parte foi ~1,6× maior que a primeira e tinha sinal contrário. Isso virou o **critério 6** do protocolo: toda mudança que altere quais posições entram exige decomposição de trades **comuns × removidos × novos** antes do bootstrap.
-
-**Entregue:** `build_macro_gate()` + `--macro-filter {off,ema200d,ema50w,ema200w}` e `--macro-confirm-days N` no motor (`off` por padrão; desligado, o motor roda bit a bit como antes — invariância provada). Também corrigido: `--long-mode` era parseado pela CLI e descartado.
-
-### Infraestrutura de validação (entregável principal desta fase)
-
-- `tests/` — **67 testes** unitários de regressão (sizing, stops, BE/parcial, funding, breakers, identidade contábil, merge point-in-time + 7 blindagens da régua estatística da Fase A + 7 da porta macro e 4 da CLI da Fase B).
-- `scripts/statistical_validation.py` — bootstrap em blocos, leave-one-out, Deflated Sharpe Ratio (escala corrigida).
-- `scripts/meta_label.py` — screening de filtro ML (AUC IS = 0.48: sem sinal aprendível).
-- `scripts/batch_experiments.py` — baterias de experimentos com 1 carga de dados.
-- `scripts/reprocess_experiments.py` — re-roda todas as configs limpas quando as métricas do motor mudam (mantém o universo do DSR na mesma escala).
-- `scripts/backtest_cs_momentum.py` e `scripts/backtest_trend_bh.py` — famílias de sinal alternativas no mesmo protocolo.
-- `PLANO_OPERACIONAL_REAL.md` — plano de carteira real baseado na evidência (núcleo B&H BTC + airbag EMA200).
-- Experimentos pré-V2.3 preservados e marcados com `invalid_lookahead: true` (excluídos do universo de múltiplos testes).
-
-*Nota V2.3.1:* auditoria externa de mecânica foi avaliada — a ordem funding/stop do motor está correta (velas Binance usam open_time = início; o settlement ocorre na abertura da vela). Único refinamento: notional do funding passou a usar a abertura da vela (delta OOS ≈ 0,08%, cosmético).
-
----
-
-## 🚀 Como Continuar em uma Nova Conversa
-
-Ao abrir uma nova conversa, você pode simplesmente referenciar o arquivo:
-> *"Siga as diretrizes e o protocolo conforme @Prompt.md"*
-
-O arquivo [**`Prompt.md`**](Prompt.md) contém os 3 setores desacoplados e autocontidos:
-1. **Setor 1:** Protocolo de Backtest e Auditoria (menu de modalidades + blindagens + walk-forward + armazenamento padrão).
-2. **Setor 2:** Prompt Mestre Operacional para análise diária em tempo real (funil quantitativo bi-direcional V2.2).
-3. **Setor 3:** Engenharia Quantitativa (motor canônico `scripts/backtest_institucional.py`) e Execução Prática.
+1. **Todo fato medido entra no `analises.md`**, no formato da seção 5, com o hash da configuração.
+   Número que não está lá não existe.
+2. **Toda mudança que se propõe nula** (refatoração, performance) passa por `verify_replay.py`, em ao
+   menos uma configuração por ramo de código tocado.
+3. **Nenhuma recomendação de dinheiro real sem lastro** em `analises.md` ou em artefato de
+   `data/acumulacao/`.

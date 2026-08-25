@@ -41,7 +41,7 @@ def _ok(obtido, alvo, tol=0.005):
 
 def reproduzir(datas, precos):
     print('=' * 88)
-    print('REPRODUCAO DA FASE C (Plan.md secao 5) — alvos vs repositorio')
+    print('REPRODUCAO DA FASE C (analises.md, Fase C) — alvos vs repositorio')
     print('=' * 88)
     print('%-4s %-46s %12s %12s %8s' % ('#', 'cenario', 'alvo', 'obtido', 'erro'))
     print('-' * 88)

@@ -21,7 +21,8 @@
   **R$39.598** (mediana, 4 blocos OOS); a baseline perde **R$13.283** — percentil **94 de Sharpe** contra o
   nulo. Antes de custos ela fica em **+R$311**, e a perda líquida é quase exatamente o **custo de operar
   (R$13.594)**. Não é "o sinal não tem informação"; é **"a informação vale menos que o custo de coletá-la"**
-  — o que aponta para custo e frequência, não para caçar sinal melhor. Ver Fase E, E2.
+  — mas **isso não é uma alavanca**: com lucro bruto de R$311 em 3,4 anos, nem corretagem zero
+  produziria renda. O sinal tem habilidade e vale, em reais, nada. Ver Fase E, E2a.
 - **g3 (`45c0eb3c`) foi REPROVADA e não é mais candidata.** Com a régua corrigida na Fase A ela aparece pelo que é:
   - **Sharpe de trading = -0,47** (o "Sharpe 1,20" incluía o cash yield). P(Sharpe>0) = 23,8%.
   - **Expectância média = -0,049R** e **PF mediano = 0,64** (a média 1,03 era carregada por um único bloco).
@@ -83,11 +84,13 @@ no repositório (`Plan.md`, Etapa 2), mas as **conclusões não devem ser re-der
 > mais configs só aumenta `n_trials` e deixa a régua marginalmente pior. **As duas únicas alavancas que
 > mudariam o veredito são:**
 > 1. **Mais informação** — mais anos, mais ativos, ou trades mais frequentes. É o gargalo real.
-> 2. **Menos custo por trade** — o teste de sinal nulo mostrou que o sinal da baseline fica em **+R$311
->    antes de custos** e perde **R$13.594** neles. O edge existe e é do tamanho da corretagem. Menos
->    trades, mais longos, taxa menor: é a única direção com fundamento medido.
+> 2. ~~**Menos custo por trade.**~~ **RETIRADO em 25/08.** A leitura de que "o edge é do tamanho da
+>    corretagem, logo cortar custo resolve" estava errada e foi corrigida. O lucro **bruto** da
+>    baseline é **+R$311 em 3,4 anos e 243 operações**, sobre R$100 mil. Corretagem zero também dá
+>    zero. Não existe versão de "otimizar custos" que transforme isso em renda.
 >
-> Trocar o gatilho, o RSI ou o filtro macro mexe no que **não** é o gargalo.
+> Trocar o gatilho, o RSI ou o filtro macro mexe no que **não** é o gargalo — e cortar custo mexe no
+> que **não tem** o que colher.
 
 **Fase B — candidatos ainda não testados** (PROJETO A — congelado; retomar só se o usuário reabrir a frente de swing), em ordem de prioridade:
 
@@ -279,9 +282,34 @@ Ou seja: **antes de custos o sinal fica exatamente em zero, e a perda líquida �
 custo de operar.** Contra entrada aleatória ele está no **percentil 94 de Sharpe** — evita boa parte
 da perda que o acaso toma. Isso muda o diagnóstico:
 
-- ❌ *"O sinal não tem informação"* → conclusão anterior, que mandava abandonar a família.
-- ✅ *"A informação do sinal vale menos que o custo de coletá-la"* → aponta para **custo e frequência**
-  (menos trades, mais longos, taxa menor), não para caçar um sinal melhor.
+- ❌ *"O sinal não tem informação."* Falso: percentil 94 contra o acaso. Ele enxerga alguma coisa.
+- ✅ *"O sinal tem habilidade real, e essa habilidade vale zero real."* Ele converte a perda de ~R$22 mil
+  que a entrada aleatória toma no bruto em **R$0** no bruto. Chegar a zero é uma proeza mensurável —
+  e zero continua sendo zero.
+
+> **Correção registrada (25/08).** A primeira redação desta seção concluía que o achado "aponta para
+> custo e frequência". **Está errado e foi retirado.** Se o bruto é +R$311 em 3,4 anos, cortar
+> corretagem pela metade leva a perda líquida de R$13.283 para ~R$6.500 — continua negativo — e
+> corretagem zero leva a +R$311, que não é renda. Não há alavanca de custo aqui. O erro foi meu: li
+> "a perda líquida é igual ao custo" como se implicasse "sem o custo haveria lucro", quando o que ela
+> implica é "sem o custo haveria zero".
+
+**E2a-bis. Como o motor erra (a anatomia das 2.683 operações).** Registrado porque explica, em uma
+tabela, por que "prever bem" e "ganhar dinheiro" são coisas diferentes:
+
+| | |
+| :--- | ---: |
+| acertos | **34,7%** |
+| erros | **65,3%** |
+| ganho médio quando acerta | **+1,88R** |
+| perda média quando erra | **−1,01R** |
+| maior ganho / maior perda | +14,8R / −1,2R |
+| **resultado médio por operação** | **−0,003R** |
+
+O motor erra **duas em cada três** operações e ainda assim quase empata, porque os ganhos são ~2× as
+perdas. É o perfil correto de trend-following: perde pouco e frequentemente, ganha muito e raramente.
+**Quem julga uma estratégia pela taxa de acerto está olhando a coluna errada** — o que decide é o
+tamanho, não a frequência.
 
 **E2b. O "+1,99 no bull, o único resultado genuíno" está superestimado.** Entradas **aleatórias** na
 mesma janela de alta marcam Sharpe mediano **+1,19** e PnL mediano **+R$20.574** — contra +1,96 e
@@ -320,7 +348,7 @@ P(Airbag > DCA) **cresce com o comprimento do bloco** — a vantagem depende int
 continuar tendo ciclos longos e persistentes como o de 2022. Coerente com o C5. **O que sobrevive é a
 redução de queda (68% → 45%), que é mecânica.**
 
-**E4a. Reprodução da Fase C no repositório (Plan.md Etapa 2): 10 de 13 alvos batem exatamente**,
+**E4a. Reprodução da Fase C no repositório: 10 de 13 alvos batem exatamente**,
 inclusive R1, R2, R4, R12 a 0,00% e as contagens de vitória (40/42, 36/42). Divergências residuais em
 R5/R6/R7/R9b ficam em ~1% e não movem conclusão. **A reprodução encontrou um erro de modelagem real:**
 cobrar IR só na liquidação final subestima o custo do giro — literalmente o alerta do achado C6, no
@@ -360,14 +388,30 @@ travadas em teste:** (1) o ótimo está **na borda** porque a alavancagem está 
 a fórmula apontaria além de 100%, e numa queda de 68% isso é **ruína**, que é absorvente; (2) o preço
 do ótimo é a cauda: no **percentil 5**, R$86 mil contra R$154 mil aportados.
 
+**E6. Três defeitos encontrados nos instrumentos NOVOS desta fase (revisão adversarial).**
+Registrados porque a sessão rodou sem supervisão e o histórico do erro vale mais que a aparência de
+acerto:
+
+| # | defeito | como se manifestava | por que era invisível |
+| :--- | :--- | :--- | :--- |
+| 1 | **IR cobrado só na liquidação**, não na venda | alvo R9b errava **+9,9%** e marcava 40/42 vitórias em vez de 36/42 | subestima o custo do giro — é *literalmente* o alerta do achado C6, e a implementação nova caiu nele |
+| 2 | **Atraso do airbag contado em checagens**, não em dias | `atraso=1` produzia **uma semana** de espera, não um dia | todos os alvos da Fase C usam `atraso=0`, onde os dois são idênticos |
+| 3 | **Volatilidade sintética escalada pelo total de trades**, não pela densidade | a varredura de amostra dizia que **34 anos seriam piores que 3,4** | indistinguível do correto enquanto o período é fixo; só aparece ao escalar trades **e** barras juntos |
+
+O defeito 3 não afeta a curva base (k=1, calibrada e validada contra a volatilidade real medida:
+0,0021 sintético vs 0,0022 real) — só a varredura de tamanho de amostra, que foi refeita. Os três
+estão travados por teste. **O defeito 1 é o mais instrutivo:** o projeto já tinha o alerta escrito no
+`analises.md` e a implementação nova caiu nele mesmo assim. Alerta em documento não substitui teste.
+
 **Veredito da fase.** Três correções ao que o projeto acreditava:
 
 1. **"36 configs, zero aprovadas" nunca foi evidência de que nada funciona.** A régua é cega abaixo de
    Sharpe ~1,2, e a causa não é o número de tentativas — é a quantidade de dados.
 2. **Mas o Projeto A segue congelado, por um motivo melhor.** Consertar a régua não resgata nenhuma
    config: os intervalos de confiança são largos demais para qualquer decisão. E o teste de sinal nulo
-   mostra que o sinal **existe** e vale **exatamente o custo de operá-lo** — não é caso de caçar sinal,
-   é caso de cortar custo e frequência, se um dia a frente for reaberta.
+   mostra que o sinal **existe** (percentil 94 contra o acaso) e que o resultado dele **antes de
+   qualquer custo é +R$311 em 3,4 anos** — ou seja, zero. Não é caso de caçar sinal melhor nem de
+   cortar custo: **não há o que colher nesta família.**
 3. **O Projeto B não é mais bem sustentado que o Projeto A no que diz respeito ao airbag.** O DCA
    superar o CDB é razoavelmente robusto (71–82%); a vantagem de retorno do airbag é cara-ou-coroa.
 

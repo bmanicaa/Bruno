@@ -1,7 +1,7 @@
 """
 Testes do PROJETO B — laboratorio de acumulacao.
 
-Travam a reproducao da Fase C dentro do repositorio (Plan.md Etapa 2) e as
+Travam a reproducao da Fase C dentro do repositorio (analises.md, Fase C) e as
 propriedades que nao podem regredir em silencio.
 """
 import datetime as dt
@@ -54,7 +54,7 @@ class TestIndicadores:
 
 
 class TestReproduzFaseC:
-    """Plan.md Etapa 2: os alvos da secao 5 tem de reproduzir no repositorio."""
+    """Os alvos da Fase C tem de reproduzir no repositorio (analises.md, E4a)."""
 
     def test_r1_cdb(self, btc):
         r = simular(*btc, politica=CDB(0.01), **kw())

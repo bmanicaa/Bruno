@@ -8,12 +8,30 @@
 
 - **Motor canônico:** `scripts/backtest_institucional.py` v**2.3.1** — matematicamente íntegro (zero lookahead, funding/notional corretos, **37 testes de regressão verdes**). Único motor que gera os artefatos oficiais. **Walk-forward completo agora em ~23s** (era 197,6s) — ver I2 na seção 4.
 - **Veredito da exploração (36 configurações limpas e distintas, 4 famílias de sinal):** NENHUMA estratégia tem edge OOS estatisticamente significativo. O "edge" da V2.2 era artefato de lookahead intra-diário — corrigido em V2.3.
+- **⚠️ CORREÇÃO DA FASE E (24/08) — a frase acima diz menos do que parece.** O protocolo tem **poder ZERO
+  abaixo de Sharpe de trading ~1,2**: uma estratégia com edge real de Sharpe 1,0 é reprovada em **100%**
+  das simulações. "Zero aprovadas" é o resultado *esperado* de uma régua cega, não evidência de que nada
+  funciona. E a causa **não** é ter testado 36 configs (variar `n_trials` entre 10 e 100 quase não muda o
+  poder) — é a **quantidade de dados**. Leitura correta: *"nenhuma tem edge grande o bastante para ser
+  detectável com 3,4 anos"*.
+- **Mas o Projeto A segue congelado, por um motivo melhor.** Consertar a régua não resgata nenhuma config:
+  o IC95 da expectância tem ~0,6R de largura (`ac35a444`: +0,07 em [−0,22, +0,40], 33% de chance de ser
+  negativo). Sem o DSR e sem penalidade de múltiplos testes, o critério de decisão também aprova **zero**.
+- **O teste de sinal nulo mudou o diagnóstico da família swing.** Entradas aleatórias no motor real perdem
+  **R$39.598** (mediana, 4 blocos OOS); a baseline perde **R$13.283** — percentil **94 de Sharpe** contra o
+  nulo. Antes de custos ela fica em **+R$311**, e a perda líquida é quase exatamente o **custo de operar
+  (R$13.594)**. Não é "o sinal não tem informação"; é **"a informação vale menos que o custo de coletá-la"**
+  — mas **isso não é uma alavanca**: com lucro bruto de R$311 em 3,4 anos, nem corretagem zero
+  produziria renda. O sinal tem habilidade e vale, em reais, nada. Ver Fase E, E2a.
 - **g3 (`45c0eb3c`) foi REPROVADA e não é mais candidata.** Com a régua corrigida na Fase A ela aparece pelo que é:
   - **Sharpe de trading = -0,47** (o "Sharpe 1,20" incluía o cash yield). P(Sharpe>0) = 23,8%.
   - **Expectância média = -0,049R** e **PF mediano = 0,64** (a média 1,03 era carregada por um único bloco).
   - **Perde em 3 dos 4 blocos OOS**; todo o +R$4,5k vem do OOS2 (alta do ETF). Sem o OOS2: -R$6,7k, PF 0,43.
   - **82% do retorno era o rendimento do caixa** (R$20,3k de cash yield vs R$4,5k de trading).
-  - **DSR p = 0,229** (REPROVA) — antes marcava p=1e-12 por um erro de escala, ver seção 4.
+  - **DSR p = 0,980** (REPROVA) — antes marcava p=1e-12 por um erro de escala, ver seção 4.
+    *(Corrigido na Fase E: a seção 1 citava 0,229, valor intermediário calculado com o Sharpe antigo,
+    contaminado pelo cash yield. Com `sharpe_trading` — a métrica que a própria Fase A adotou — o valor
+    canônico é 0,980, confirmado por reimplementação independente em 0,982.)*
 - **Nenhuma das 36 configs limpas a substitui.** Com a régua corrigida: 7 têm Sharpe de trading > 0 e **zero** passam nos critérios endurecidos (seção 3). Tabela completa na seção 4.
 - **Fase B item 1 (híbrido trend + swing) CONCLUÍDA e REPROVADA.** O filtro "só operar acima da EMA200 diária" **já existia** no motor — o regime bull exige `close_1d >= EMA50 E >= EMA200` (provado com trades idênticos em dados reais). A variante mais estrita (`ac35a444` — EMA50 semanal + confirmação de 7 dias) é a **primeira das 36 a passar nos 4 primeiros critérios**, mas reprova no bootstrap (P(PF>1)=58,8%) e no DSR (p=0,84); a autópsia mostra que o ganho veio de **realocação de vagas da carteira**, não do filtro. Seção 4, Fase B.
 - **Fase C (24/08) — o plano de dinheiro real foi medido pela primeira vez.** Ver seção 4. Em uma linha:
@@ -60,6 +78,20 @@ no repositório (`Plan.md`, Etapa 2), mas as **conclusões não devem ser re-der
 
 > **Ler antes de propor qualquer filtro novo (achado B5):** numa carteira de 4 vagas fixas, bloquear uma entrada libera a vaga para outra moeda mais tarde. O efeito medido de um filtro mistura o mérito dele com o sorteio de quem ocupou a vaga — na Fase B a segunda parte foi ~1,6× maior que a primeira e tinha sinal contrário. Toda mudança que altere quais posições entram exige a decomposição do critério 6 da seção 3.
 
+> ### ⚠️ LEIA ANTES DE PROPOR QUALQUER TESTE NOVO NO PROJETO A (Fase E)
+> Testar mais uma família de sinal **não vai produzir aprovação**, qualquer que seja o mérito dela: o
+> protocolo tem poder ZERO abaixo de Sharpe de trading ~1,2 com o tamanho de amostra disponível. Rodar
+> mais configs só aumenta `n_trials` e deixa a régua marginalmente pior. **As duas únicas alavancas que
+> mudariam o veredito são:**
+> 1. **Mais informação** — mais anos, mais ativos, ou trades mais frequentes. É o gargalo real.
+> 2. ~~**Menos custo por trade.**~~ **RETIRADO em 25/08.** A leitura de que "o edge é do tamanho da
+>    corretagem, logo cortar custo resolve" estava errada e foi corrigida. O lucro **bruto** da
+>    baseline é **+R$311 em 3,4 anos e 243 operações**, sobre R$100 mil. Corretagem zero também dá
+>    zero. Não existe versão de "otimizar custos" que transforme isso em renda.
+>
+> Trocar o gatilho, o RSI ou o filtro macro mexe no que **não** é o gargalo — e cortar custo mexe no
+> que **não tem** o que colher.
+
 **Fase B — candidatos ainda não testados** (PROJETO A — congelado; retomar só se o usuário reabrir a frente de swing), em ordem de prioridade:
 
 1. **Momentum cross-sectional com hedge** (long top-N / short bottom-N) — hedge nunca testado; é a única variante que muda a natureza da exposição, e **não sofre do problema B5** (não tem vagas fixas). É o candidato metodologicamente mais limpo que sobrou.
@@ -91,6 +123,15 @@ no repositório (`Plan.md`, Etapa 2), mas as **conclusões não devem ser re-der
 - Chaves opcionais de params (`long_mode`, `macro_filter`, `macro_confirm_days`) só entram no dict quando saem do padrão. **Não "normalizar" isso** — acrescentar uma chave a todas as configs mudaria os 36 `config_hash` já registrados. Travado por `test_hash_da_baseline_nao_muda_com_as_chaves_novas`.
 - A porta semanal usa `shift(1)` sobre semanas e supõe série sem buracos. Verificado em 24/08: BTC diário tem 364 semanas consecutivas, zero buracos. Se a base mudar, revalidar.
 
+**Nunca testado, ao contrário do que a contagem de "36 configs" sugere (levantado na Fase E):** os
+parâmetros do **sinal** nunca entraram em nenhum experimento. `RSI_LONG_MIN=44`, `RSI_LONG_MAX=62`,
+`BREAKEVEN_R=2.0`, `PARTIAL_R=2.0`, `TIME_STOP_CANDLES=126`, a faixa de stop 3,5–8%, o multiplicador
+1,5×ATR e a janela de 10 velas são **constantes de módulo** e não têm flag de CLI. Das 22 configs
+limpas de swing existem só **9 combinações distintas de sinal** — as outras 13 variam `risk_pct`,
+`fee_pct`, `max_positions` e `universe`, que mudam **quanto se aposta**, não **o que se prevê**. O
+timeframe de 4h tem **1 única config limpa** (`4cdae2fe`); as outras 7 estão marcadas
+`invalid_lookahead`. Registrar isto não é convite a testar mais: ver o aviso de poder acima.
+
 **Não fazer:** re-otimizar parâmetros no período completo; operar com dinheiro real sem aprovação do protocolo; apagar experimentos marcados com `invalid_lookahead` (são evidência histórica); **julgar qualquer config pelo `sharpe_mean` — use sempre `sharpe_trading_mean`**; reimplementar o filtro "acima da EMA200 diária" — já existe dentro do regime bull (ver B0, travado por teste); **propor "medir qualidade de tendência" como ideia nova — o `btc_adx_min` já faz isso e reprovou em 3 configs limpas** (ver seção 2, item 2).
 
 ---
@@ -118,6 +159,12 @@ no repositório (`Plan.md`, Etapa 2), mas as **conclusões não devem ser re-der
   3. **≥30 trades OOS.** Abaixo disso o bootstrap satura e devolve p-valores falsamente confiantes (a família trend marcava P(PF>1)=100% com 10 trades). O `statistical_validation.py` agora sinaliza `insufficient_sample`.
   4. Melhora em ≥3/5 métricas OOS (trading PnL, PF, **sharpe_trading**, DD, retorno) vs baseline vigente; PF OOS > 1.0; piora de DD ≤ 20% relativa.
   5. Bootstrap P(PF>1) ≥ 90% **e** Deflated Sharpe p < 0.10.
+     > **⚠️ Este é o critério que trava tudo (medido na Fase E).** Os critérios 1 a 4 passam quase sempre a
+     > partir de E[R] = +0,05; o 5 reprova até Sharpe de trading ~1,2. Ele é um padrão de **publicação
+     > acadêmica** (o DSR existe para impedir descoberta falsa após garimpo), **não** um critério de
+     > alocação de capital. Mantenha-o como número **reportado**; para decidir aposta use
+     > `scripts/criterio_de_decisao.py`, que separa "existe efeito?" de "vale apostar?". Quem for
+     > afrouxar a régua tem de mexer AQUI, e não nos critérios 1 a 4.
   6. **Decomposição de trades antes do bootstrap** (novo na Fase B): se a mudança altera quais posições entram, comparar a lista de trades contra a baseline separando **comuns × removidos × novos**, e reportar o agregado **sem o maior trade**. Numa carteira de vagas fixas, bloquear uma entrada libera a vaga para outra moeda — foi assim que a `ac35a444` "ganhou" R$16k num bloco onde a porta fechou em ~1% dos dias. Ver seção 4, achado B5.
   7. Registrar em `analises.md` (seção 4, formato na seção 5) com hash da config.
 - **Blindagens:** zero lookahead (dados diários usam apenas o dia completo anterior); walk-forward 4 blocos OOS + holdout (`HOLDOUT = 2026-02-01 → 2026-08-20`; **atenção: é só uma constante — nenhum código o executa hoje.** Está "intocado" por omissão, não por desenho. Quando/se uma config passar nos 6 critérios, o teste final de holdout ainda precisa ser escrito); correção de múltiplos testes (DSR, na escala correta e só sobre configs limpas e distintas); experimentos em `data/experimentos/exp_{hash}.json`; configs pré-V2.3 marcadas com `invalid_lookahead` e excluídas do universo do DSR.
@@ -150,6 +197,228 @@ beta do ativo). Para qualquer variante do plano real valem estes:
 ---
 
 ## 4. Histórico Condensado
+
+### 24/08 — Fase E: auditoria do PODER da régua (o teste que faltava dos dois lados)
+
+**Motivação.** As Fases A e B gastaram auditorias inteiras medindo o risco de **aprovar demais**
+(falso positivo). Nenhuma linha do projeto mediu o risco de **reprovar demais**. Isso decide o rumo
+do projeto inteiro, porque o veredito *"36 configurações limpas, nenhuma tem edge"* é o que sustenta
+o congelamento do Projeto A.
+
+**E1. O protocolo tem poder ZERO abaixo de Sharpe de trading ~1,2.**
+
+Método: estratégias sintéticas com **expectância verdadeira conhecida**, herdando a forma empírica
+dos 2.683 trades reais (win rate 34,7%, perdas ancoradas em −1R, skew 2,32, curtose 11,24), com a
+volatilidade por barra calibrada contra a real (0,0021 sintético vs 0,0022 medido) por ponte
+browniana. Submetidas aos **gates reais**, importados de `statistical_validation.py` sem alteração.
+400 rodadas por nível.
+
+| edge REAL: E[R] | Sharpe de trading | g1 | g2 | g3 | g4 | **g5** | **PODER** |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| +0,00 | +0,05 | 1,00 | 0,26 | 1,00 | 0,21 | 0,00 | **0,000** |
+| +0,05 | +0,25 | 1,00 | 1,00 | 1,00 | 1,00 | 0,00 | **0,000** |
+| +0,10 | +0,44 | 1,00 | 1,00 | 1,00 | 1,00 | 0,00 | **0,000** |
+| +0,15 | +0,64 | 1,00 | 1,00 | 1,00 | 1,00 | 0,00 | **0,000** |
+| +0,20 | +0,84 | 1,00 | 1,00 | 1,00 | 1,00 | 0,00 | **0,000** |
+| +0,25 | +1,04 | 1,00 | 1,00 | 1,00 | 1,00 | 0,00 | **0,000** |
+| +0,30 | +1,23 | 1,00 | 1,00 | 1,00 | 1,00 | 0,01 | **0,005** |
+| +0,40 | +1,62 | 1,00 | 1,00 | 1,00 | 1,00 | 1,00 | **1,000** |
+| +0,50 | +2,02 | 1,00 | 1,00 | 1,00 | 1,00 | 1,00 | **1,000** |
+
+- Uma estratégia com edge real de **Sharpe 1,0 é reprovada em 100% das simulações.**
+- **O gargalo é o critério 5** (bootstrap + DSR). Os critérios 1 a 4 passam quase sempre a partir de
+  E[R] = +0,05. Quem for "consertar" a régua tem de mexer ali, não nos outros.
+- **A penalidade de múltiplos testes NÃO é a causa.** Variando `n_trials` em 10 / 36 / 100, o poder
+  praticamente não muda (em E[R] = +0,15 o DSR mediano vai de 0,376 a 0,587, e o poder segue 0,000).
+  Ter testado 36 configs em vez de 10 não é o que impede a aprovação.
+
+**Validação cruzada dos gates.** `avaliar_protocolo()` reproduz os números publicados: `ac35a444`
+P(PF>1) **0,588 vs 0,588** e DSR p **0,844 vs 0,844**; `45c0eb3c` Sharpe de trading **−0,47**. A curva
+foi medida com os gates reais do projeto, não com uma reimplementação aproximada.
+
+> **Erro de documentação encontrado aqui.** A seção 1 e o item A1 citam **DSR p = 0,229** para a g3;
+> a re-leitura final da Fase A (seção 4) traz **p = 0,980**. Os dois foram corretos em momentos
+> diferentes — 0,229 usava o Sharpe antigo (com cash yield), 0,980 usa `sharpe_trading`, que é a
+> métrica que a própria Fase A adotou. Minha implementação independente dá **0,982**. **O valor
+> canônico é 0,980**; 0,229 está superado e foi corrigido na seção 1.
+
+**E2. Teste de sinal nulo — 300 rodadas. O achado mais importante da fase.**
+
+Implementação: rotação circular das colunas de **sinal** em `_hot_arrays`, que alimenta apenas os dois
+laços de **triagem** (linhas 575 e 734). O laço de posições lê `df4.loc` direto, então **preço de
+entrada, stop, saídas, custos, funding e as 4 vagas permanecem o motor real sobre preços reais**. A
+rotação preserva distribuição marginal e autocorrelação de cada sinal — a taxa de entrada se mantém
+(**310 trades no nulo contra 299 no real**) — e destrói só o alinhamento com o preço futuro.
+
+**O ponto neutro não é zero.** Entradas sem informação, no motor real, perdem:
+
+| | PnL de trading (4 blocos OOS) | Sharpe de trading |
+| :--- | ---: | ---: |
+| nulo — p5 | −84.079 | −1,01 |
+| **nulo — mediana** | **−39.598** | **−0,67** |
+| nulo — p95 | +61.105 | +0,29 |
+| **sinal real (`ad61cd70`)** | **−13.283** | **−0,12** |
+| **percentil do real no nulo** | **79,3** | **94,3** |
+
+Janela a janela:
+
+| janela | PnL real | PnL nulo (med) | perc. | Sharpe real | nulo (med) | perc. |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| OOS1 | −23.201 | −20.115 | 38,7 | −1,19 | −0,93 | 33,0 |
+| OOS2 | +1.546 | −4.073 | 60,7 | +0,15 | −0,04 | 61,0 |
+| OOS3 | +6.415 | −8.143 | 76,7 | +0,29 | −0,17 | 76,3 |
+| OOS4 | +1.956 | −9.182 | **98,0** | +0,28 | −1,60 | **97,7** |
+| BULL6M | +36.107 | +20.574 | 74,7 | +1,96 | +1,19 | 80,3 |
+
+**E2a. O sinal NÃO é ruído — mas vale exatamente o custo de operá-lo.** Decompondo a baseline:
+
+| | R$ |
+| :--- | ---: |
+| PnL líquido (medido) | **−13.283** |
+| taxas + funding (243 trades) | **+13.594** |
+| **PnL BRUTO, antes de custos** | **+311** |
+
+Ou seja: **antes de custos o sinal fica exatamente em zero, e a perda líquida é, quase à unidade, o
+custo de operar.** Contra entrada aleatória ele está no **percentil 94 de Sharpe** — evita boa parte
+da perda que o acaso toma. Isso muda o diagnóstico:
+
+- ❌ *"O sinal não tem informação."* Falso: percentil 94 contra o acaso. Ele enxerga alguma coisa.
+- ✅ *"O sinal tem habilidade real, e essa habilidade vale zero real."* Ele converte a perda de ~R$22 mil
+  que a entrada aleatória toma no bruto em **R$0** no bruto. Chegar a zero é uma proeza mensurável —
+  e zero continua sendo zero.
+
+> **Correção registrada (25/08).** A primeira redação desta seção concluía que o achado "aponta para
+> custo e frequência". **Está errado e foi retirado.** Se o bruto é +R$311 em 3,4 anos, cortar
+> corretagem pela metade leva a perda líquida de R$13.283 para ~R$6.500 — continua negativo — e
+> corretagem zero leva a +R$311, que não é renda. Não há alavanca de custo aqui. O erro foi meu: li
+> "a perda líquida é igual ao custo" como se implicasse "sem o custo haveria lucro", quando o que ela
+> implica é "sem o custo haveria zero".
+
+**E2a-bis. Como o motor erra (a anatomia das 2.683 operações).** Registrado porque explica, em uma
+tabela, por que "prever bem" e "ganhar dinheiro" são coisas diferentes:
+
+| | |
+| :--- | ---: |
+| acertos | **34,7%** |
+| erros | **65,3%** |
+| ganho médio quando acerta | **+1,88R** |
+| perda média quando erra | **−1,01R** |
+| maior ganho / maior perda | +14,8R / −1,2R |
+| **resultado médio por operação** | **−0,003R** |
+
+O motor erra **duas em cada três** operações e ainda assim quase empata, porque os ganhos são ~2× as
+perdas. É o perfil correto de trend-following: perde pouco e frequentemente, ganha muito e raramente.
+**Quem julga uma estratégia pela taxa de acerto está olhando a coluna errada** — o que decide é o
+tamanho, não a frequência.
+
+**E2b. O "+1,99 no bull, o único resultado genuíno" está superestimado.** Entradas **aleatórias** na
+mesma janela de alta marcam Sharpe mediano **+1,19** e PnL mediano **+R$20.574** — contra +1,96 e
++R$36.107 do sinal real. **Cerca de 57% daquele PnL é beta**, não seleção. O sinal ainda adiciona algo
+(percentil 80), mas a leitura do `README.md` cobrava crédito demais.
+
+**E3. Critério de decisão: mesmo sem o DSR, nenhuma config merece dinheiro.**
+
+`criterio_de_decisao.py` remove a penalidade de múltiplos testes e o portão de p-valor, e decide por
+crescimento logarítmico esperado com a incerteza de estimação embutida (Kelly, teto travado em
+meio-Kelly, checagem de ruína). Nas 22 configs limpas de swing: **zero recomendadas** — por um motivo
+mais fundamental que o DSR.
+
+| config | trades | E[R] | IC95 de E[R] | P(edge < 0) |
+| :--- | ---: | ---: | :---: | ---: |
+| `ac35a444` | 216 | +0,071 | [−0,219, +0,403] | 33% |
+| `45c0eb3c` (g3) | 46 | +0,235 | [−0,300, +0,945] | 25% |
+| `ad61cd70` (baseline) | 243 | −0,016 | [−0,254, +0,250] | 56% |
+
+**O gargalo não é o método nem as estratégias: é a quantidade de informação.** Com 46 a 326 trades em
+3,4 anos, o intervalo de confiança da expectância tem ~0,6R de largura. Nenhuma maquinaria estatística
+extrai veredito daí. Isso reconcilia E1 com E3: a régua era cega, **e** consertá-la não resgata nada.
+
+**E4. A mesma régua aplicada ao Projeto B — e ele também não sobrevive.**
+
+`"40 de 42 combinações vencem"` e `"48 de 71 inícios batem o CDB"` contam janelas **sobrepostas de uma
+única série de preço** com **um** bear market. Sob block bootstrap dos log-retornos, varrendo blocos de
+90/180/365/730 dias × 2 sementes (o próprio critério 1 do protocolo 3.1):
+
+| | histórico único | **reamostrado** |
+| :--- | :--- | ---: |
+| P(DCA em BTC > CDB) | "sempre com ≥4 anos" | **71% a 82%** |
+| P(Airbag > DCA fixo) | "40 de 42 = 95%" | **31% a 59%** |
+
+P(Airbag > DCA) **cresce com o comprimento do bloco** — a vantagem depende inteiramente de o cripto
+continuar tendo ciclos longos e persistentes como o de 2022. Coerente com o C5. **O que sobrevive é a
+redução de queda (68% → 45%), que é mecânica.**
+
+**E4a. Reprodução da Fase C no repositório: 10 de 13 alvos batem exatamente**,
+inclusive R1, R2, R4, R12 a 0,00% e as contagens de vitória (40/42, 36/42). Divergências residuais em
+R5/R6/R7/R9b ficam em ~1% e não movem conclusão. **A reprodução encontrou um erro de modelagem real:**
+cobrar IR só na liquidação final subestima o custo do giro — literalmente o alerta do achado C6, no
+qual a implementação nova caiu. Corrigido para cobrança na venda, o erro de R9b caiu de **+9,9% para
+−0,68%** e as vitórias bateram exatas. Travado por teste.
+
+**E4b. Releitura do C5 com o benchmark que faltava.** O C5 conclui "~90% da vantagem é CDI, não market
+timing". É verdade **contra o DCA 100% BTC** — mas o airbag fica ~40% do tempo fora. Contra uma
+carteira **passiva de mesma exposição média** (zero operações):
+
+| comparação | com CDI 1% a.m. | **sem carry** |
+| :--- | ---: | ---: |
+| airbag vs DCA 100% BTC | +26,6% | **+1,7%** |
+| airbag vs passivo 60/40 iso-exposição | +50,2% | **+33,4%** |
+
+O timing **não é bom o bastante para bater exposição total**, mas **é bom o bastante para tornar a
+fatia em caixa quase gratuita**. *"A vantagem é carry"* e *"o timing não vale nada"* são afirmações
+diferentes, e só a primeira é verdadeira.
+
+**E4c. Tempo submerso — a pergunta aberta nº 6 do `Plan.md`, respondida.** No DCA puro a carteira passa
+**apenas 7% dos dias** valendo menos que o total depositado, com pior sequência de **69 dias**. A queda
+de 68% assusta muito mais do que dói, porque os aportes seguem entrando. **O argumento comportamental
+do C8 fica bem mais fraco do que parecia.**
+
+**E5. Alocação que maximiza crescimento (a pergunta do usuário).** Critério de crescimento logarítmico
+— o correto para quem não saca, porque maximiza a **mediana** e não a média. 150 caminhos reamostrados:
+
+| peso BTC | cresc. log | mediana | **p5 (ruim)** | p95 | maxDD |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 20% | 0,8140 | 291.368 | **202.510** | 1.304.794 | 21% |
+| 60% | 1,1203 | 410.972 | **144.396** | 3.451.248 | 46% |
+| **100%** | **1,2458** | **530.575** | **86.283** | 5.597.703 | 63% |
+
+O crescimento é **monotônico até 100% BTC** — o DCA puro é ótimo pelo critério de crescimento, e
+diluir com caixa a 1% a.m. reduz o crescimento esperado, não só a volatilidade. **Duas ressalvas
+travadas em teste:** (1) o ótimo está **na borda** porque a alavancagem está proibida — sem essa trava
+a fórmula apontaria além de 100%, e numa queda de 68% isso é **ruína**, que é absorvente; (2) o preço
+do ótimo é a cauda: no **percentil 5**, R$86 mil contra R$154 mil aportados.
+
+**E6. Três defeitos encontrados nos instrumentos NOVOS desta fase (revisão adversarial).**
+Registrados porque a sessão rodou sem supervisão e o histórico do erro vale mais que a aparência de
+acerto:
+
+| # | defeito | como se manifestava | por que era invisível |
+| :--- | :--- | :--- | :--- |
+| 1 | **IR cobrado só na liquidação**, não na venda | alvo R9b errava **+9,9%** e marcava 40/42 vitórias em vez de 36/42 | subestima o custo do giro — é *literalmente* o alerta do achado C6, e a implementação nova caiu nele |
+| 2 | **Atraso do airbag contado em checagens**, não em dias | `atraso=1` produzia **uma semana** de espera, não um dia | todos os alvos da Fase C usam `atraso=0`, onde os dois são idênticos |
+| 3 | **Volatilidade sintética escalada pelo total de trades**, não pela densidade | a varredura de amostra dizia que **34 anos seriam piores que 3,4** | indistinguível do correto enquanto o período é fixo; só aparece ao escalar trades **e** barras juntos |
+
+O defeito 3 não afeta a curva base (k=1, calibrada e validada contra a volatilidade real medida:
+0,0021 sintético vs 0,0022 real) — só a varredura de tamanho de amostra, que foi refeita. Os três
+estão travados por teste. **O defeito 1 é o mais instrutivo:** o projeto já tinha o alerta escrito no
+`analises.md` e a implementação nova caiu nele mesmo assim. Alerta em documento não substitui teste.
+
+**Veredito da fase.** Três correções ao que o projeto acreditava:
+
+1. **"36 configs, zero aprovadas" nunca foi evidência de que nada funciona.** A régua é cega abaixo de
+   Sharpe ~1,2, e a causa não é o número de tentativas — é a quantidade de dados.
+2. **Mas o Projeto A segue congelado, por um motivo melhor.** Consertar a régua não resgata nenhuma
+   config: os intervalos de confiança são largos demais para qualquer decisão. E o teste de sinal nulo
+   mostra que o sinal **existe** (percentil 94 contra o acaso) e que o resultado dele **antes de
+   qualquer custo é +R$311 em 3,4 anos** — ou seja, zero. Não é caso de caçar sinal melhor nem de
+   cortar custo: **não há o que colher nesta família.**
+3. **O Projeto B não é mais bem sustentado que o Projeto A no que diz respeito ao airbag.** O DCA
+   superar o CDB é razoavelmente robusto (71–82%); a vantagem de retorno do airbag é cara-ou-coroa.
+
+**Entregues:** `poder_do_teste.py`, `sinal_nulo.py`, `criterio_de_decisao.py`, o pacote
+`scripts/acumulacao/` (Projeto B por adição) e **34 testes novos (71 no total, todos verdes)**.
+`git diff` **vazio** em todos os arquivos congelados do Projeto A.
+
 
 ### 24/08 — I2: vetorização do screener (mudança nula, 8,6× mais rápida)
 

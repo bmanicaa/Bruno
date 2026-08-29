@@ -47,6 +47,16 @@
   (12/12 calibrações negativas — arrasto de caixa) e BTC+ETH 80/20 com rebalanceio por aporte (o ETH é
   que não pagou, o mecanismo de rebalanceio é sadio).
 - **Porta macro (nova):** `build_macro_gate()` + `--macro-filter` / `--macro-confirm-days`, `off` por padrão. Desligada, o motor roda **bit a bit** como antes — invariância provada re-executando `ad61cd70`.
+- **Projeto C (29/08) — CARRY DE FUNDING medido e REPROVADO, com mecanismo.** Primeira estratégia do
+  repositório que **não precisa prever preço**: comprado no spot + vendido no perpétuo. 750 configurações.
+  Melhor caso R$245.197, **mediana R$126.571**, contra **R$229.338 do CDI** — 39/750 (5,2%) superam o CDI, e
+  a melhor delas tem 75% do ganho vindo do próprio CDI sobre caixa parado. Bootstrap: IC95 do CAGR
+  **[3,8%; 9,9%]**, inteiro abaixo do CDI, P(carry>CDI)=0,0005. **Não é falta de poder** — é efeito grande
+  de sinal trocado. Três causas: (i) a margem imobiliza capital cujo CDI perdido (R$103k) supera o funding
+  coletado (R$46k); (ii) 35,4% dos settlements do BTC são a constante de juro da Binance, não prêmio, e
+  caíram para 4,7% em 2026; (iii) o funding bruto foi de +30,6% (2021) a **+1,5% (2026)**. O funding teria
+  de ser **2,08× maior** só para empatar com o CDI. Ver seção 4 e `data/carry/relatorio.md`.
+  **Não refazer com outra cesta/gatilho/custo — os três eixos já foram varridos.**
 - **Plano de execução da próxima sessão:** `Plan.md` na raiz do projeto — modularização do motor +
   construção do laboratório de acumulação. **Ler `Plan.md` antes de tocar em qualquer código.**
 - **Git:** Fase A commitada em `171c7d5`, `70c1eda`, `2381146`. As mudanças da Fase B ainda **não commitadas**.
@@ -197,6 +207,87 @@ beta do ativo). Para qualquer variante do plano real valem estes:
 ---
 
 ## 4. Histórico Condensado
+
+### 29/08 — Projeto C: CARRY DE FUNDING medido pela primeira vez (750 configs) — REPROVADO, mecanismo identificado
+
+- **Mudança Implementada:** pacote novo por adição — `scripts/carry/` (dados, custos, motor, grid,
+  benchmarks, evidência, CLI) + `tests/test_carry.py` (31 testes). Nada do Projeto A foi tocado.
+  Motivação: todos os mecanismos testados até aqui exigem **prever preço**, e nenhum funcionou. O funding
+  estava no repositório há 7 anos usado **só como custo**. Esta é a medição do outro lado — o
+  cash-and-carry (comprado no spot + vendido no perpétuo), que recebe funding **sem prever nada**.
+  Artefatos: `data/carry/grid.json`, `data/carry/evidencia.json`, `data/carry/relatorio.md`.
+
+- **Resultados Obtidos** (2019-09-10 → 2026-08-22, 6,95 anos, R$100k, 750 configs = 5 cestas × 10 gatilhos
+  × 3 alavancagens × 5 rebalanceios):
+
+  | Estratégia | Patrimônio final | CAGR | Max DD |
+  |---|---:|---:|---:|
+  | Carry — melhor das 750 | R$ 245.197 | +13,78% | — |
+  | Carry — mediana do grid | R$ 126.571 | — | — |
+  | Carry — pior das 750 | R$ 23.590 | −18,77% | — |
+  | **CDI 1% a.m.** | **R$ 229.338** | **+12,69%** | 0,0% |
+  | DCA BTC (12 parcelas) | R$ 895.414 | +37,09% | 75,9% |
+  | BTC comprado e segurado | R$ 764.502 | +34,01% | 76,7% |
+
+  - **39 de 750 configurações (5,2%) superam o CDI.** Referência (BTC, 1x, semanal): R$153.275.
+  - **Decomposição da referência** (identidade fecha, resíduo < 1e-9 em todas as 750):
+    (a) funding **+46.099** | (b) base **−256** | (c) taxas+slippage **−3.929** |
+    (d) juro do caixa **+11.360** | (f) quebra de hedge **0** | (e) resíduo **~0**.
+  - **Bootstrap em blocos** (90/180/365/730 dias × 3 sementes = 12 combinações, reamostrador de
+    `statistical_validation._resample_series`): CAGR mediano **6,2%**, IC95 **[3,8% ; 9,9%]**.
+    **P(CAGR > CDI) = 0,0005 no melhor caso das 12.** O IC95 inteiro fica abaixo do CDI.
+  - **Poder** — vol anual da estratégia **0,55%**, ρ(1) dos retornos diários **0,61**. A fórmula iid daria
+    efeito detectável de 0,59% a.a.; ela é **inválida aqui** — a amostra efetiva cai de 2.538 para ~56
+    observações e o valor corrigido é 3,97% a.a. O poder **empírico** (injeção de excesso conhecido,
+    método de `poder_do_teste.py`) é 1% em +5% a.a. e 77% em +8% a.a. **A conclusão não depende do poder:
+    o carry não ficou "sem significância", ficou ~6 p.p. ABAIXO do CDI.**
+  - **Por regime:** bull CAGR +10,8% (funding bruto +20,5% a.a.) | lateral +3,9% (+6,3%) | bear +2,0% (+2,8%).
+  - **Break-even:** o funding teria de ser **2,08× maior** (22,1% a.a. bruto) a 1x, ou 1,75× (18,6%) a 3x,
+    só para **empatar** com o CDI. Observado: 10,6% a.a. na série inteira, **1,5% em 2026**.
+
+- **Análise Diagnóstica — três mecanismos, nenhum deles "custo alto":**
+
+  1. **A margem come o retorno antes das taxas.** Com L=1 a perna vendida exige margem igual ao notional:
+     R$100k de capital sustentam só R$45k de carry. O capital médio imobilizado (spot + margem) foi
+     R$124.075 e **deixou de render R$103.002 de CDI — mais do que os R$46.099 de funding que a estrutura
+     coletou.** O custo de oportunidade sozinho supera a receita bruta. Taxas e slippage são R$3.929, 8%
+     do problema. **Não é um problema de corretagem; é de eficiência de capital.**
+  2. **Um terço do "carry histórico" é convenção contábil, não prêmio.** A fórmula da Binance é
+     `funding = premium + clamp(juro − premium, ±0,05%)` com `juro = 0,01%/8h`. Quando o prêmio fica na
+     banda [−0,04%, +0,06%] o funding vale **exatamente** 0,01%. **35,4% dos 7.616 settlements do BTC
+     estão nesse ponto de massa** — é a constante da corretora, não o mercado pagando. E está sumindo:
+     66,9% dos settlements em 2019 contra **4,7% em 2026**, com o funding negativo indo de 18,3% para
+     **29,6%**. O funding bruto anual caiu de +30,6% (2021) para **+1,5% (2026)**.
+     *(A mesma fórmula, invertida, foi usada para reconstruir a base — o repositório não tem série de
+     spot, as klines são do perpétuo, de `fapi.binance.com`.)*
+  3. **A configuração vencedora vence por não operar.** A melhor das 750 (`BTC+ETH / funding 7d > 0,01% /
+     3x / semanal`) fica montada em **775 de 2.539 dias (31% do tempo)**, exposição média de 19%, e
+     **75% do seu ganho é o item (d): CDI sobre o caixa parado.** Seu excesso sobre o CDI é de
+     **0,97% a.a.**, contra efeito detectável de ~8% a.a., e ela é o máximo de 750 tentativas
+     correlacionadas. É o achado **C5 se repetindo em outro projeto**: a vantagem é CDI, não a estratégia.
+
+- **Correção de modelagem registrada (vale para quem for reusar o motor).** A primeira versão desmontava a
+  perna comprada **no fechamento do dia** após uma liquidação. Resultado: as 8 melhores configs tiravam
+  **~91% do lucro** desse trecho (R$1,36M de R$1,49M) — a perna vendida morria numa alta, sobrava um
+  comprado em BTC sem hedge e o preço seguia subindo. O grid passou a **selecionar as configs que mais
+  liquidavam**. Isso é posição direcional adquirida por acidente, enviesada para cima porque liquidação
+  só ocorre em alta forte. O motor agora refaz a neutralidade **no próprio preço de liquidação**, com
+  slippage de estresse. `test_liquidacao_nunca_vira_lucro` tranca a regressão.
+
+- **Reprovado, com mecanismo identificado — não refazer.** Os 10,6% a.a. brutos evaporam assim: ~55% do
+  notional não pode ser montado (margem), ~⅓ do que sobra é a constante de juro da corretora e está
+  secando, e o resto não paga o CDI. **Nada aqui sugere afrouxar custo, mudar cesta ou calibrar gatilho:
+  os três eixos já foram varridos e a mediana do grid (R$126.571) perde para o CDI por 45%.**
+
+- **Risco não medido, e não mensurável:** a estrutura exige spot e perpétuo na mesma corretora. Em
+  novembro de 2022 a **FTX zerou exatamente quem fazia isso** — perda **total e instantânea**, não
+  gradual, e nenhuma das duas pernas protegeu a outra, porque o risco não estava no preço e sim no
+  custodiante. Uma série de preços não contém esse evento por construção. Todos os números acima são
+  **antes** do risco de perder tudo de uma vez.
+
+- **Limitações registradas:** checagem de liquidação em granularidade **diária** (o número de liquidações
+  é piso, não teto); CDI em reais contra carry em USDT, sem risco cambial nos dois sentidos; sem IR;
+  slippage fixo, sem profundidade de livro (as cestas TOP10/TOP20 incluem pares onde R$100k já movem preço).
 
 ### 24/08 — Fase E: auditoria do PODER da régua (o teste que faltava dos dois lados)
 

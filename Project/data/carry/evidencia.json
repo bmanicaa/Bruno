@@ -1,0 +1,463 @@
+{
+  "gerado_em": "2026-08-29",
+  "config_referencia": {
+    "cesta": "BTC",
+    "gatilho": [
+      "sempre"
+    ],
+    "alavancagem": 1,
+    "rebalanceio": [
+      "semanal"
+    ],
+    "base_modo": "premium",
+    "politica_margem": "aportar",
+    "gatilho_margem": 0.5,
+    "slippage_estresse": 0.001,
+    "taxa": 0.00075,
+    "slippage": 0.0005,
+    "mmr": 0.004,
+    "juro_mensal": 0.01,
+    "fracao_capital": 0.9,
+    "capital": 100000.0,
+    "inicio": "2019-09-10",
+    "fim": "2026-08-22"
+  },
+  "hash_referencia": "f0b71cef",
+  "resultado_referencia": {
+    "hash": "f0b71cef",
+    "patrimonio_final": 153275.01594576277,
+    "capital_inicial": 100000.0,
+    "retorno_total": 0.5327501594576278,
+    "cagr": 0.06338775241414041,
+    "anos": 6.9486652977412735,
+    "dias": 2539,
+    "inicio": "2019-09-10",
+    "fim": "2026-08-22",
+    "a_funding": 46099.27735068371,
+    "b_base": -255.60841897314617,
+    "c_custos": -3928.626730405127,
+    "d_juros": 11359.97374445737,
+    "f_quebra_hedge": 0.0,
+    "custo_oportunidade_margem": 103002.35036208696,
+    "capital_imobilizado_medio": 124075.17642150067,
+    "e_residuo": -2.9103830456733704e-11,
+    "n_entradas": 3,
+    "n_saidas": 3,
+    "n_rebalanceios": 363,
+    "n_aportes_margem": 0,
+    "valor_aportes_margem": 0.0,
+    "n_liquidacoes": 0,
+    "perda_em_liquidacao": 0.0,
+    "n_desmontes_forcados": 2,
+    "dias_com_posicao": 2536,
+    "exposicao_media": 0.44948697293189194
+  },
+  "cdi": {
+    "patrimonio_final": 229337.6382774231,
+    "capital_inicial": 100000.0,
+    "retorno_total": 1.2933763827742308,
+    "cagr": 0.12687804453207296,
+    "maxdd": 0.0,
+    "anos": 6.9486652977412735
+  },
+  "bootstrap_blocos": {
+    "linhas": [
+      {
+        "bloco": 90,
+        "semente": 42,
+        "cagr_mediano": 0.06247420148811356,
+        "ic95_baixo": 0.04450994546601609,
+        "ic95_alto": 0.0894990475393896,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 90,
+        "semente": 7,
+        "cagr_mediano": 0.06255623878147998,
+        "ic95_baixo": 0.04390575638321155,
+        "ic95_alto": 0.08880523719192493,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 90,
+        "semente": 2026,
+        "cagr_mediano": 0.06228501448831236,
+        "ic95_baixo": 0.044527729694960404,
+        "ic95_alto": 0.0883930500961716,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 180,
+        "semente": 42,
+        "cagr_mediano": 0.062079935239512496,
+        "ic95_baixo": 0.04197010249290174,
+        "ic95_alto": 0.09492942372673295,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 180,
+        "semente": 7,
+        "cagr_mediano": 0.06196023710075105,
+        "ic95_baixo": 0.04191597551468689,
+        "ic95_alto": 0.09484031380741854,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 180,
+        "semente": 2026,
+        "cagr_mediano": 0.06230966086253065,
+        "ic95_baixo": 0.04137642146749098,
+        "ic95_alto": 0.09357533898830328,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 365,
+        "semente": 42,
+        "cagr_mediano": 0.06276344768059439,
+        "ic95_baixo": 0.038216574635056094,
+        "ic95_alto": 0.09882565199595007,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 365,
+        "semente": 7,
+        "cagr_mediano": 0.061424488218524864,
+        "ic95_baixo": 0.03851579825532474,
+        "ic95_alto": 0.09761582924763912,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 365,
+        "semente": 2026,
+        "cagr_mediano": 0.06191544269100946,
+        "ic95_baixo": 0.0391559413857019,
+        "ic95_alto": 0.09745141195677307,
+        "p_supera_alvo": 0.0005,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 730,
+        "semente": 42,
+        "cagr_mediano": 0.06298367541428085,
+        "ic95_baixo": 0.039348071254988966,
+        "ic95_alto": 0.0981717549812597,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 730,
+        "semente": 7,
+        "cagr_mediano": 0.06213937909642475,
+        "ic95_baixo": 0.038905879746186915,
+        "ic95_alto": 0.09783416387935531,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      },
+      {
+        "bloco": 730,
+        "semente": 2026,
+        "cagr_mediano": 0.06281660856152549,
+        "ic95_baixo": 0.03984262718439712,
+        "ic95_alto": 0.0981629398104467,
+        "p_supera_alvo": 0.0,
+        "p_positivo": 1.0
+      }
+    ],
+    "agregado": {
+      "cagr_mediano": {
+        "min": 0.061424488218524864,
+        "mediana": 0.062297337675421505,
+        "max": 0.06298367541428085
+      },
+      "ic95_baixo": {
+        "min": 0.038216574635056094,
+        "mediana": 0.04060952432594405,
+        "max": 0.044527729694960404
+      },
+      "ic95_alto": {
+        "min": 0.0883930500961716,
+        "mediana": 0.096190417841753,
+        "max": 0.09882565199595007
+      },
+      "p_supera_alvo": {
+        "min": 0.0,
+        "mediana": 0.0,
+        "max": 0.0005
+      },
+      "p_positivo": {
+        "min": 1.0,
+        "mediana": 1.0,
+        "max": 1.0
+      }
+    },
+    "alvo_cagr": 0.12687804453207296,
+    "n_obs": 2538
+  },
+  "poder_analitico": {
+    "n_dias": 2538,
+    "anos": 6.9486652977412735,
+    "vol_anual": 0.005529814453728482,
+    "rho1": 0.6061711937680826,
+    "n_efetivo": 55.745616658119744,
+    "sharpe_anual_minimo_iid": 1.0628039035034411,
+    "retorno_anual_minimo_iid": 0.005877108387072379,
+    "sharpe_anual_minimo": 7.171228943858443,
+    "retorno_anual_minimo_detectavel": 0.039655565464744455
+  },
+  "poder_simulado": [
+    {
+      "efeito_anual": 0.0,
+      "poder": 0.0,
+      "rodadas": 150
+    },
+    {
+      "efeito_anual": 0.02,
+      "poder": 0.0,
+      "rodadas": 150
+    },
+    {
+      "efeito_anual": 0.05,
+      "poder": 0.013333333333333334,
+      "rodadas": 150
+    },
+    {
+      "efeito_anual": 0.08,
+      "poder": 0.7666666666666667,
+      "rodadas": 150
+    },
+    {
+      "efeito_anual": 0.12,
+      "poder": 1.0,
+      "rodadas": 150
+    }
+  ],
+  "regimes_estrategia": {
+    "bear": {
+      "dias": 727,
+      "cagr_no_regime": 0.020312733141548023,
+      "retorno_total": 0.04083748908990237
+    },
+    "bull": {
+      "dias": 1006,
+      "cagr_no_regime": 0.10757055159508422,
+      "retorno_total": 0.32498562411462983
+    },
+    "indefinido": {
+      "dias": 198,
+      "cagr_no_regime": 0.08380294747342387,
+      "retorno_total": 0.04459123859504621
+    },
+    "lateral": {
+      "dias": 607,
+      "cagr_no_regime": 0.03865673357007671,
+      "retorno_total": 0.065060995050084
+    }
+  },
+  "funding_bruto_por_regime": {
+    "bear": {
+      "dias": 727,
+      "settlements": 2181,
+      "taxa_media_por_settlement": 2.5274704264099074e-05,
+      "anualizado_simples": 0.027675801169188483
+    },
+    "bull": {
+      "dias": 1006,
+      "settlements": 3018,
+      "taxa_media_por_settlement": 0.00018695110006626903,
+      "anualizado_simples": 0.20471145457256457
+    },
+    "indefinido": {
+      "dias": 199,
+      "settlements": 597,
+      "taxa_media_por_settlement": 0.00014117313232830828,
+      "anualizado_simples": 0.15458457989949756
+    },
+    "lateral": {
+      "dias": 607,
+      "settlements": 1820,
+      "taxa_media_por_settlement": 5.725004395604387e-05,
+      "anualizado_simples": 0.0626543726523887
+    }
+  },
+  "decaimento_anual_funding": {
+    "2019": {
+      "settlements": 338,
+      "funding_bruto_ano": 0.023094889999999934,
+      "frac_na_banda_morta": 0.6686390532544378,
+      "frac_negativo": 0.1834319526627219
+    },
+    "2020": {
+      "settlements": 1098,
+      "funding_bruto_ano": 0.17239718999999923,
+      "frac_na_banda_morta": 0.5045537340619308,
+      "frac_negativo": 0.1429872495446266
+    },
+    "2021": {
+      "settlements": 1095,
+      "funding_bruto_ano": 0.30608422999999507,
+      "frac_na_banda_morta": 0.43105022831050227,
+      "frac_negativo": 0.0730593607305936
+    },
+    "2022": {
+      "settlements": 1095,
+      "funding_bruto_ano": 0.04164925000000003,
+      "frac_na_banda_morta": 0.30776255707762556,
+      "frac_negativo": 0.22100456621004566
+    },
+    "2023": {
+      "settlements": 1095,
+      "funding_bruto_ano": 0.07865712000000057,
+      "frac_na_banda_morta": 0.38538812785388127,
+      "frac_negativo": 0.10136986301369863
+    },
+    "2024": {
+      "settlements": 1098,
+      "funding_bruto_ano": 0.11956883000000093,
+      "frac_na_banda_morta": 0.4207650273224044,
+      "frac_negativo": 0.08378870673952642
+    },
+    "2025": {
+      "settlements": 1095,
+      "funding_bruto_ano": 0.051264280000000134,
+      "frac_na_banda_morta": 0.17168949771689498,
+      "frac_negativo": 0.12876712328767123
+    },
+    "2026": {
+      "settlements": 702,
+      "funding_bruto_ano": 0.015102199999999988,
+      "frac_na_banda_morta": 0.04700854700854701,
+      "frac_negativo": 0.2962962962962963
+    }
+  },
+  "break_even_funding": {
+    "1": {
+      "fator": 2.081895485520363
+    },
+    "2": {
+      "fator": 1.732852652668953
+    },
+    "3": {
+      "fator": 1.7544631212949753
+    }
+  },
+  "sensibilidade_reserva": {
+    "0.5": {
+      "1": {
+        "patrimonio_final": 183775.31385850292,
+        "n_liquidacoes": 0,
+        "n_aportes_margem": 2,
+        "n_desmontes_forcados": 0,
+        "d_juros": 58855.830242061355
+      },
+      "3": {
+        "patrimonio_final": 201643.68875073033,
+        "n_liquidacoes": 0,
+        "n_aportes_margem": 41,
+        "n_desmontes_forcados": 0,
+        "d_juros": 62339.285811017
+      }
+    },
+    "0.7": {
+      "1": {
+        "patrimonio_final": 167767.905074964,
+        "n_liquidacoes": 0,
+        "n_aportes_margem": 1,
+        "n_desmontes_forcados": 1,
+        "d_juros": 34067.061047483396
+      },
+      "3": {
+        "patrimonio_final": 190057.29684330744,
+        "n_liquidacoes": 1,
+        "n_aportes_margem": 40,
+        "n_desmontes_forcados": 0,
+        "d_juros": 36451.84889709259
+      }
+    },
+    "0.8": {
+      "1": {
+        "patrimonio_final": 159839.25095364344,
+        "n_liquidacoes": 0,
+        "n_aportes_margem": 0,
+        "n_desmontes_forcados": 2,
+        "d_juros": 22337.705591634338
+      },
+      "3": {
+        "patrimonio_final": 183375.39968935426,
+        "n_liquidacoes": 1,
+        "n_aportes_margem": 38,
+        "n_desmontes_forcados": 3,
+        "d_juros": 23924.34707082074
+      }
+    },
+    "0.9": {
+      "1": {
+        "patrimonio_final": 153275.01594576277,
+        "n_liquidacoes": 0,
+        "n_aportes_margem": 0,
+        "n_desmontes_forcados": 2,
+        "d_juros": 11359.97374445737
+      },
+      "3": {
+        "patrimonio_final": 154857.76003892103,
+        "n_liquidacoes": 1,
+        "n_aportes_margem": 2,
+        "n_desmontes_forcados": 39,
+        "d_juros": 12676.86477436048
+      }
+    },
+    "0.95": {
+      "1": {
+        "patrimonio_final": 150771.99163187458,
+        "n_liquidacoes": 0,
+        "n_aportes_margem": 0,
+        "n_desmontes_forcados": 2,
+        "d_juros": 6548.093941450265
+      },
+      "3": {
+        "patrimonio_final": 152476.19566131983,
+        "n_liquidacoes": 1,
+        "n_aportes_margem": 2,
+        "n_desmontes_forcados": 39,
+        "d_juros": 7937.86738827395
+      }
+    },
+    "0.98": {
+      "1": {
+        "patrimonio_final": 149837.8183181645,
+        "n_liquidacoes": 0,
+        "n_aportes_margem": 0,
+        "n_desmontes_forcados": 2,
+        "d_juros": 4159.302704479507
+      },
+      "3": {
+        "patrimonio_final": 151501.96529900757,
+        "n_liquidacoes": 1,
+        "n_aportes_margem": 2,
+        "n_desmontes_forcados": 39,
+        "d_juros": 5568.011519070194
+      }
+    }
+  },
+  "sensibilidade_base": {
+    "zero": {
+      "patrimonio_final": 153579.48848288387,
+      "b_base": 0.0
+    },
+    "premium": {
+      "patrimonio_final": 153275.01594576277,
+      "b_base": -255.60841897314617
+    },
+    "pessimista": {
+      "patrimonio_final": 153209.09690091194,
+      "b_base": -323.0430135840728
+    }
+  }
+}

@@ -1,0 +1,12 @@
+#separator:tab
+#html:true
+#notetype:N5 Gramática
+#deck:Japonês::N5::Gramática
+#tags column:5
+#columns:Frase	Resposta	Estrutura	Explicacao	Tags
+<ruby>私<rt>わたし</rt></ruby>は<ruby>学生<rt>がくせい</rt></ruby> ___ 。	です	N + です	Cópula polida "ser/estar". Liga-se direto ao substantivo. Versão casual: だ.	aula::01 fase::1 tipo::gramatica gramatica::desu
+<ruby>母<rt>はは</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby> ___ 。(registro polido)	です	N + です	です é neutro-polido e serve para qualquer pessoa gramatical — não conjuga por pessoa como em português.	aula::01 fase::1 tipo::gramatica gramatica::desu
+<ruby>私<rt>わたし</rt></ruby> ___ <ruby>留学生<rt>りゅうがくせい</rt></ruby>です。	は	N + は	Marca o TÓPICO ("quanto a mim, ..."). Escreve-se は mas pronuncia-se "wa". Define do que a frase trata, não quem pratica a ação.	aula::01 fase::1 tipo::gramatica gramatica::wa-topico
+<ruby>今日<rt>きょう</rt></ruby> ___ <ruby>漢字<rt>かんじ</rt></ruby>の<ruby>言葉<rt>ことば</rt></ruby>です。	は	N + は	は pode marcar tempo como tópico: "quanto a hoje...". Contraste com が (Aula 3), que introduz informação nova.	aula::01 fase::1 tipo::gramatica gramatica::wa-topico
+あなたは<ruby>先生<rt>せんせい</rt></ruby>です ___ 。	か	Frase + か	Partícula final que transforma a afirmação em pergunta sim/não. Em japonês não é preciso inverter a ordem das palavras.	aula::01 fase::1 tipo::gramatica gramatica::ka-pergunta
+<ruby>外国人<rt>がいこくじん</rt></ruby>です ___ 。(transformar em pergunta)	か	Frase + か	Com か, o ponto de interrogação é opcional — a partícula já marca a pergunta.	aula::01 fase::1 tipo::gramatica gramatica::ka-pergunta

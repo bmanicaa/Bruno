@@ -1,0 +1,36 @@
+#separator:tab
+#html:true
+#notetype:N5 Vocab
+#deck:Japonês::N5::Vocabulário
+#tags column:5
+#columns:Palavra	Significado	Leitura	Exemplo	Tags
+<ruby>一<rt>いち</rt></ruby>	Um / Número 1	いち	<ruby>私<rt>わたし</rt></ruby>の<ruby>番号<rt>ばんごう</rt></ruby>は<ruby>一<rt>いち</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>二<rt>に</rt></ruby>	Dois / Número 2	に	<ruby>番号<rt>ばんごう</rt></ruby>は<ruby>二<rt>に</rt></ruby>ですか。	aula::03 fase::1 tipo::vocab
+<ruby>三<rt>さん</rt></ruby>	Três / Número 3	さん	<ruby>友達<rt>ともだち</rt></ruby>は<ruby>三人<rt>さんにん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>四<rt>し</rt></ruby>	Quatro / Número 4	し	<ruby>生徒<rt>せいと</rt></ruby>は<ruby>四人<rt>よにん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>五<rt>ご</rt></ruby>	Cinco / Número 5	ご	<ruby>家族<rt>かぞく</rt></ruby>は<ruby>五人<rt>ごにん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>六<rt>ろく</rt></ruby>	Seis / Número 6	ろく	<ruby>学生<rt>がくせい</rt></ruby>は<ruby>六人<rt>ろくにん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>七<rt>しち</rt></ruby>	Sete / Número 7	しち	<ruby>子供<rt>こども</rt></ruby>は<ruby>七人<rt>ななにん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>八<rt>はち</rt></ruby>	Oito / Número 8	はち	<ruby>生徒<rt>せいと</rt></ruby>は<ruby>八人<rt>はちにん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>九<rt>きゅう</rt></ruby>	Nove / Número 9	きゅう	<ruby>番号<rt>ばんごう</rt></ruby>は<ruby>九<rt>きゅう</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>十<rt>じゅう</rt></ruby>	Dez / Número 10	じゅう	<ruby>学生<rt>がくせい</rt></ruby>は<ruby>十人<rt>じゅうにん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>百<rt>ひゃく</rt></ruby>	100 / Cem	ひゃく	<ruby>会社<rt>かいしゃ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>は<ruby>百人<rt>ひゃくにん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>千<rt>せん</rt></ruby>	1.000 / Mil	せん	<ruby>会社<rt>かいしゃ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>は<ruby>千人<rt>せんにん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>万<rt>まん</rt></ruby>	10.000 / Dez mil	まん	<ruby>会社<rt>かいしゃ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>は<ruby>一万人<rt>いちまんにん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>一つ<rt>ひとつ</rt></ruby>	Um item / Uma coisa (Contador geral)	ひとつ	<ruby>本<rt>ほん</rt></ruby>は<ruby>一つ<rt>ひとつ</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>二つ<rt>ふたつ</rt></ruby>	Dois itens / Duas coisas (Contador geral)	ふたつ	<ruby>本<rt>ほん</rt></ruby>は<ruby>二つ<rt>ふたつ</rt></ruby>ですか。	aula::03 fase::1 tipo::vocab
+<ruby>三つ<rt>みっつ</rt></ruby>	Três itens / Três coisas (Contador geral)	みっつ	<ruby>言葉<rt>ことば</rt></ruby>は<ruby>三つ<rt>みっつ</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>四つ<rt>よっつ</rt></ruby>	Quatro itens / Quatro coisas (Contador geral)	よっつ	<ruby>漢字<rt>かんじ</rt></ruby>は<ruby>四つ<rt>よっつ</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>五つ<rt>いつつ</rt></ruby>	Cinco itens / Cinco coisas (Contador geral)	いつつ	<ruby>名前<rt>なまえ</rt></ruby>は<ruby>五つ<rt>いつつ</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>六つ<rt>むっつ</rt></ruby>	Seis itens / Seis coisas (Contador geral)	むっつ	<ruby>言葉<rt>ことば</rt></ruby>は<ruby>六つ<rt>むっつ</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>七つ<rt>ななつ</rt></ruby>	Sete itens / Sete coisas (Contador geral)	ななつ	<ruby>本<rt>ほん</rt></ruby>は<ruby>七つ<rt>ななつ</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>八つ<rt>やっつ</rt></ruby>	Oito itens / Oito coisas (Contador geral)	やっつ	<ruby>漢字<rt>かんじ</rt></ruby>は<ruby>八つ<rt>やっつ</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>九つ<rt>ここのつ</rt></ruby>	Nove itens / Nove coisas (Contador geral)	ここのつ	<ruby>言葉<rt>ことば</rt></ruby>は<ruby>九つ<rt>ここのつ</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+いくつ	Quantos? / Quantos anos?	いくつ	<ruby>本<rt>ほん</rt></ruby>はいくつですか。	aula::03 fase::1 tipo::vocab
+<ruby>円<rt>えん</rt></ruby>	iene (moeda japonesa); círculo	えん	<ruby>英語<rt>えいご</rt></ruby>の<ruby>本<rt>ほん</rt></ruby>は<ruby>千円<rt>せんえん</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+いくら	Quanto custa? / Quanto?	いくら	<ruby>英語<rt>えいご</rt></ruby>の<ruby>本<rt>ほん</rt></ruby>はいくらですか。	aula::03 fase::1 tipo::vocab
+<ruby>零<rt>れい</rt></ruby>	Zero	れい	<ruby>番号<rt>ばんごう</rt></ruby>は<ruby>零<rt>れい</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+ゼロ	Zero (Loanword)	ゼロ	<ruby>番号<rt>ばんごう</rt></ruby>はゼロです。	aula::03 fase::1 tipo::vocab
+<ruby>番号<rt>ばんごう</rt></ruby>	Número (Identificador / Telefone)	ばんごう	あなたの<ruby>番号<rt>ばんごう</rt></ruby>はいくつですか。	aula::03 fase::1 tipo::vocab
+<ruby>二人<rt>ふたり</rt></ruby>	Duas pessoas / Casal	ふたり	<ruby>兄弟<rt>きょうだい</rt></ruby>は<ruby>二人<rt>ふたり</rt></ruby>です。	aula::03 fase::1 tipo::vocab
+<ruby>一人<rt>ひとり</rt></ruby>	Uma pessoa / Sozinho	ひとり	<ruby>友達<rt>ともだち</rt></ruby>は<ruby>一人<rt>ひとり</rt></ruby>です。	aula::03 fase::1 tipo::vocab

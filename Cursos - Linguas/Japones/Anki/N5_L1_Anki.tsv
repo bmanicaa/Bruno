@@ -1,0 +1,31 @@
+#separator:tab
+#html:true
+#notetype:N5 Vocab
+#deck:Japonês::N5::Vocabulário
+#tags column:5
+#columns:Palavra	Significado	Leitura	Exemplo	Tags
+<ruby>国<rt>くに</rt></ruby>	país	くに	<ruby>私<rt>わたし</rt></ruby>の<ruby>国<rt>くに</rt></ruby>は<ruby>外国<rt>がいこく</rt></ruby>じゃないです。	aula::01 fase::1 tipo::vocab
+<ruby>外国<rt>がいこく</rt></ruby>	país estrangeiro	がいこく	<ruby>外国<rt>がいこく</rt></ruby>の<ruby>言葉<rt>ことば</rt></ruby>は<ruby>英語<rt>えいご</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>会社<rt>かいしゃ</rt></ruby>	empresa; companhia	かいしゃ	<ruby>父<rt>ちち</rt></ruby>は<ruby>会社<rt>かいしゃ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>本<rt>ほん</rt></ruby>	livro	ほん	<ruby>私<rt>わたし</rt></ruby>の<ruby>本<rt>ほん</rt></ruby>は<ruby>漢字<rt>かんじ</rt></ruby>の<ruby>本<rt>ほん</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>名前<rt>なまえ</rt></ruby>	nome	なまえ	<ruby>私<rt>わたし</rt></ruby>の<ruby>名前<rt>なまえ</rt></ruby>はマルコです。	aula::01 fase::1 tipo::vocab
+<ruby>英語<rt>えいご</rt></ruby>	idioma inglês	えいご	<ruby>母<rt>はは</rt></ruby>は<ruby>英語<rt>えいご</rt></ruby>の<ruby>先生<rt>せんせい</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>漢字<rt>かんじ</rt></ruby>	kanji	かんじ	<ruby>漢字<rt>かんじ</rt></ruby>の<ruby>先生<rt>せんせい</rt></ruby>は<ruby>外国人<rt>がいこくじん</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>言葉<rt>ことば</rt></ruby>	palavra	ことば	<ruby>英語<rt>えいご</rt></ruby>は<ruby>外国<rt>がいこく</rt></ruby>の<ruby>言葉<rt>ことば</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>人<rt>ひと</rt></ruby>	pessoa	ひと	<ruby>会社<rt>かいしゃ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby>じゃないです。	aula::01 fase::1 tipo::vocab
+<ruby>学生<rt>がくせい</rt></ruby>	estudante	がくせい	<ruby>兄<rt>あに</rt></ruby>は<ruby>学生<rt>がくせい</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>先生<rt>せんせい</rt></ruby>	professor; mestre	せんせい	あなたは<ruby>英語<rt>えいご</rt></ruby>の<ruby>先生<rt>せんせい</rt></ruby>ですか。	aula::01 fase::1 tipo::vocab
+<ruby>外国人<rt>がいこくじん</rt></ruby>	estrangeiro	がいこくじん	<ruby>友達<rt>ともだち</rt></ruby>は<ruby>外国人<rt>がいこくじん</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>留学生<rt>りゅうがくせい</rt></ruby>	estudante de intercâmbio	りゅうがくせい	<ruby>私<rt>わたし</rt></ruby>は<ruby>留学生<rt>りゅうがくせい</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>生徒<rt>せいと</rt></ruby>	aluno	せいと	<ruby>妹<rt>いもうと</rt></ruby>は<ruby>生徒<rt>せいと</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>医者<rt>いしゃ</rt></ruby>	médico	いしゃ	<ruby>母<rt>はは</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>私<rt>わたし</rt></ruby>	eu	わたし	<ruby>私<rt>わたし</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby>じゃないです。	aula::01 fase::1 tipo::vocab
+あなた	você	あなた	あなたは<ruby>留学生<rt>りゅうがくせい</rt></ruby>ですか。	aula::01 fase::1 tipo::vocab
+はい	sim	はい	はい、<ruby>私<rt>わたし</rt></ruby>は<ruby>学生<rt>がくせい</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+ええ	sim	ええ	ええ、<ruby>私<rt>わたし</rt></ruby>も<ruby>留学生<rt>りゅうがくせい</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+どうも	obrigado	どうも	どうも、<ruby>先生<rt>せんせい</rt></ruby>。	aula::01 fase::1 tipo::vocab
+どうぞ	por favor (ao oferecer algo)	どうぞ	はい、どうぞ。	aula::01 fase::1 tipo::vocab
+じゃあ	então; bem	じゃあ	じゃあ、あなたは<ruby>生徒<rt>せいと</rt></ruby>ですか。	aula::01 fase::1 tipo::vocab
+さあ	bem... / vamos lá	さあ	さあ、<ruby>本<rt>ほん</rt></ruby>はいくつですか。	aula::01 fase::1 tipo::vocab
+<ruby>今日<rt>きょう</rt></ruby>	hoje	きょう	<ruby>今日<rt>きょう</rt></ruby>の<ruby>先生<rt>せんせい</rt></ruby>は<ruby>母<rt>はは</rt></ruby>です。	aula::01 fase::1 tipo::vocab
+<ruby>今<rt>いま</rt></ruby>	agora	いま	<ruby>今<rt>いま</rt></ruby>、<ruby>私<rt>わたし</rt></ruby>は<ruby>留学生<rt>りゅうがくせい</rt></ruby>です。	aula::01 fase::1 tipo::vocab

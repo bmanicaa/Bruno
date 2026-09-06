@@ -1,0 +1,11 @@
+#separator:tab
+#html:true
+#notetype:N5 Gramática
+#deck:Japonês::N5::Gramática
+#tags column:5
+#columns:Frase	Resposta	Estrutura	Explicacao	Tags
+A: <ruby>家族<rt>かぞく</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby>ですか。B: <ruby>父<rt>ちち</rt></ruby> ___ <ruby>医者<rt>いしゃ</rt></ruby>です。	が	N + が	が identifica QUEM, entre alternativas — é a informação nova que responde à pergunta. は apenas retomaria o tópico já conhecido.	aula::03 fase::1 tipo::gramatica gramatica::ga-sujeito
+<ruby>女の子<rt>おんなのこ</rt></ruby> ___ <ruby>生徒<rt>せいと</rt></ruby>です。(apontar quem, informação nova)	が	N + が	Regra prática: は = o que já está em pauta; が = o que entra em cena agora ou responde a "quem/qual".	aula::03 fase::1 tipo::gramatica gramatica::ga-sujeito
+<ruby>兄<rt>あに</rt></ruby>は<ruby>学生<rt>がくせい</rt></ruby>です ___ 、<ruby>私<rt>わたし</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby>です。(contraste)	が	Oração + が + Oração	O MESMO が também liga duas orações com sentido de "mas". Distinga pela posição: depois de です/ます é conjunção, depois de substantivo é sujeito.	aula::03 fase::1 tipo::gramatica gramatica::ga-mas
+<ruby>先生<rt>せんせい</rt></ruby> ___ <ruby>医者<rt>いしゃ</rt></ruby> ___ ですか。(duas alternativas)	か / か	A か B か	Apresenta alternativas: "A ou B?". Cada item recebe seu próprio か; o か final da frase faz a pergunta.	aula::03 fase::1 tipo::gramatica gramatica::ka-ka
+<ruby>本<rt>ほん</rt></ruby>は<ruby>一つ<rt>ひとつ</rt></ruby> ___ <ruby>二つ<rt>ふたつ</rt></ruby>ですか。	か	A か B か	Na fala, o か depois do segundo item costuma cair, restando só o か da pergunta.	aula::03 fase::1 tipo::gramatica gramatica::ka-ka

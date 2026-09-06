@@ -1,0 +1,33 @@
+#separator:tab
+#html:true
+#notetype:N5 Vocab
+#deck:Japonês::N5::Vocabulário
+#tags column:5
+#columns:Palavra	Significado	Leitura	Exemplo	Tags
+<ruby>父<rt>ちち</rt></ruby>	Pai (Meu pai)	ちち	<ruby>父<rt>ちち</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>母<rt>はは</rt></ruby>	Mãe (Minha mãe)	はは	<ruby>母<rt>はは</rt></ruby>も<ruby>医者<rt>いしゃ</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>兄<rt>あに</rt></ruby>	Irmão mais velho (Meu)	あに	<ruby>兄<rt>あに</rt></ruby>は<ruby>学生<rt>がくせい</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>姉<rt>あね</rt></ruby>	Irmã mais velha (Minha)	あね	<ruby>姉<rt>あね</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby>じゃないです。	aula::02 fase::1 tipo::vocab
+<ruby>弟<rt>おとうと</rt></ruby>	Irmão mais novo (Meu)	おとうと	<ruby>弟<rt>おとうと</rt></ruby>は<ruby>生徒<rt>せいと</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>妹<rt>いもうと</rt></ruby>	Irmã mais nova (Minha)	いもうと	<ruby>妹<rt>いもうと</rt></ruby>は<ruby>子供<rt>こども</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>お父さん<rt>おとうさん</rt></ruby>	Pai (Alheio/Formal)	おとうさん	あなたの<ruby>お父さん<rt>おとうさん</rt></ruby>は<ruby>会社<rt>かいしゃ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>ですか。	aula::02 fase::1 tipo::vocab
+<ruby>お母さん<rt>おかあさん</rt></ruby>	Mãe (Alheio/Formal)	おかあさん	<ruby>友達<rt>ともだち</rt></ruby>の<ruby>お母さん<rt>おかあさん</rt></ruby>は<ruby>先生<rt>せんせい</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>お兄さん<rt>おにいさん</rt></ruby>	Irmão mais velho (Alheio)	おにいさん	あなたの<ruby>お兄さん<rt>おにいさん</rt></ruby>も<ruby>学生<rt>がくせい</rt></ruby>ですか。	aula::02 fase::1 tipo::vocab
+<ruby>お姉さん<rt>おねえさん</rt></ruby>	Irmã mais velha (Alheio)	おねえさん	<ruby>お姉さん<rt>おねえさん</rt></ruby>は<ruby>英語<rt>えいご</rt></ruby>の<ruby>先生<rt>せんせい</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>家族<rt>かぞく</rt></ruby>	Família	かぞく	<ruby>私<rt>わたし</rt></ruby>の<ruby>家族<rt>かぞく</rt></ruby>は<ruby>五人<rt>ごにん</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>両親<rt>りょうしん</rt></ruby>	Pais (Ambos)	りょうしん	<ruby>両親<rt>りょうしん</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>兄弟<rt>きょうだい</rt></ruby>	Irmãos e Irmãs	きょうだい	<ruby>兄弟<rt>きょうだい</rt></ruby>は<ruby>二人<rt>ふたり</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>子供<rt>こども</rt></ruby>	Criança / Filho(a)	こども	<ruby>子供<rt>こども</rt></ruby>は<ruby>生徒<rt>せいと</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>友達<rt>ともだち</rt></ruby>	Amigo(a)	ともだち	<ruby>友達<rt>ともだち</rt></ruby>は<ruby>留学生<rt>りゅうがくせい</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+おばあさん	Avó / Idosa	おばあさん	おばあさんも<ruby>家族<rt>かぞく</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>伯母さん<rt>おばさん</rt></ruby>	Tia / Senhora	おばさん	<ruby>伯母さん<rt>おばさん</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>伯父さん<rt>おじさん</rt></ruby>	Tio / Senhor	おじさん	<ruby>伯父さん<rt>おじさん</rt></ruby>は<ruby>会社<rt>かいしゃ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>奥さん<rt>おくさん</rt></ruby>	Esposa (Alheia)	おくさん	<ruby>先生<rt>せんせい</rt></ruby>の<ruby>奥さん<rt>おくさん</rt></ruby>は<ruby>外国人<rt>がいこくじん</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>お巡りさん<rt>おまわりさん</rt></ruby>	Policial (Termo Amigável)	おまわりさん	<ruby>お巡りさん<rt>おまわりさん</rt></ruby>は<ruby>警官<rt>けいかん</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>警官<rt>けいかん</rt></ruby>	Policial	けいかん	<ruby>父<rt>ちち</rt></ruby>は<ruby>警官<rt>けいかん</rt></ruby>じゃないです。	aula::02 fase::1 tipo::vocab
+<ruby>男<rt>おとこ</rt></ruby>	Homem / Masculino	おとこ	<ruby>先生<rt>せんせい</rt></ruby>は<ruby>男<rt>おとこ</rt></ruby>ですか、<ruby>女<rt>おんな</rt></ruby>ですか。	aula::02 fase::1 tipo::vocab
+<ruby>女<rt>おんな</rt></ruby>	Mulher / Feminino	おんな	<ruby>医者<rt>いしゃ</rt></ruby>は<ruby>女<rt>おんな</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>大人<rt>おとな</rt></ruby>	Adulto	おとな	<ruby>兄<rt>あに</rt></ruby>は<ruby>大人<rt>おとな</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>男の子<rt>おとこのこ</rt></ruby>	Menino / Garoto	おとこのこ	<ruby>弟<rt>おとうと</rt></ruby>は<ruby>男の子<rt>おとこのこ</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>女の子<rt>おんなのこ</rt></ruby>	Menina / Garota	おんなのこ	<ruby>妹<rt>いもうと</rt></ruby>は<ruby>女の子<rt>おんなのこ</rt></ruby>です。	aula::02 fase::1 tipo::vocab
+<ruby>家庭<rt>かてい</rt></ruby>	Lar / Família	かてい	<ruby>家庭<rt>かてい</rt></ruby>の<ruby>言葉<rt>ことば</rt></ruby>は<ruby>英語<rt>えいご</rt></ruby>です。	aula::02 fase::1 tipo::vocab

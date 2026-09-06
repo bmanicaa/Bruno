@@ -1,0 +1,90 @@
+# JLPT N5 Kanji List
+
+Source: https://jlptsensei.com/jlpt-n5-kanji-list/
+
+## Kanji (80 total)
+
+| # | Kanji | Aula (intro) | Onyomi | Kunyomi | Kanji Meaning |
+|---|---|---|---|---|---|
+| 1 | 日 | 14 | nichi, jitsu (ニチ, ジツ) | hi, -bi, -ka (ひ, -び, -か) | day, sun, Japan, counter for days |
+| 2 | 一 | 4 | ichi (イチ) | hito(tsu) (ひと(つ)) | one |
+| 3 | 国 | 1 | koku (コク) | kuni (くに) | country |
+| 4 | 人 | 12 | jin, nin (ジン、 ニン) | hito (ひと) | person |
+| 5 | 年 | 19 | nen (ネン) | toshi (とし) | year, counter for years |
+| 6 | 大 | 11 | dai, tai (ダイ、 タイ) | oo(kii) (おお(きい)) | large, big |
+| 7 | 十 | 28 | juu (ジュウ) | tou, to (とお、 と) | ten, 10 |
+| 8 | 二 | 28 | ni, ji (ニ、 ジ) | futa(tsu) (ふた(つ)) | two, 2 |
+| 9 | 本 | 4 | hon (ホン) | moto (もと) | book, present, true, counter for long cylindrical things |
+| 10 | 中 | 6 | chuu (チュウ) | naka, uchi, ata(ru) (なか、 うち、 あた(る)) | in, inside, middle, mean, center |
+| 11 | 長 | 10 | chou (チョウ) | naga(i), osa (なが(い)、 おさ) | long, leader, superior, senior |
+| 12 | 出 | 23 | shutsu, sui (シュツ、 スイ) | de(ru), da(su), i(deru) (で(る)、 だ(す)、 い(でる)) | exit, leave, go out |
+| 13 | 三 | 11 | san (サン) | mi(tsu) (み(つ)) | three, 3 |
+| 14 | 時 | 15 | ji (ジ) | toki, doki (とき、 -どき) | time, hour |
+| 15 | 行 | 8 | kou, gyou, an (コウ、 ギョウ、 アン) | i(ku), yu(ku), okona(u) (い(く)、 ゆ(く)、 おこな(う)) | going, journey, carry out, line, row |
+| 16 | 見 | 25 | ken (ケン) | mi(ru), mi(seru) (み(る)、 み(せる)) | see, hopes, chances, idea, opinion, look at, visible |
+| 17 | 月 | 15 | getsu, gatsu (ゲツ、 ガツ) | tsuki (つき) | month, moon |
+| 18 | 分 | 31 | bun, fun, bu (ブン、 フン、 ブ) | wa(keru) (わ(ける)) | part, minute of time, understand |
+| 19 | 後 | 20 | go, kou (ゴ、 コウ) | nochi, ushi(ro), ato (のち、 うし(ろ)、 あと) | behind, back, later |
+| 20 | 前 | 6 | zen (ゼン) | mae (まえ) | in front, before |
+| 21 | 生 | 24 | sei, shou (セイ、 ショウ) | i(kiru), u(mu), o(u), ha(eru), nama (い(きる)、 う(む)、 お(う)、 は(える)、 なま) | life, genuine, birth |
+| 22 | 五 | 10 | go (ゴ) | itsu(tsu) (いつ(つ)) | five, 5 |
+| 23 | 間 | 14 | kan, ken (カン、 ケン) | aida, ma, ai (あいだ、 ま、 あい) | interval, space |
+| 24 | 上 | 25 | jou, shou, shan (ジョウ、 ショウ、 シャン) | ue, uwa, kami, a(geru), nobo(ru), tatematsu(ru) (うえ、 うわ-、 かみ、 あ(げる)、 のぼ(る)、 たてまつ(る)) | above, up |
+| 25 | 東 | 7 | tou (トウ) | higashi (ひがし) | east |
+| 26 | 四 | 14 | shi (シ) | yo(tsu), yon (よ(つ)、 よん) | four, 4 |
+| 27 | 今 | 15 | kon, kin (コン、 キン) | ima (いま) | now; the present |
+| 28 | 金 | 21 | kin, kon, gon (キン、 コン、 ゴン) | kane, kana, gane (かね、 かな-、 -がね) | gold |
+| 29 | 九 | 3 | kyuu, ku (キュウ、 ク) | kokono(tsu) (ここの(つ)) | nine, 9 |
+| 30 | 入 | 23 | nyuu (ニュウ) | i(ru), hai(ru) (い(る)、はい(る)) | enter, insert |
+| 31 | 学 | 8 | gaku (ガク) | mana(bu) (まな(ぶ)) | study, learning, science |
+| 32 | 高 | 10 | kou (コウ) | taka(i) (たか(い)) | tall, high, expensive |
+| 33 | 円 | 3 | en (エン) | maru(i) (まる(い)) | circle, yen, round |
+| 34 | 子 | 25 | shi, su, tsu (シ、 ス、 ツ) | ko, ne (こ、 ね) | child |
+| 35 | 外 | 1 | gai, ge (ガイ、 ゲ) | soto, hoka, hazu-, to- (そと、 ほか、 はず(す)、 と-) | outside |
+| 36 | 八 | 29 | hachi (ハチ) | ya(tsu), you (や(つ)、 よう) | eight, 8 |
+| 37 | 六 | 16 | roku (ロク) | mu(tsu), mui (む(つ)、 むい) | six, 6 |
+| 38 | 下 | 21 | ka, ge (カ、 ゲ) | shita, shimo, moto, sa(geru), kuda(ru), o(rosu) (した、 しも、 もと、 さ(げる)、 くだ(る)、 お(ろす)) | below, down, descend, give, low, inferior |
+| 39 | 来 | 15 | rai, tai (ライ、 タイ) | kuru, kitaru, ki, ko (く.る、 きた.る、 き、 こ) | come, due, next, cause, become |
+| 40 | 気 | 27 | ki, ke (キ、 ケ) | iki (いき) | spirit, mind, air, atmosphere, mood |
+| 41 | 小 | 11 | shou (ショウ) | chii(sai), ko-, o-, sa- (ちい(さい)、 こ-、 お-、 さ-) | little, small |
+| 42 | 七 | 24 | shichi (シチ) | nana(tsu), nano (なな(つ)、 なの) | seven, 7 |
+| 43 | 山 | 17 | san, sen (サン、 セン) | yama (やま) | mountain |
+| 44 | 話 | 20 | wa (ワ) | hana(su), hanashi (はな(す)、 はなし) | tale, talk |
+| 45 | 女 | 2 | jo (ジョ) | onnna, me (おんな、 め) | woman, female |
+| 46 | 北 | 7 | hoku (ホク) | kita (きた) | north |
+| 47 | 午 | 20 | go (ゴ) | uma (うま) | noon, sign of the horse |
+| 48 | 百 | 29 | hyaku, byaku (ヒャク、 ビャク) | momo (もも) | hundred |
+| 49 | 書 | 29 | sho (ショ) | kaku (か(く)) | write |
+| 50 | 先 | 20 | sen (セン) | saki, ma(zu) (さき、 ま(ず)) | before, ahead, previous, future, precedence |
+| 51 | 名 | 4 | mei, myou (メイ、 ミョウ) | na (な) | name, noted, distinguished, reputation |
+| 52 | 川 | 17 | sen (セン) | kawa (かわ) | river, stream |
+| 53 | 千 | 3 | sen (セン) | chi (ち) | thousand |
+| 54 | 水 | 16 | sui (スイ) | mizu (みず) | water |
+| 55 | 半 | 28 | han (ハン) | naka(ba) (なか(ば)) | half, middle, odd number, semi- |
+| 56 | 男 | 2 | dan, nan (ダン、 ナン) | otoko, o (おとこ、 お) | male; man |
+| 57 | 西 | 7 | sei, sai (セイ、 サイ) | nishi (にし) | west |
+| 58 | 電 | 31 | den (デン) | — | electricity; electric powered |
+| 59 | 校 | 8 | kou (コウ) | — | school, exam |
+| 60 | 語 | 1 | go (ゴ) | kata(ru) (かた(る)) | word, speech, language |
+| 61 | 土 | 19 | do, to (ド、 ト) | tsuchi (つち) | soil, earth, ground |
+| 62 | 木 | 17 | boku, moku (ボク、 モク) | ki, ko (き、 こ-) | tree, wood |
+| 63 | 聞 | 31 | bun, mon (ブン、 モン) | ki(ku) (き(く)) | to hear; to listen; to ask |
+| 64 | 食 | 16 | shoku, jiki (ショク、 ジキ) | k(u), ta(beru), ha(mu) (く(う)、 た(べる)、 は(む)) | eat, food |
+| 65 | 車 | 21 | sha (シャ) | kuruma (くるま) | car, wheel |
+| 66 | 何 | 12 | ka (カ) | nani, nan (なに、 なん) | what |
+| 67 | 南 | 8 | nan, na (ナン、 ナ) | minami (みなみ) | south |
+| 68 | 万 | 31 | man, ban (マン、 バン) | — | ten thousand, 10,000 |
+| 69 | 毎 | 23 | mai (マイ) | goto(ni) (ごと(に)) | every |
+| 70 | 白 | 11 | haku, byaku (ハク、 ビャク) | shiro(i) (しろ(い)) | white |
+| 71 | 天 | 27 | ten (テン) | amatsu (あまつ) | heavens, sky, imperial |
+| 72 | 母 | 2 | bo (ボ) | haha, kaa (はは、 かあ) | mother |
+| 73 | 火 | 14 | ka (カ) | hi, bi, ho (ひ、 -び、 ほ-) | fire |
+| 74 | 右 | 6 | u, yuu (ウ、 ユウ) | migi (みぎ) | right (direction) |
+| 75 | 読 | 19 | doku, toku, tou (ドク、 トク、 トウ) | yo(mu) (よ(む)) | to read |
+| 76 | 友 | 2 | yuu (ユウ) | tomo (とも) | friend |
+| 77 | 左 | 6 | sa, sha (サ、 シャ) | hidari (ひだり) | left |
+| 78 | 休 | 24 | kyuu (キュウ) | yasu(mu) (やす(む)) | rest, day off, retire, sleep |
+| 79 | 父 | 12 | fu (フ) | chichi, tou (ちち、 とう) | father |
+| 80 | 雨 | 27 | u (ウ) | ame, ama (あめ、 あま) | rain |
+
+---

@@ -1,0 +1,14 @@
+#separator:tab
+#html:true
+#notetype:N5 Gramática
+#deck:Japonês::N5::Gramática
+#tags column:5
+#columns:Frase	Resposta	Estrutura	Explicacao	Tags
+<ruby>私<rt>わたし</rt></ruby>は<ruby>医者<rt>いしゃ</rt></ruby> ___ です。(negar identidade)	じゃない	N + じゃない (です)	Negativa da cópula. じゃない é casual; ではありません é formal. じゃないです é o meio-termo polido do dia a dia.	aula::02 fase::1 tipo::gramatica gramatica::janai
+<ruby>兄<rt>あに</rt></ruby>は<ruby>学生<rt>がくせい</rt></ruby> ___ 。(negar, casual)	じゃない	N + じゃない	Sem です fica casual. じゃない é a contração falada de ではない.	aula::02 fase::1 tipo::gramatica gramatica::janai
+<ruby>私<rt>わたし</rt></ruby> ___ <ruby>本<rt>ほん</rt></ruby>です。	の	N1 + の + N2	Marca posse ou atribuição: N1 é o possuidor, N2 o possuído. Ordem inversa à do português ("o livro de mim" → <ruby>私<rt>わたし</rt></ruby>の<ruby>本<rt>ほん</rt></ruby>).	aula::02 fase::1 tipo::gramatica gramatica::no-posse
+<ruby>友達<rt>ともだち</rt></ruby> ___ <ruby>お母さん<rt>おかあさん</rt></ruby>は<ruby>先生<rt>せんせい</rt></ruby>です。	の	N1 + の + N2	の encadeia: <ruby>友達<rt>ともだち</rt></ruby>の<ruby>お母さん<rt>おかあさん</rt></ruby> = "a mãe do amigo". Pode empilhar: <ruby>私<rt>わたし</rt></ruby>の<ruby>友達<rt>ともだち</rt></ruby>の<ruby>お母さん<rt>おかあさん</rt></ruby>.	aula::02 fase::1 tipo::gramatica gramatica::no-posse
+<ruby>私<rt>わたし</rt></ruby> ___ <ruby>留学生<rt>りゅうがくせい</rt></ruby>です。(indicar adição)	も	N + も	"Também". SUBSTITUI は/が — nunca diga <ruby>私<rt>わたし</rt></ruby>はも. Com verbo negativo passa a significar "tampouco".	aula::02 fase::1 tipo::gramatica gramatica::mo
+<ruby>弟<rt>おとうと</rt></ruby> ___ <ruby>生徒<rt>せいと</rt></ruby>です。(ele igualmente)	も	N + も	Erro clássico de lusófono: manter は junto de も. も ocupa o lugar da partícula de tópico.	aula::02 fase::1 tipo::gramatica gramatica::mo
+あなたの ___ は<ruby>医者<rt>いしゃ</rt></ruby>です。(irmão mais velho DE OUTRA pessoa)	<ruby>お兄さん<rt>おにいさん</rt></ruby>	お + <ruby>和語<rt>わご</rt></ruby>	Família alheia leva prefixo honorífico: <ruby>お兄さん<rt>おにいさん</rt></ruby>. Para a própria família usa-se a forma simples <ruby>兄<rt>あに</rt></ruby>. Confundir as duas soa arrogante ou distante.	aula::02 fase::1 tipo::gramatica gramatica::o-go-polidez
+<ruby>私<rt>わたし</rt></ruby>の ___ は<ruby>会社<rt>かいしゃ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>です。(meu próprio pai)	<ruby>父<rt>ちち</rt></ruby>	<ruby>和語<rt>わご</rt></ruby> sem prefixo	Ao falar da PRÓPRIA família, use a forma sem honorífico: <ruby>父<rt>ちち</rt></ruby> / <ruby>母<rt>はは</rt></ruby> / <ruby>兄<rt>あに</rt></ruby> / <ruby>姉<rt>あね</rt></ruby>. Já <ruby>お父さん<rt>おとうさん</rt></ruby> e <ruby>お母さん<rt>おかあさん</rt></ruby> referem-se à família do interlocutor.	aula::02 fase::1 tipo::gramatica gramatica::o-go-polidez

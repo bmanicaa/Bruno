@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading: Aula 3 — JLPT N5</title>
+  <style>
+    :root[data-theme="light"] {
+      --bg-color: #f7f9fb;
+      --text-color: #2b2b2b;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --primary-color: #3b82f6;
+      --badge-blue: #ebf8ff;
+      --badge-blue-text: #2b6cb0;
+      --badge-green: #f0fff4;
+      --badge-green-text: #2f855a;
+      --ruby-color: #64748b;
+    }
+
+    :root[data-theme="amoled"] {
+      --bg-color: #000000;
+      --text-color: #e0e0e0;
+      --card-bg: #0a0a0a;
+      --border-color: #222222;
+      --primary-color: #3b82f6;
+      --badge-blue: #1e3a8a;
+      --badge-blue-text: #93c5fd;
+      --badge-green: #064e3b;
+      --badge-green-text: #6ee7b7;
+      --ruby-color: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.8;
+      padding: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .header-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .header-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .meta-badges {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-blue { background: var(--badge-blue); color: var(--badge-blue-text); }
+    .badge-green { background: var(--badge-green); color: var(--badge-green-text); }
+
+    .theme-toggle-btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .theme-toggle-btn:hover {
+      opacity: 0.9;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .story-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .ja-text {
+      font-size: 1.5rem;
+      line-height: 2.5;
+      font-family: "Hiragino Kaku Gothic Pro", "Meiryo", "Noto Sans JP", sans-serif;
+    }
+
+    ruby {
+      ruby-align: center;
+    }
+    rt {
+      font-size: 0.7rem;
+      color: var(--ruby-color);
+      user-select: none;
+    }
+
+    .questions-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .questions-card h2 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    .questions-list {
+      list-style-position: inside;
+    }
+    .questions-list li {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    @media print {
+      body {
+        background-color: white !important;
+        color: black !important;
+        padding: 0;
+      }
+      .header-card, .story-card, .questions-card {
+        border: none !important;
+        box-shadow: none !important;
+        background-color: white !important;
+        padding: 0 !important;
+        margin-bottom: 1.5rem !important;
+      }
+      .theme-toggle-btn {
+        display: none !important;
+      }
+      .ja-text {
+        font-size: 1.4rem;
+        line-height: 2;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header-card">
+    <div class="header-top-row">
+      <div class="meta-badges">
+        <span class="badge badge-blue">Nível JLPT N5</span>
+        <span class="badge badge-green">⏳ ~10 Minutos</span>
+      </div>
+      <div>
+        <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙 AMOLED Black</button>
+      </div>
+    </div>
+    <h1>📖 LEITURA: AULA 3 — 私の家族と友達</h1>
+    <div>
+      <strong>🎯 Escopo:</strong> Aula 3 (Cumulativo: Aulas 1 a 3)<br>
+      <strong>📝 Tema:</strong> Apresentação pessoal de Marco, contagem dos membros de sua família, detalhes sobre seus irmãos, amigos e contagem de itens.
+    </div>
+  </header>
+
+  <section class="story-card">
+    <div class="ja-text">
+      <p style="margin-bottom: 1.2rem;">
+        <ruby>私<rt>わたし</rt></ruby>の<ruby>名前<rt>なまえ</rt></ruby>はマルコです。私はいま、<ruby>留学生<rt>りゅうがくせい</rt></ruby>です。
+      </p>
+      <p style="margin-bottom: 1.2rem;">
+        私の<ruby>家族<rt>かぞく</rt></ruby>は<ruby>五人<rt>ごにん</rt></ruby>です。<ruby>父<rt>ちち</rt></ruby>、<ruby>母<rt>はは</rt></ruby>、<ruby>兄<rt>あに</rt></ruby>、<ruby>妹<rt>いもうと</rt></ruby>、私です。父は<ruby>会社<rt>かいしゃ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>です。母は<ruby>医者<rt>いしゃ</rt></ruby>です。兄は<ruby>学生<rt>がくせい</rt></ruby>です。妹は<ruby>子供<rt>こども</rt></ruby>です。
+      </p>
+      <p style="margin-bottom: 1.2rem;">
+兄はとても<ruby>大人<rt>おとな</rt></ruby>です。妹は<ruby>女の子<rt>おんなのこ</rt></ruby>です。父の会社の人は<ruby>四千五百六十七人<rt>よんせんごひゃくろくじゅうななにん</rt></ruby>です。
+      </p>
+      <p style="margin-bottom: 1.2rem;">
+        <ruby>友達<rt>ともだち</rt></ruby>は<ruby>三人<rt>さんにん</rt></ruby>です。<ruby>一人<rt>ひとり</rt></ruby>は<ruby>外国人<rt>がいこくじん</rt></ruby>です。<ruby>二人<rt>ふたり</rt></ruby>は留学生です。
+      </p>
+      <p>
+        <ruby>本<rt>ほん</rt></ruby>は<ruby>一つ<rt>ひとつ</rt></ruby>か<ruby>二つ<rt>ふたつ</rt></ruby>ですか。いいえ、本は<ruby>三つ<rt>みっつ</rt></ruby>です。
+      </p>
+    </div>
+  </section>
+
+  <section class="questions-card">
+    <h2>❓ COMPREENSÃO DE TEXTO</h2>
+    <p style="margin-bottom: 1rem; font-style: italic;">Responda às seguintes perguntas e discuta com a IA no chat para receber feedback didático e o gabarito detalhado.</p>
+    <ol class="questions-list">
+      <li><strong>[Factual]</strong> Quem é o narrador do texto e qual é o seu status atual (ocupação/estudo)?</li>
+      <li><strong>[Factual / Numérica]</strong> Quantas pessoas formam a família de Marco e quem são esses membros?</li>
+      <li><strong>[Interpretação de Profissão]</strong> Qual é a profissão do pai e a da mãe de Marco segundo o texto?</li>
+      <li><strong>[Numérica / Análise de Grupo]</strong> Quantos amigos Marco tem no total, e qual a divisão entre amigos estrangeiros e japoneses?</li>
+      <li><strong>[Leitura & Contagem]</strong> O narrador possui um ou dois livros? Qual é a quantidade exata mencionada no final?</li>
+    </ol>
+  </section>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.getElementById('themeBtn');
+      if (html.getAttribute('data-theme') === 'light') {
+        html.setAttribute('data-theme', 'amoled');
+        btn.innerHTML = '☀️ Light / Print';
+      } else {
+        html.setAttribute('data-theme', 'light');
+        btn.innerHTML = '🌙 AMOLED Black';
+      }
+    }
+  </script>
+</body>
+</html>

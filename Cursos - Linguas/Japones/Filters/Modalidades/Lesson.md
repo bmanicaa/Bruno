@@ -22,7 +22,7 @@ The lesson MUST eliminate 100% of ambiguity. The student's capacity to absorb ma
 2. **ZERO AMBIGUITY**: Never use vague explanations like "used in certain contexts". State EXACTLY which contexts (formal/informal, spoken/written, male/female, region, emotional nuance).
 3. **CONTROLLED COGNITIVE LOAD**: Sentence examples MUST ONLY use vocabulary from the current lesson or from previous lessons (cumulative principle defined in `JLPTN5.md`). Do NOT introduce words that haven't been taught yet.
 4. **FURIGANA (RUBY):** Segue rigorosamente a Regra 11 de `JLPTN5.md` e a especificação técnica detalhada em `Filters/HTML/HTML_Lesson.md` §4.2. Resumo: todo kanji em toda ocorrência recebe `<ruby>` com leitura por palavra inteira; kana puro nunca recebe ruby.
-5. **MANDATORY 4-LAYER SENTENCE BREAKDOWN**: Every Japanese phrase/example MUST include all 4 layers detailed below.
+5. **MANDATORY 3-LAYER SENTENCE BREAKDOWN**: Every Japanese phrase/example MUST include all 3 layers detailed below (`layer-1-ja`, `layer-3-pt`, `layer-4-breakdown`). The old `layer-2-kana` does NOT exist — layer 1 is already 100% ruby-annotated, and the validator blocks any file containing it.
 6. **CUMULATIVE RULE**: Follow the cumulative principle strictly — lesson N may use all content from lessons 1..N, but NEVER content from lessons N+1 or beyond. This applies to grammar, vocabulary, and kanji.
 7. **VOCABULÁRIO UNIFICADO**: The vocabulary list for each lesson is strictly defined in `Content/N5_Vocabulary.md` under `## Aula X`. Os dados já vêm pré-agrupados por temas semânticos (ex: `### Saudações e Expressões`, `### Lugares e Direções`). A IA DEVE extrair exatamente essas palavras, preservando e utilizando EXATAMENTE as categorias semânticas (subtítulos) que já vêm predefinidas e mastigadas no arquivo, ensinando-as em uma seção consolidada "Vocabulário da Aula". Provide robust examples using the 3-layer breakdown.
 8. **VERBO-CORE & MÓDULO DE CONJUGAÇÃO**: The Aula 6 introduces the Verbo-Core — verbs presented in the 4 lexical forms (dictionary / ます / ました / ません) as fixed pairs, WITHOUT group-systematization. The systematization (Grupos 1-3, て-form, ない-form, た-form) belongs EXCLUSIVELY to the MÓDULO DE CONJUGAÇÃO da Aula 19 (seção 3E do Template A em `Filters/HTML/HTML_Lesson.md`). Every verb taught before Aula 19 (Aula 7: ある/いる; Aulas 16-17: 食べる, 飲む, 話す, 書く) is also presented as a dictionary/ます pair (with ました/ません when useful).
@@ -118,7 +118,7 @@ Formato sugerido:
 - Comparação direta com o Português (onde encaixa e onde a tradução direta FALHA).
 
 #### C. Exemplos Práticos em Contexto
-*(Aplicar a Regra de Ouro das 4 Camadas para CADA exemplo - mínimo 3 exemplos por ponto gramatical)*
+*(Aplicar o Padrão de 3 Camadas para CADA exemplo — mínimo 3 exemplos por ponto gramatical. A camada de leitura integral em kana (`layer-2-kana`) NÃO existe: a camada 1 já é 100% anotada por ruby.)*
 
 #### D. Tabela de Conjugação *(quando aplicável)*
 *(Incluir quando a aula introduz um novo padrão de conjugação verbal. Mostrar a conjugação para os 3 grupos de verbos com 2-3 exemplos de cada grupo.)*
@@ -144,17 +144,15 @@ Formato sugerido:
 ---
 
 ## 3.5 💬 MINI-DIÁLOGO EM CONTEXTO
-*(Criar um diálogo curto de 3-5 turnos que integre naturalmente a gramática e vocabulário ensinados nesta aula. Usar a regra das 4 camadas para cada fala.)*
+*(Criar um diálogo curto de 3-5 turnos que integre naturalmente a gramática e vocabulário ensinados nesta aula. Usar o Padrão de 3 Camadas para cada fala.)*
 
 **Contexto**: [Situação do diálogo — ex: "No restaurante, pedindo comida"]
 
 **[Pessoa A]**: [Fala em japonês]
-* **Reading**: [Kana]
 * **PT-BR**: "[Tradução]"
 * **Breakdown**: [...]
 
 **[Pessoa B]**: [Fala em japonês]
-* **Reading**: [Kana]
 * **PT-BR**: "[Tradução]"
 * **Breakdown**: [...]
 
@@ -175,6 +173,17 @@ Formato sugerido:
 ## 🏗️ TEMPLATE B: AULA DE CONSOLIDAÇÃO (🔄)
 
 Consolidation lessons do NOT teach new content. They review and reinforce everything from the previous 3-4 content lessons through active recall and interleaved practice.
+
+### ⚠️ LEITURA OBRIGATÓRIA DE `Progress.md` ANTES DE GERAR
+
+A aula de consolidação é o **principal consumidor** do estado do curso. Antes de escrever qualquer seção, a IA DEVE abrir `Progress.md` e extrair § Itens Fracos.
+
+1. **Todo item com status ⚠️ ativo cujo escopo caia dentro desta consolidação DEVE ser exercitado explicitamente** — na Seção 1 (Recall) e/ou na Seção 2 (Interleaved). Não é opcional e não é "se sobrar espaço": é a razão de a consolidação existir.
+2. Respeitar as **instruções específicas** anotadas junto ao item. Se `Progress.md` diz "use dica neutra, não nomeie a função", obedecer — a dica nomeada já foi acertada e não mede nada.
+3. Na Seção 4 (Autodiagnóstico), **pré-marcar** os itens fracos conhecidos com ⚠️ em vez de deixar em branco: o estudante não deveria precisar lembrar sozinho o que já foi diagnosticado.
+4. Após a sessão, **atualizar `Progress.md`**: marcar a consolidação como concluída e mover para *Itens dominados* o que foi recuperado com sucesso.
+
+> Sem este passo, a consolidação revisa conteúdo genérico e ignora justamente os pontos onde o estudante já demonstrou falhar — que é o desperdício mais caro do sistema, porque a consolidação só acontece a cada 3-4 semanas.
 
 ```markdown
 # 🔄 AULA [NUMBER]: CONSOLIDAÇÃO — Aulas [X] a [Y]
@@ -205,6 +214,18 @@ Consolidation lessons do NOT teach new content. They review and reinforce everyt
 
 ---
 
+## 1.5 ⏳ SEGUNDA PASSADA — BLOCO ANTIGO (`review_prior`)
+*(Incluir SEMPRE que a aula tiver o campo `review_prior` no YAML — Aulas 13, 18, 22, 26, 30. Omitir nas demais.)*
+
+Recuperação de um bloco de 8-12 aulas atrás, que de outro modo só voltaria na Aula 32. **Este é o único momento em que aquele conteúdo é revisto** — trate-o como tal.
+
+- 5-8 itens de recall rápido cobrindo gramática e vocabulário das aulas em `review_prior`.
+- Priorizar o que estiver em `Progress.md` § Itens Fracos com origem naquelas aulas.
+- Formato de recuperação ATIVA (lacuna, tradução, correção de erro) — nunca releitura passiva.
+- Registrar o desempenho: acerto aqui é candidato a *Itens dominados*; erro reforça a linha em § Itens Fracos.
+
+---
+
 ## 2. 🔀 EXERCÍCIOS INTERLEAVED (15 min)
 *(Mistura deliberada de conteúdo de TODAS as aulas cobertas. Cada exercício combina gramática, vocab e kanji de aulas diferentes.)*
 
@@ -222,7 +243,7 @@ Consolidation lessons do NOT teach new content. They review and reinforce everyt
 **Contexto**: [Situação realista]
 **Tarefa**: Leia o diálogo, depois tente criar um diálogo similar sobre [variação do tema].
 
-[Diálogo modelo com 4 camadas]
+[Diálogo modelo com 3 camadas]
 
 ---
 
@@ -234,6 +255,7 @@ Marque com ✅ (seguro), ⚠️ (preciso revisar), ou ❌ (não lembro):
 | Item | Status |
 | :--- | :---: |
 | Kanji: [list] | _____ |
+| **Gramática: [item fraco de Progress.md]** | **⚠️ (pré-marcado — diagnosticado na Aula N)** |
 | Gramática: [list] | _____ |
 | Vocabulário do tema [X] | _____ |
 

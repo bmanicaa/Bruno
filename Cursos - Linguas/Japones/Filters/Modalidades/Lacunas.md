@@ -9,7 +9,7 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
 1. **Princípio do Foco na Matéria Vigente (Escopo de Avaliação):**
    - A modalidade **Lacunas** testa **exclusivamente** a gramática, partículas, conjugações e vocabulário **novos da Aula X** — a gramática e os kanji listados nos campos `grammar` e `kanji` da Aula X em `JLPTN5.md`, e o vocabulário definido na seção `## Aula X` de `Content/N5_Vocabulary.md` (ou ementário correspondente).
    - É **estritamente proibido** colocar lacunas que cobrem ou pontuem itens gramaticais ou vocabulário ensinados exclusivamente em aulas futuras (X+1 em diante).
-   - **Exceção para Aulas de Consolidação:** Nas aulas de consolidação (ex: Aula 5, 9, 13, 18, 26, 32), o escopo avaliado abrange todos os itens introduzidos na respectiva fase/bloco de aulas recém-concluído.
+   - **Exceção para Aulas de Consolidação:** Nas aulas de consolidação (5, 9, 13, 18, 22, 26, 30, 32), o escopo avaliado abrange todos os itens introduzidos na respectiva fase/bloco de aulas recém-concluído.
 
 2. **Distinção Obrigatória: Conteúdo TESTADO vs. Conteúdo de SCAFFOLDING:**
    - **Conteúdo TESTADO (as lacunas `[ ___ ]`):** Apenas itens novos da Aula X. A resposta esperada na lacuna e pontuada deve exigir a aplicação ativa de um termo de vocabulário da Aula X (seção `## Aula X` de `Content/N5_Vocabulary.md`). É EXPRESSAMENTE PROIBIDO exigir palavras como resposta que não estão formalmente na Aula X.
@@ -114,6 +114,11 @@ Ao receber o comando `"Corrigir Lacunas Aula X"` ou `"Avalie o Practice/N5_PX_La
 
 3. **Atualização do Arquivo Local:**
    - A IA edita o cabeçalho de `Practice/N5_P{X}_Lacunas.md` alterando o status para `✅ Concluído (Nota: YY/100)`.
+
+3.1 **Atualização de `Progress.md` (OBRIGATÓRIA):**
+   - Marcar a célula `Lacunas` da Aula X no Mapa de Progresso com a nota.
+   - Para cada erro, criar ou incrementar uma linha em § Itens Fracos **com diagnóstico de causa raiz**, seguindo o § 4 Protocolo de Atualização de `Progress.md`.
+   - Esses itens são o insumo da Seção 6 (Revisão Espaçada) do próximo Teste. Sem esta escrita, o erro é esquecido e nunca mais re-testado.
 
 4. **Feedback Didático no Chat (Diagnóstico de Causa Raiz):**
    - A IA publica no chat um relatório contendo:

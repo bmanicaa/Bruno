@@ -1,125 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-// --- VALIDAÇÃO AUTOMÁTICA DE RUBY (Regra 11 do JLPTN5.md / §4.6 do Filters/HTML.md) ---
-// Determinística e bloqueante: um arquivo HTML reprovado NÃO é enviado ao Drive.
-
-const KANJI_RE = /[\u3400-\u9fff\uf900-\ufaff]/; // Ideogramas CJK (kanji)
-
-function extractLessonNumber(fileName) {
-    const m = fileName.match(/N5_L(\d+)\.html/i);
-    return m ? parseInt(m[1], 10) : null;
-}
-
-// Lê Content/N5_Kanji.md e monta o mapa kanji -> aula de introdução.
-function loadFormalKanji() {
-    const kanjiPath = path.join(__dirname, '../../../Japones/Content/N5_Kanji.md');
-    if (!fs.existsSync(kanjiPath)) return null;
-    const lines = fs.readFileSync(kanjiPath, 'utf8').split('\n');
-    const map = new Map();
-    for (const line of lines) {
-        const m = line.match(/^\|\s*\d+\s*\|\s*([\u3400-\u9fff])\s*\|\s*(\d+)\s*\|/);
-        if (m) map.set(m[1], parseInt(m[2], 10));
-    }
-    return map.size ? map : null;
-}
-
-function validateLessonHtml(html, lessonNum, formalKanji) {
-    const errors = [];
-    const warnings = [];
-
-    // Isola o <body> (remove <head>, <style> e <script>)
-    const clean = (html.includes('</head>') ? html.split('</head>')[1] : html)
-        .replace(/<style>[\s\S]*?<\/style>/g, ' ')
-        .replace(/<script>[\s\S]*?<\/script>/g, ' ');
-
-    // CHECK 1 — Nenhum <ruby> sobre palavra sem kanji (kana puro).
-    const rubyRe = /<ruby[^>]*>([\s\S]*?)<\/ruby>/g;
-    let m;
-    while ((m = rubyRe.exec(clean)) !== null) {
-        const inner = m[1];
-        const rtIdx = inner.indexOf('<rt>');
-        const base = (rtIdx >= 0 ? inner.slice(0, rtIdx) : inner).replace(/<[^>]+>/g, '');
-        if (![...base].some(ch => KANJI_RE.test(ch))) {
-            errors.push(`CHECK1 [ruby sobre kana puro]: <ruby>${base}</ruby> não pode existir.`);
-        }
-    }
-
-    // Regiões isentas: layer-4 breakdown (a frase anotada está logo acima).
-    const exemptRegions = [];
-    const breakdownRe = /<div class="layer-4-breakdown">[\s\S]*?<\/div>/g;
-    let bm;
-    while ((bm = breakdownRe.exec(clean)) !== null) {
-        exemptRegions.push([bm.index, bm.index + bm[0].length]);
-    }
-    const inExempt = (pos) => exemptRegions.some(([a, b]) => pos >= a && pos < b);
-
-    // Regiões cobertas por <ruby> (a base contém o kanji anotado).
-    const rubyRegions = [];
-    const rubyAllRe = /<ruby[^>]*>[\s\S]*?<\/ruby>/g;
-    let rm;
-    while ((rm = rubyAllRe.exec(clean)) !== null) rubyRegions.push([rm.index, rm.index + rm[0].length]);
-    const inRuby = (pos) => rubyRegions.some(([a, b]) => pos >= a && pos < b);
-
-    // CHECK 2 — Todo kanji Nível 2 (reconhecimento) precisa de ruby em TODA ocorrência.
-    if (formalKanji && lessonNum) {
-        const isLevel2 = (ch) => {
-            if (!formalKanji.has(ch)) return true;
-            return formalKanji.get(ch) > lessonNum;
-        };
-        for (let i = 0; i < clean.length; i++) {
-            const ch = clean[i];
-            if (!KANJI_RE.test(ch)) continue;
-            if (inRuby(i) || inExempt(i)) continue;
-            if (isLevel2(ch)) {
-                const ctx = clean.slice(Math.max(0, i - 15), i + 16).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-                errors.push(`CHECK2 [kanji Nível 2 sem ruby]: "${ch}" em ...${ctx}...`);
-            }
-        }
-    } else if (formalKanji) {
-        warnings.push('CHECK2 não executado: número da aula não identificado no nome do arquivo (use N5_LX.html).');
-    } else {
-        warnings.push('CHECK2 não executado: Content/N5_Kanji.md não encontrado.');
-    }
-
-    // CHECK 3 — Layer-2-kana condicional (presente ⟺ layer-1 tem kanji sem ruby).
-    const layer1Re = /<div class="layer-1-ja ja-text">([\s\S]*?)<\/div>/g;
-    let lm;
-    while ((lm = layer1Re.exec(clean)) !== null) {
-        const l1Clean = lm[1].replace(/<ruby[^>]*>[\s\S]*?<\/ruby>/g, '').replace(/<[^>]+>/g, '');
-        const bare = [...l1Clean].some(ch => KANJI_RE.test(ch));
-        const after = clean.slice(lm.index + lm[0].length, lm.index + lm[0].length + 200);
-        const hasL2 = /^\s*<div class="layer-2-kana">/.test(after);
-        const snippet = lm[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-        if (hasL2 && !bare) {
-            errors.push(`CHECK3 [layer-2 redundante]: frase 100% anotada por ruby não deve ter layer-2-kana — "${snippet}".`);
-        }
-        if (!hasL2 && bare) {
-            errors.push(`CHECK3 [layer-2 ausente]: frase com kanji sem ruby (buraco de leitura) exige layer-2-kana — "${snippet}".`);
-        }
-    }
-
-    // CHECK 4 (aviso) — Nível 1 não pode repetir <ruby> para a mesma palavra no arquivo.
-    if (formalKanji && lessonNum) {
-        const seen = new Map();
-        rubyRe.lastIndex = 0;
-        while ((m = rubyRe.exec(clean)) !== null) {
-            const inner = m[1];
-            const rtIdx = inner.indexOf('<rt>');
-            const base = (rtIdx >= 0 ? inner.slice(0, rtIdx) : inner).replace(/<[^>]+>/g, '');
-            const baseKanji = [...base].filter(ch => KANJI_RE.test(ch));
-            const allLevel1 = baseKanji.length > 0 && baseKanji.every(ch => formalKanji.has(ch) && formalKanji.get(ch) <= lessonNum);
-            if (!allLevel1) continue;
-            if (seen.has(base)) {
-                warnings.push(`CHECK4 [Nível 1 ruby repetido]: "${base}" já apareceu com ruby neste arquivo (1ª ocorrência apenas).`);
-            } else {
-                seen.set(base, true);
-            }
-        }
-    }
-
-    return { errors, warnings };
-}
+// --- VALIDAÇÃO AUTOMÁTICA DE ARTEFATOS (Regra 11 do JLPTN5.md / §4.6 do HTML_Lesson.md) ---
+// A lógica vive numa FONTE ÚNICA DE VERDADE, em Japones/scripts/validate_artifact.js,
+// para que o mesmo validador sirva HTML (aula/reading), Markdown (Teste/Lacunas/Ditado)
+// e TSV do Anki. Determinística e bloqueante: artefato reprovado NÃO sobe ao Drive.
+const {
+    validateArtifact,
+    detectMode,
+    detectLesson,
+} = require('../../../Japones/scripts/validate_artifact.js');
 
 const { getAccessToken } = require('./auth');
 
@@ -153,19 +43,26 @@ async function findOrCreateFolder(token, folderName, parentId = 'root') {
 }
 
 async function uploadLesson(fileName, fileContent, convertToDoc = null) {
-    // VALIDAÇÃO AUTOMÁTICA (Regra 11) — bloqueia upload de HTML reprovado.
-    if (fileName.toLowerCase().endsWith('.html')) {
-        const lessonNum = extractLessonNumber(fileName);
-        const formalKanji = loadFormalKanji();
-        const { errors, warnings } = validateLessonHtml(fileContent, lessonNum, formalKanji);
+    // VALIDAÇÃO AUTOMÁTICA (Regra 11) — bloqueia upload de artefato reprovado.
+    // O modo é inferido do nome do arquivo: N5_L{n}.html = aula (furigana universal),
+    // N5_P{n}_Reading.html = reading (furigana gradual). Nunca mais silenciosamente
+    // pulada: se o modo/aula não puder ser inferido, isso é dito em voz alta.
+    {
+        const mode = detectMode(fileName);
+        const lesson = detectLesson(fileName);
+        if (!lesson) {
+            console.log(`⚠️ Aula não identificada em "${fileName}" — o Vocabulary Gate (CHECK5) não será executado.`);
+        }
+        const { errors, warnings } = validateArtifact(fileContent, { mode, lesson });
+        console.log(`▶ Validando "${fileName}" [mode=${mode}${lesson ? `, aula=${lesson}` : ''}]`);
         if (warnings.length) {
             console.log('⚠️ AVISOS (não bloqueantes):\n' + warnings.map(w => '  - ' + w).join('\n'));
         }
         if (errors.length) {
-            console.error('❌ VALIDAÇÃO DE RUBY REPROVADA — upload bloqueado:\n' + errors.map(e => '  - ' + e).join('\n'));
-            throw new Error('Aula reprovada na validação de ruby (Regra 11 / Filters/HTML.md §4.6). Corrija o HTML e tente novamente.');
+            console.error('❌ VALIDAÇÃO REPROVADA — upload bloqueado:\n' + errors.map(e => '  - ' + e).join('\n'));
+            throw new Error('Artefato reprovado na validação (Regra 11 / HTML_Lesson.md §4.6). Corrija e tente novamente.');
         }
-        console.log('✓ Validação de ruby aprovada (Regra 11).');
+        console.log('✓ Validação aprovada (Regra 11).');
     }
 
     const token = await getAccessToken();
@@ -258,4 +155,4 @@ if (require.main === module) {
         .catch(err => console.error('Erro no upload:', err));
 }
 
-module.exports = { uploadLesson, validateLessonHtml, extractLessonNumber, loadFormalKanji };
+module.exports = { uploadLesson, validateArtifact, detectMode, detectLesson };

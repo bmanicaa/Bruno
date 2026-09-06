@@ -66,3 +66,16 @@ A estrutura do arquivo HTML é definida rigorosamente em `Filters/HTML/HTML_read
 1. A IA apresenta, no chat, as perguntas de interpretação geradas.
 2. O estudante responde pelo chat.
 3. A IA avalia a precisão da resposta e fornece feedback didático detalhado no chat.
+4. **Atualização de `Progress.md` (OBRIGATÓRIA):** marcar a célula `Reading` da Aula X no Mapa de Progresso e registrar em § Itens Fracos qualquer estrutura que o estudante demonstrou não decodificar — mesmo sem nota numérica, um mal-entendido de leitura é um dado de retenção tão válido quanto um erro de exercício.
+
+---
+
+## ✅ 6. VALIDAÇÃO ANTES DA ENTREGA
+
+Executar obrigatoriamente, corrigindo todo erro bloqueante:
+
+```bash
+node scripts/validate_artifact.js Practice/{NIVEL}_P{X}_Reading.html
+```
+
+No modo `reading` o validador confere a política **gradual**: a 1ª ocorrência de cada palavra com kanji deve ter `<ruby>`, e as seguintes **não** podem ter. Confere também ruby sobre palavra inteira (nunca kanji a kanji), ausência de ruby em kana puro, e emite avisos do Vocabulary Gate para palavras fora do inventário cumulativo — que devem ser **lidos e julgados**, não ignorados.

@@ -2,6 +2,8 @@
 
 Source: https://jlptsensei.com/jlpt-n5-vocabulary-list/
 
+> **Nota de manutenção:** a entrada 円 (えん, #645) foi ACRESCENTADA à lista original do jlptsensei. Motivo: 円 é um dos 80 kanji formais do N5, mas não aparecia em NENHUMA das 644 palavras — era impossível ensiná-lo pela abordagem composicional (forma → significado via palavras). Entrou na Aula 3, junto de いくら, onde preço é o contexto natural.
+
 Esta lista foi reestruturada cronologicamente para facilitar o consumo da IA durante a geração das aulas. As palavras estão agrupadas nas exatas aulas em que são introduzidas.
 
 > Nota: As aulas de consolidação (5, 9, 13, 18, 22, 26, 30, 32) não introduzem vocabulário novo e, por isso, não possuem seção própria — a numeração das seções segue apenas as aulas de conteúdo.
@@ -109,7 +111,7 @@ Esta lista foi reestruturada cronologicamente para facilitar o consumo da IA dur
 
 
 ## Aula 3
-*(Total: 29 palavras introduzidas nesta aula)*
+*(Total: 30 palavras introduzidas nesta aula)*
 
 ### Números e Quantidades
 
@@ -139,6 +141,7 @@ Esta lista foi reestruturada cronologicamente para facilitar o consumo da IA dur
 | 284 | 九つ | ここのつ | kokonotsu | Noun, Numeric | nine; 9 |
 | 191 | いくつ | いくつ | ikutsu | Adverb | how many?, how old? |
 | 190 | いくら | いくら | ikura | Noun, Adverb | how much?; how many? |
+| 645 | 円 | えん | en | Noun, Suffix | yen (Japanese currency); circle |
 | 460 | 零 | れい | rei | Noun | zero |
 | 643 | ゼロ | ゼロ | zero | Noun | zero |
 | 42 | 番号 | ばんごう | bangou | Noun | number |

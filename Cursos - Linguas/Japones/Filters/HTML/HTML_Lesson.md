@@ -1025,8 +1025,8 @@ As Aulas de Consolidação **não ensinam conteúdo novo**. Elas exercitam ativa
   <section id="sec-3">
     <h2 class="section-title">3. 💬 DIÁLOGO DE PRODUÇÃO (10 MIN)</h2>
     <div class="grammar-block">
-      <p style="margin-bottom: 1rem;"><strong>Contexto:</strong> Diálogo longo em 4 camadas integrando o vocabulário acumulado.</p>
-      <!-- Chat bubbles estilo 4 camadas -->
+      <p style="margin-bottom: 1rem;"><strong>Contexto:</strong> Diálogo longo em 3 camadas integrando o vocabulário acumulado.</p>
+      <!-- Chat bubbles estilo 3 camadas (layer-1-ja / layer-3-pt / layer-4-breakdown) -->
     </div>
   </section>
 
@@ -1109,7 +1109,7 @@ Em conformidade com a Regra 13 de `JLPTN5.md`:
 1. Salvar o arquivo gerado temporariamente como HTML.
 2. Executar o script Node.js para envio ao Google Drive:
    ```bash
-   node "/Users/bmanica/Documents/GitHub/Bruno/Google Workspace/Drive/scripts/upload_to_gdrive.js" "<caminho_do_arquivo_html_temp>" "N5_LX.html"
+   node "../Google Workspace/Drive/scripts/upload_to_gdrive.js" "<caminho_do_arquivo_html_temp>" "N5_LX.html"
    ```
 3. Retornar no chat apenas uma mensagem sucinta de confirmação do salvamento e upload.
 4. Gerar o arquivo `.tsv` do Anki em `Anki/N5_LX_Anki.tsv` com os cabeçalhos `#separator:tab`, `#html:true` e `#notetype:Básico` no topo e furigana `<ruby>` na frente dos cards.
@@ -1124,10 +1124,31 @@ Em conformidade com a Regra 13 de `JLPTN5.md`:
 
 ### 4.6 Checklist de Validação Automática (Antes do Upload)
 
-O script `upload_to_gdrive.js` executa esta validação mecanicamente e **BLOQUEIA** o upload se qualquer checagem de 1 a 4 falhar (a 5 é aviso não bloqueante). O gerador DEVE conferir o mesmo antes de salvar o arquivo:
+A validação é implementada em **`scripts/validate_artifact.js`** — fonte única de verdade, compartilhada entre o `upload_to_gdrive.js` (que **BLOQUEIA** o upload) e a linha de comando (única barreira para Markdown e TSV, que não passam pelo upload).
 
-1. **Sem ruby sobre kana puro** (bloqueante): todo `<ruby>` deve ter base contendo ≥1 kanji. `あなた`, `はい`, `ええ`, `どうも`, `どうぞ`, `じゃあ`, `さあ` e partículas ficam **sem** `<ruby>`.
-2. **Todo kanji com ruby** (política "sempre furigana"): não deve existir kanji solto fora das exceções (layer-4 breakdown, exemplo kunyomi do card com leitura em parênteses, listas meta). O script **bloqueia** qualquer kanji sem ruby — inclusive em textos explicativos, callouts e dicas do Anki. O gerador aplica ruby em **TODO** kanji, sem exceção.
-3. **Nenhuma `layer-2-kana`** (bloqueante): como a `layer-1-ja` é sempre 100% anotada por ruby, a camada `layer-2-kana` **não deve existir** em exemplos ou diálogos.
-4. **Ruby sobre a palavra inteira** (bloqueante): nenhum `<ruby>` dividido kanji a kanji; leituras irregulares (`今日` = きょう, `大人` = おとな) preservadas.
-5. **Aviso não bloqueante esperado:** o script pode emitir avisos de "ruby repetido" para kanji dos 80 já introduzidos — **ignorar**; a política atual é ruby em toda ocorrência.
+```bash
+node scripts/validate_artifact.js Practice/N5_P4_Lacunas.md
+node scripts/validate_artifact.js <arquivo> --aula 4 --mode markdown   # forçar modo
+```
+
+O **modo** é inferido do nome do arquivo e determina a política de furigana aplicada:
+
+| Modo | Arquivos | Política |
+|---|---|---|
+| `lesson` | `N5_L{n}.html` | Furigana **universal** |
+| `reading` | `N5_P{n}_Reading.html` | Furigana **gradual** (só a 1ª ocorrência) |
+| `markdown` | `N5_P{n}*.md` | Furigana **universal** |
+| `anki` | `N5_*.tsv` | Furigana **universal** |
+
+**Checagens:**
+
+1. **CHECK1 — Sem ruby sobre kana puro** (bloqueante, todos os modos): todo `<ruby>` deve ter base contendo ≥1 kanji. `あなた`, `はい`, `ええ`, `どうも`, `どうぞ`, `じゃあ`, `さあ` e partículas ficam **sem** `<ruby>`.
+2. **CHECK2 — Cobertura de furigana** (bloqueante), sensível ao modo:
+   - Modos universais: nenhum kanji pode aparecer fora de um `<ruby>` — inclusive em textos explicativos, callouts e dicas. Isenção: `layer-4-breakdown`.
+   - Modo `reading`: a 1ª ocorrência **deve** ter ruby e as seguintes **não podem** ter. Títulos (`<h1>`/`<h2>`/`<title>`) são isentos da checagem de ordem por serem rótulos, não narrativa.
+3. **CHECK3 — Nenhuma `layer-2-kana`** (bloqueante, modo `lesson`): como a `layer-1-ja` é sempre 100% anotada por ruby, essa camada não deve existir.
+4. **CHECK4 — Ruby sobre a palavra inteira** (bloqueante, todos os modos), em três frentes:
+   - `4a` — `<ruby>` adjacentes (palavra fatiada kanji a kanji). Tab e quebra de linha são fronteiras rígidas: separam colunas de TSV e células de tabela, onde dois `<ruby>` vizinhos são palavras distintas.
+   - `4b` — kanji solto colado imediatamente antes ou depois de um `<ruby>`.
+   - `4c` — honorífico partido: `お<ruby>兄</ruby>さん` em vez de `<ruby>お兄さん<rt>おにいさん</rt></ruby>`.
+5. **CHECK5 — Vocabulary Gate** (aviso, exige `--aula`): sinaliza palavras com kanji fora do inventário cumulativo das Aulas 1..N. É **aviso**, não erro, porque numerais e contadores compostos (`五人`, `三人`) são legitimamente composicionais e dariam falso positivo. Todo aviso deve ser **lido e julgado** — foi assim que se detectou `日本人` num Reading da Aula 3, uma violação real da Regra 3.1.

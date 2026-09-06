@@ -6,10 +6,12 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
 
 ## ⛔ 1. REGRAS INVIOLÁVEIS (HARD RULES)
 
-1. **Princípio do Foco na Matéria Vigente (Escopo de Avaliação):**
-   - O teste avalia **exclusivamente** a gramática, kanji e vocabulário **novos da Aula X** — a gramática e os kanji listados nos campos `grammar` e `kanji` da Aula X em `JLPTN5.md`, e o vocabulário definido na seção `## Aula X` de `Content/N5_Vocabulary.md`.
-   - É **estritamente proibido** cobrar, avaliar ou pontuar conhecimento de gramática, kanji ou vocabulário ensinados em aulas anteriores (1 a X-1). A revisão cumulativa é responsabilidade de outros mecanismos do sistema.
+1. **Princípio do Foco na Matéria Vigente + Revisão Espaçada (Escopo de Avaliação):**
+   - **Seções 1 a 5 (80 pts) — matéria vigente.** Avaliam **exclusivamente** a gramática, kanji e vocabulário **novos da Aula X** — a gramática e os kanji listados nos campos `grammar` e `kanji` da Aula X em `JLPTN5.md`, e o vocabulário definido na seção `## Aula X` de `Content/N5_Vocabulary.md`.
+   - **Seção 6 (20 pts) — revisão espaçada.** Avalia deliberadamente conteúdo **antigo**, sorteado das Aulas **X-2, X-4 e X-8** (as que existirem), com **prioridade absoluta para os itens listados em `Progress.md` § Itens Fracos**.
    - É **estritamente proibido** introduzir gramática, kanji ou vocabulário de aulas futuras (X+1 em diante).
+
+   > **Por que a Seção 6 existe.** Os `scope` das aulas de consolidação cobrem apenas o bloco imediatamente anterior e **nunca revisitam um bloco mais antigo**: a gramática da Aula 2 é revista na Aula 5 e só reaparece na Aula 32 — 27 semanas depois. Sem esta seção, o Teste não oferece nenhuma recuperação espaçada, e o Anki sozinho não cobria gramática. Espaçamento + interleaving é a alavanca de retenção mais forte disponível; esta seção é onde o sistema a aplica.
 
 2. **Distinção Obrigatória: Conteúdo TESTADO vs. Conteúdo de SCAFFOLDING:**
    - **Conteúdo TESTADO** (o que a questão COBRA do aluno): Apenas itens novos da Aula X. A resposta correta e o principal foco da questão devem pertencer ao ementário da Aula X.
@@ -27,7 +29,7 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
    - O aluno responderá marcando um "x" na opção correta (ex: `- [x] A)`).
 
 6. **Local de Salvamento:**
-   - O caderno de teste é gerado em Markdown no caminho `/Users/bmanica/Documents/GitHub/Bruno/Japones/Practice/N5_P{X}.md`.
+   - O caderno de teste é gerado em Markdown no caminho `Practice/N5_P{X}.md`.
 
 7. **PROIBIDO DAR A RESPOSTA NA DICA OU ENUNCIADO (ANTI-SPOILER RULE):**
    - As perguntas, dicas ou placeholders (ex: `___`) NUNCA podem entregar a resposta gramatical ou a intenção da questão mastigada.
@@ -35,17 +37,30 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
 
 ---
 
-## ⚙️ 2. TAXONOMIA DE QUESTÕES (AS 5 SEÇÕES DO TESTE)
+## ⚙️ 2. TAXONOMIA DE QUESTÕES (AS 6 SEÇÕES DO TESTE)
 
-Todo caderno de teste gerado deve conter as 5 seções a seguir, totalizando **100 pontos**. Todas as seções são estritamente de múltipla escolha e focam exclusivamente no conteúdo novo da Aula X:
+Todo caderno de teste gerado deve conter as **6 seções** a seguir, totalizando **100 pontos** em **25 questões de 4 pontos cada**. Todas as seções são estritamente de múltipla escolha:
 
-| Seção | Nome da Seção | Foco Pedagógico | Formato | Pontuação |
-|---|---|---|---|---|
-| **Seção 1** | **Vocabulário & Kanji** | Identificação do significado correto ou da leitura em contexto (usando itens **novos da Aula X**). | Escolha a tradução ou uso correto (A, B, C, D). | **20 pts** |
-| **Seção 2** | **Partículas & Conectores** | Aplicação correta das partículas e conectores **ensinados na Aula X**. | Frase com lacuna `___`. Escolha a alternativa (A, B, C, D) que preenche corretamente. | **20 pts** |
-| **Seção 3** | **Gramática & Conjugação** | Aplicação das **estruturas gramaticais e conjugações novas da Aula X**. | Escolha a forma verbal/adjetival ou estrutura gramatical adequada (A, B, C, D). | **20 pts** |
-| **Seção 4** | **Compreensão Situacional** | Identificar a frase ou resposta mais apropriada para um contexto prático, usando a **matéria da Aula X**. | Cenário descrito em PT-BR. Escolha a resposta correta em japonês (A, B, C, D). | **20 pts** |
-| **Seção 5** | **Interpretação (Reading Check)** | Leitura de um pequeno trecho ou diálogo (1 a 3 frases) focado nos **itens da Aula X** para atestar compreensão sintática. | Texto em japonês + Pergunta. Escolha a alternativa correta (A, B, C, D). | **20 pts** |
+| Seção | Nome da Seção | Foco Pedagógico | Formato | Questões | Pontuação |
+|---|---|---|---|:---:|---|
+| **Seção 1** | **Vocabulário & Kanji** | Identificação do significado correto ou da leitura em contexto (usando itens **novos da Aula X**). | Escolha a tradução ou uso correto (A, B, C, D). | 4 | **16 pts** |
+| **Seção 2** | **Partículas & Conectores** | Aplicação correta das partículas e conectores **ensinados na Aula X**. | Frase com lacuna `___`. Escolha a alternativa (A, B, C, D) que preenche corretamente. | 4 | **16 pts** |
+| **Seção 3** | **Gramática & Conjugação** | Aplicação das **estruturas gramaticais e conjugações novas da Aula X**. | Escolha a forma verbal/adjetival ou estrutura gramatical adequada (A, B, C, D). | 4 | **16 pts** |
+| **Seção 4** | **Compreensão Situacional** | Identificar a frase ou resposta mais apropriada para um contexto prático, usando a **matéria da Aula X**. | Cenário descrito em PT-BR. Escolha a resposta correta em japonês (A, B, C, D). | 4 | **16 pts** |
+| **Seção 5** | **Interpretação (Reading Check)** | Leitura de um pequeno trecho ou diálogo (1 a 3 frases) focado nos **itens da Aula X** para atestar compreensão sintática. | Texto em japonês + Pergunta. Escolha a alternativa correta (A, B, C, D). | 4 | **16 pts** |
+| **Seção 6** | **🔁 Revisão Espaçada** | Recuperação de conteúdo **ANTIGO** — Aulas X-2, X-4, X-8. **Prioridade absoluta para os itens de `Progress.md` § Itens Fracos.** | Formato livre entre os das Seções 1-5, escolhido conforme o item revisado (A, B, C, D). | 5 | **20 pts** |
+
+### Regra de composição da Seção 6
+
+1. Ler `Progress.md` § **Itens Fracos**. Cada item com status ⚠️ ativo **DEVE**
+   gerar pelo menos uma questão, até o limite de 5.
+2. Se sobrarem vagas, completar sorteando das Aulas X-2, X-4 e X-8 (as que
+   existirem), preferindo pontos gramaticais que **não** apareceram em nenhuma
+   consolidação desde que foram ensinados.
+3. Se `Progress.md` não existir ou estiver vazio, usar apenas o critério (2) e
+   registrar no chat que a revisão dirigida ainda não tem dados.
+4. **Nunca** repetir literalmente a questão que originou o erro — cobre o mesmo
+   ponto em contexto novo. Reconhecer a questão de cor não é recuperação.
 
 ---
 
@@ -55,11 +70,12 @@ Ao receber o comando `"Exercícios Aula X"`, `"Drill Aula X"` ou `"Teste Aula X"
 
 1. **Leitura de Escopo (Foco na Aula X):**
    - Abrir `JLPTN5.md` e extrair a definição da Aula X.
-   - Identificar os itens **novos** da aula (conteúdo a ser TESTADO).
+   - Identificar os itens **novos** da aula (conteúdo a ser TESTADO nas Seções 1-5).
    - Carregar o acumulado para uso como scaffolding.
+   - **Abrir `Progress.md`** e extrair a seção § Itens Fracos — é o insumo obrigatório da Seção 6.
 
 2. **Montagem da Estrutura:**
-   - Gerar o arquivo em `/Users/bmanica/Documents/GitHub/Bruno/Japones/Practice/N5_P{X}.md`.
+   - Gerar o arquivo em `Practice/N5_P{X}.md`.
    - Incluir o cabeçalho Markdown com Metadados e Status `⏳ Pendente`.
    - Gerar as questões de múltipla escolha (A, B, C, D) seguindo a Taxonomia.
    - Criar **distratores (opções incorretas) plausíveis** baseados em erros gramaticais comuns (ex: partícula errada, conjugação imperfeita, erro de nível de polidez), utilizando o conteúdo acumulado.
@@ -78,7 +94,7 @@ Ao receber o comando `"Exercícios Aula X"`, `"Drill Aula X"` ou `"Teste Aula X"
 Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 
 1. **Leitura das Respostas:**
-   - A IA abre e lê o arquivo `/Users/bmanica/Documents/GitHub/Bruno/Japones/Practice/N5_P{X}.md`.
+   - A IA abre e lê o arquivo `Practice/N5_P{X}.md`.
    - Analisa quais checkboxes foram marcadas com `x` ou `X` pelo aluno (ex: `- [x] A)` ou `- [X] A)`).
 
 2. **Cálculo da Nota & Correção:**
@@ -88,10 +104,16 @@ Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 3. **Atualização do Arquivo Local:**
    - A IA edita o cabeçalho do arquivo `Practice/N5_P{X}.md` atualizando o campo `> **Status:**` para `✅ Concluído (Nota: YY/100)`.
 
-4. **Feedback Detalhado no Chat:**
-   - Fornece a Nota Final.
-   - Para as questões erradas, explica de forma cirúrgica por que o distrator escolhido estava incorreto e revisa a regra da Aula X correspondente à opção certa.
-   - Oferece um diagnóstico de quais pontos da Aula X precisam de mais revisão.
+4. **Atualização de `Progress.md` (OBRIGATÓRIA):**
+   - Marcar a célula `Teste` da Aula X no Mapa de Progresso com a nota.
+   - Para **cada erro**, criar ou incrementar uma linha em § Itens Fracos, com **diagnóstico de causa raiz** — nunca apenas "errou a partícula".
+   - Para cada item da Seção 6 **acertado**, incrementar o contador de acertos; após 2 acertos consecutivos em modalidades diferentes, mover para *Itens dominados*.
+   - Seguir integralmente o § 4 Protocolo de Atualização de `Progress.md`.
+
+5. **Feedback Detalhado no Chat:**
+   - Fornece a Nota Final, com o recorte **Seções 1-5 (matéria nova) vs. Seção 6 (retenção)** separado — são diagnósticos diferentes: errar a Seção 6 indica esquecimento, não incompreensão.
+   - Para as questões erradas, explica de forma cirúrgica por que o distrator escolhido estava incorreto e revisa a regra correspondente à opção certa.
+   - Oferece um diagnóstico de quais pontos precisam de mais revisão e qual tag do Anki atacar (ver `Anki/README_ANKI.md` § 5).
 
 ---
 
@@ -101,13 +123,15 @@ Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 # 🧪 TESTE DE FIXAÇÃO (MÚLTIPLA ESCOLHA): AULA [X] — [TÍTULO DA AULA]
 
 > **Nível:** JLPT N5
-> **Escopo Avaliado:** Aula [X] (conteúdo novo: [N] gramática, [N] kanji, [N] vocabulário)
+> **Escopo — Seções 1-5 (80 pts):** Aula [X] (conteúdo novo: [N] gramática, [N] kanji, [N] vocabulário)
+> **Escopo — Seção 6 (20 pts):** Revisão espaçada das Aulas [X-2], [X-4], [X-8] + itens de `Progress.md` § Itens Fracos
+> **Estrutura:** 25 questões × 4 pts = 100 pts
 > **Instruções:** Este é um teste de múltipla escolha. Marque a alternativa correta colocando um 'x' entre os colchetes, assim: `- [x] A)`.
 > **Status:** ⏳ Pendente
 
 ---
 
-## 📝 SEÇÃO 1: VOCABULÁRIO & KANJI (20 PONTOS)
+## 📝 SEÇÃO 1: VOCABULÁRIO & KANJI (16 PONTOS)
 
 1. Qual é o significado correto da palavra <ruby>[Palavra em Kanji nova da Aula X]<rt>[Kana]</rt></ruby>?
 - [ ] A) [Distrator 1]
@@ -123,7 +147,7 @@ Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 
 ---
 
-## 📝 SEÇÃO 2: PARTÍCULAS & CONECTORES (20 PONTOS)
+## 📝 SEÇÃO 2: PARTÍCULAS & CONECTORES (16 PONTOS)
 
 1. Qual partícula preenche corretamente a lacuna abaixo?
 [Frase com scaffolding] ___ [Continuação da frase].
@@ -134,7 +158,7 @@ Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 
 ---
 
-## 📝 SEÇÃO 3: GRAMÁTICA & CONJUGAÇÃO (20 PONTOS)
+## 📝 SEÇÃO 3: GRAMÁTICA & CONJUGAÇÃO (16 PONTOS)
 
 1. Selecione a forma correta para completar a frase usando a gramática da Aula X:
 [Frase contextualizando a estrutura].
@@ -145,7 +169,7 @@ Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 
 ---
 
-## 📝 SEÇÃO 4: COMPREENSÃO SITUACIONAL (20 PONTOS)
+## 📝 SEÇÃO 4: COMPREENSÃO SITUACIONAL (16 PONTOS)
 
 1. **Cenário:** [Breve situação descrita em PT-BR]. O que você diria ou qual frase melhor descreve isso, aplicando a matéria nova?
 - [ ] A) [Opção em Japonês Incorreta]
@@ -155,7 +179,7 @@ Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 
 ---
 
-## 📝 SEÇÃO 5: INTERPRETAÇÃO (20 PONTOS)
+## 📝 SEÇÃO 5: INTERPRETAÇÃO (16 PONTOS)
 
 1. Leia o trecho abaixo e responda à pergunta:
 [Pequeno texto ou diálogo em japonês contendo os novos itens gramaticais/vocabulário da Aula X]
@@ -164,6 +188,29 @@ Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 - [ ] B) [Alternativa Incorreta]
 - [ ] C) [Alternativa Correta]
 - [ ] D) [Alternativa Incorreta]
+
+---
+
+## 🔁 SEÇÃO 6: REVISÃO ESPAÇADA (20 PONTOS)
+
+> Esta seção **não** cobra a Aula [X]. Ela cobra o que você aprendeu semanas
+> atrás e pode ter esquecido. Errar aqui é sinal de retenção, não de
+> compreensão — e é exatamente essa a informação que o sistema precisa.
+
+[GERAR 5 QUESTÕES. Cada uma deve declarar sua origem entre colchetes.]
+
+1. **[Aula N — {ponto revisado}]** [Enunciado no formato mais adequado ao item]
+- [ ] A) [Distrator]
+- [ ] B) [Resposta Correta]
+- [ ] C) [Distrator]
+- [ ] D) [Distrator]
+
+[NOTAS PARA A IA GERADORA:]
+- Todo item com status ⚠️ ativo em `Progress.md` § Itens Fracos DEVE aparecer aqui (até 5).
+- Vagas restantes: sortear das Aulas X-2, X-4, X-8, preferindo pontos que não
+  apareceram em nenhuma consolidação desde que foram ensinados.
+- **Nunca** reutilizar literalmente a questão que originou o erro — mesmo ponto,
+  contexto novo.
 
 ---
 
@@ -189,6 +236,9 @@ Ao receber o comando `"Corrigir Aula X"` ou `"Avalie o Practice/N5_PX.md"`:
 
 #### Seção 5: Interpretação
 1. **Resposta:** C) [Alternativa Correta]. *Explicação: ...*
+
+#### Seção 6: Revisão Espaçada
+1. **Resposta:** [Correta] — *revisão da Aula N.* *Explicação: [regra relembrada + por que o distrator é tentador para quem esqueceu].*
 
 </details>
 ```

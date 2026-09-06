@@ -1,0 +1,4 @@
+# POTENTIAL DUPLICATES REPORT
+# Items with same name and exact same byte size
+
+Nenhuma duplicata óbvia encontrada.

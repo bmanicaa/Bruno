@@ -1,0 +1,31 @@
+#separator:tab
+#html:true
+#notetype:N5 Vocab
+#deck:Japonês::N5::Vocabulário
+#tags column:5
+#columns:Palavra	Significado	Leitura	Exemplo	Tags
+<ruby>有名<rt>ゆうめい</rt></ruby>	Famoso (subst. / adj.-な)	ゆうめい	<ruby>父<rt>ちち</rt></ruby>はとても<ruby>有名<rt>ゆうめい</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>本当<rt>ほんとう</rt></ruby>	Verdade; realidade (subst. / adj.-な)	ほんとう	<ruby>本当<rt>ほんとう</rt></ruby>ですか。	aula::04 fase::1 tipo::vocab
+<ruby>頭<rt>あたま</rt></ruby>	Cabeça (subst.)	あたま	<ruby>頭<rt>あたま</rt></ruby>は<ruby>一つ<rt>ひとつ</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>目<rt>め</rt></ruby>	Olho (subst.)	め	<ruby>目<rt>め</rt></ruby>は<ruby>二つ<rt>ふたつ</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>耳<rt>みみ</rt></ruby>	Orelha; audição (subst.)	みみ	<ruby>耳<rt>みみ</rt></ruby>も<ruby>二つ<rt>ふたつ</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>鼻<rt>はな</rt></ruby>	Nariz (subst.)	はな	<ruby>鼻<rt>はな</rt></ruby>は<ruby>一つ<rt>ひとつ</rt></ruby>だけです。	aula::04 fase::1 tipo::vocab
+<ruby>口<rt>くち</rt></ruby>	Boca; abertura (subst.)	くち	<ruby>口<rt>くち</rt></ruby>と<ruby>歯<rt>は</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>歯<rt>は</rt></ruby>	Dente (subst.)	は	<ruby>歯<rt>は</rt></ruby>は<ruby>沢山<rt>たくさん</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>手<rt>て</rt></ruby>	Mão; braço (subst.)	て	<ruby>手<rt>て</rt></ruby>と<ruby>足<rt>あし</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>足<rt>あし</rt></ruby>	Pé; perna (subst.)	あし	<ruby>足<rt>あし</rt></ruby>も<ruby>二つ<rt>ふたつ</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>お腹<rt>おなか</rt></ruby>	Barriga; estômago (subst.)	おなか	<ruby>私<rt>わたし</rt></ruby>の<ruby>お腹<rt>おなか</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>体<rt>からだ</rt></ruby>	Corpo (subst.)	からだ	<ruby>体<rt>からだ</rt></ruby>は<ruby>一つ<rt>ひとつ</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>背<rt>せ</rt></ruby>	Altura; estatura; costas (subst.)	せ	<ruby>背<rt>せ</rt></ruby>は<ruby>同じ<rt>おなじ</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>誰<rt>だれ</rt></ruby>	Quem (pronome interrogativo)	だれ	<ruby>先生<rt>せんせい</rt></ruby>は<ruby>誰<rt>だれ</rt></ruby>ですか。	aula::04 fase::1 tipo::vocab
+<ruby>誰か<rt>だれか</rt></ruby>	Alguém (pronome indefinido)	だれか	<ruby>誰か<rt>だれか</rt></ruby>の<ruby>本<rt>ほん</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+どこ	Onde; que lugar (pronome interrogativo)	どこ	<ruby>会社<rt>かいしゃ</rt></ruby>はどこですか。	aula::04 fase::1 tipo::vocab
+<ruby>何<rt>なに</rt></ruby>	O que (pronome interrogativo; vira なん antes de です)	なに	<ruby>名前<rt>なまえ</rt></ruby>は<ruby>何<rt>なん</rt></ruby>ですか。	aula::04 fase::1 tipo::vocab
+どなた	Quem (pronome interrogativo — versão polida)	どなた	どなたですか。	aula::04 fase::1 tipo::vocab
+いつ	Quando (pronome interrogativo)	いつ	いつですか。	aula::04 fase::1 tipo::vocab
+<ruby>一番<rt>いちばん</rt></ruby>	O número um; o mais ~ (subst. / adv.)	いちばん	<ruby>一番<rt>いちばん</rt></ruby>の<ruby>友達<rt>ともだち</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>同じ<rt>おなじ</rt></ruby>	Mesmo; igual (subst. / adv.)	おなじ	<ruby>本<rt>ほん</rt></ruby>は<ruby>同じ<rt>おなじ</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>結構<rt>けっこう</rt></ruby>	Ótimo; suficiente; "não, obrigado" (subst. / adj.-な / adv.)	けっこう	<ruby>結構<rt>けっこう</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>少し<rt>すこし</rt></ruby>	Um pouco; pequena quantidade (subst. / adv.)	すこし	<ruby>少し<rt>すこし</rt></ruby>だけです。	aula::04 fase::1 tipo::vocab
+<ruby>沢山<rt>たくさん</rt></ruby>	Muito; muitos (subst. / adj.-な)	たくさん	<ruby>本<rt>ほん</rt></ruby>が<ruby>沢山<rt>たくさん</rt></ruby>です。	aula::04 fase::1 tipo::vocab
+<ruby>全部<rt>ぜんぶ</rt></ruby>	Tudo; todos (subst. / adv.)	ぜんぶ	<ruby>全部<rt>ぜんぶ</rt></ruby>が<ruby>同じ<rt>おなじ</rt></ruby>です。	aula::04 fase::1 tipo::vocab

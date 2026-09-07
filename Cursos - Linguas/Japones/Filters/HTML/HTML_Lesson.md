@@ -1166,16 +1166,16 @@ Paperwhite. O EPUB é **derivado, nunca escrito à mão**: a fonte única de ver
 continua sendo o `.html` / `.md`. Se o conteúdo mudar, regere o EPUB; não edite
 o `.epub`.
 
-**Esta seção é o contrato TÉCNICO.** O contrato de uso — quais comandos, o que é
-automático e o que é sob demanda — está em `Filters/Modalidades/EPUB.md`.
+**Esta seção é o contrato TÉCNICO.** O contrato de uso — quais comandos e o que
+sai junto com o quê — está em `Filters/Modalidades/EPUB.md`.
 
 | Fonte | Formato | Modo do validador | Quando é gerado |
 |---|---|---|---|
-| `N5_L{X}.html` (aula) | HTML | `lesson` — furigana universal | **Automático** (Regra 13(b2)) |
-| `N5_P{X}_Reading.html` | HTML | `reading` — furigana **gradual** | Sob demanda |
-| `N5_P{X}.md` (Teste) | Markdown | `markdown` — universal | Sob demanda |
-| `N5_P{X}_Lacunas.md` | Markdown | `markdown` — universal | Sob demanda |
-| `N5_P{X}_Ditado.md` | Markdown | `markdown` — universal | Sob demanda |
+| `N5_L{X}.html` (aula) | HTML | `lesson` — furigana universal | Junto com o HTML da aula (Regra 13(b2)) |
+| `N5_P{X}_Reading.html` | HTML | `reading` — furigana **gradual** | Junto com o exercício pedido (Regra 14.1) |
+| `N5_P{X}.md` (Teste) | Markdown | `markdown` — universal | Junto com o exercício pedido (Regra 14.1) |
+| `N5_P{X}_Lacunas.md` | Markdown | `markdown` — universal | Junto com o exercício pedido (Regra 14.1) |
+| `N5_P{X}_Ditado.md` | Markdown | `markdown` — universal | Junto com o exercício pedido (Regra 14.1) |
 
 ```bash
 node scripts/build_epub.js /tmp/N5_L4.html --upload              # aula → Drive

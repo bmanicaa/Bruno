@@ -25,10 +25,11 @@ Legenda: ✅ concluído · 🟡 gerado, não feito · ⬜ não gerado · `—` n
 
 *(as Aulas 6-32 seguem não iniciadas; acrescente a linha quando gerar)*
 
-**Versão Kindle (EPUB):** derivada do HTML pela Regra 13(b2), não é estado próprio — cada
-aula gerada a partir de agora sai com `.epub` junto. As **Aulas 1-3 e os Readings 2-3 são
-anteriores ao pipeline**: para lê-los no Paperwhite, baixe o HTML do Drive e rode
-`node scripts/build_epub.js <arquivo.html> --upload`.
+**Versão Kindle (EPUB):** derivada, não é estado próprio — todo artefato pedido a partir
+de agora sai com `.epub` junto (aula pela Regra 13(b2); exercícios pela Regra 14.1). As
+**Aulas 1-3, os Readings 2-3 e o Lacunas 3 são anteriores ao pipeline**: para lê-los no
+Paperwhite, rode `node scripts/build_epub.js <arquivo> -o "<temp>.epub" --upload` (o HTML
+das aulas precisa ser baixado do Drive antes — a Regra 13(g) apaga o temporário local).
 
 **Cards de gramática no Anki:** Aulas 1-3 → 19 cards (`Anki/N5_G{1,2,3}_Gramatica.tsv`)
 **Cards de vocabulário:** 82, todos com leitura (TTS) e frase de exemplo

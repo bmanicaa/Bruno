@@ -15,38 +15,48 @@ produziu o arquivo-fonte.
 
 ---
 
-## ⚡ QUANDO RODA: AUTOMÁTICO PARA A AULA, SOB DEMANDA PARA O RESTO
+## ⚡ QUANDO RODA: SEMPRE JUNTO COM O ARTEFATO PEDIDO
 
-| Artefato | Quando o EPUB é gerado |
+**O EPUB nunca é um pedido separado.** Ele acompanha, na mesma resposta, o que
+o estudante pediu:
+
+| O estudante pede | O que sai |
 |---|---|
-| **📘 Aula** (`N5_L{X}.html`) | **AUTOMÁTICO.** Sai junto com o HTML no pipeline da Regra 13(b2) de `JLPTN5.md`. Não precisa ser pedido. |
-| 📖 Reading · 🧪 Teste · 🧩 Lacunas · 🎧 Ditado | **SOB DEMANDA.** Só quando o estudante pedir, com um dos comandos abaixo. |
+| `"Aula 4"` | HTML **+ EPUB**, os dois no Drive · Regra **13(b2)** de `JLPTN5.md` |
+| `"Lacunas Aula 4"` · `"Teste Aula 4"` · `"Reading Aula 4"` · `"Ditado Aula 4"` | arquivo de trabalho em `Practice/` **+ EPUB** no Drive · Regra **14.1** |
+| `"Corrigir Lacunas Aula 4"` | `.md` atualizado com o gabarito **+ EPUB regerado** · Regra **14.2** |
 
-A assimetria é deliberada: a aula é o material que se lê de ponta a ponta e é o
-caso de uso central do e-reader. Os exercícios têm valor no Kindle, mas geram
-arquivo toda semana e nem sempre serão lidos lá — gerar sempre seria lixo no
-Drive.
+O princípio é simples: **nada é gerado sem pedido, e nada que foi pedido chega
+pela metade.** Não existe artefato de estudo que exista só no computador — se o
+estudante pediu, ele tem a versão de tela e a versão de papel eletrônico.
 
 ---
 
-## 💬 COMANDOS NO CHAT
+## 💬 COMANDO AVULSO — PARA **REGERAR**
 
-| Comando | Ação |
+Os comandos abaixo não são o caminho normal (o EPUB já veio junto). Eles servem
+para **refazer** a versão Kindle quando a fonte mudou e o `.epub` do Drive ficou
+velho — o caso típico é depois de uma correção, para o gabarito chegar ao
+aparelho, ou depois de editar o artefato à mão.
+
+| Comando | Alvo |
 |---|---|
-| `"EPUB Aula X"` / `"Kindle Aula X"` | Converte a **aula** `N5_L{X}.html`. |
-| `"EPUB Reading Aula X"` / `"Kindle Reading Aula X"` | Converte `Practice/N5_P{X}_Reading.html`. |
-| `"EPUB Teste Aula X"` / `"Kindle Teste Aula X"` | Converte `Practice/N5_P{X}.md`. |
-| `"EPUB Lacunas Aula X"` / `"Kindle Lacunas Aula X"` | Converte `Practice/N5_P{X}_Lacunas.md`. |
-| `"EPUB Ditado Aula X"` / `"Kindle Ditado Aula X"` | Converte `Practice/N5_P{X}_Ditado.md`. |
+| `"EPUB Aula X"` / `"Kindle Aula X"` | a **aula** `N5_L{X}.html` |
+| `"EPUB Reading Aula X"` / `"Kindle Reading Aula X"` | `Practice/N5_P{X}_Reading.html` |
+| `"EPUB Teste Aula X"` / `"Kindle Teste Aula X"` | `Practice/N5_P{X}.md` |
+| `"EPUB Lacunas Aula X"` / `"Kindle Lacunas Aula X"` | `Practice/N5_P{X}_Lacunas.md` |
+| `"EPUB Ditado Aula X"` / `"Kindle Ditado Aula X"` | `Practice/N5_P{X}_Ditado.md` |
 
 Sem modalidade explícita (`"EPUB Aula 4"`), o alvo é a **aula**.
 
 ```bash
-node scripts/build_epub.js <arquivo.html|.md> --upload --nome-drive "<nome>.epub"
+node scripts/build_epub.js <arquivo.html|.md> -o "<temp>.epub" --upload --nome-drive "<nome>.epub"
 ```
 
-Se o HTML da aula não estiver mais em disco (a Regra 13(g) apaga o temporário),
-baixe-o do Drive antes de converter.
+Gere em caminho temporário, suba ao Drive e apague o local: o EPUB é derivado e
+o Drive é o canal de entrega (Regra 1 de `JLPTN5.md`). Se a fonte não estiver
+mais em disco — a Regra 13(g) apaga o HTML temporário da aula —, baixe-a do
+Drive antes de converter.
 
 ---
 
@@ -89,10 +99,11 @@ HTML primeiro e daí em diante o tratamento é idêntico.
 Estes limites são do aparelho, não do conversor. Estão documentados aqui para
 que ninguém prometa ao estudante o que o Kindle não faz:
 
-- **Não dá para digitar respostas.** Os campos `> Resposta N:` viram linhas de
-  escrita marcadas, para responder mentalmente ou no papel. A resposta **oficial
-  continua sendo digitada no `.md`, no computador** — é ele que os comandos
-  `"Corrigir ..."` leem.
+- **O Kindle é só de leitura.** Não dá para digitar nada nele: os campos
+  `> Resposta N:` viram linhas de escrita marcadas, para responder mentalmente.
+  A resposta **é digitada no `.md`, no computador** — é ele que os comandos
+  `"Corrigir ..."` leem. Isso é por design, não uma limitação a contornar: o
+  aparelho serve para **ler o conteúdo**; o computador, para responder.
 - **Não há botão de esconder o gabarito.** O `<details>` do Markdown vira um
   **capítulo próprio**, com quebra de página e aviso no topo: chega-se a ele de
   propósito pelo sumário, não por descuido ao virar a página.

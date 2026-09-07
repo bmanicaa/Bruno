@@ -1161,15 +1161,27 @@ O **modo** é inferido do nome do arquivo e determina a política de furigana ap
 
 ## 📱 4.7 VERSÃO E-READER (EPUB) — `scripts/build_epub.js`
 
-O mesmo HTML que você abre no navegador vira um **EPUB 3** para ler no Kindle
+Qualquer artefato de estudo do curso vira um **EPUB 3** para ler no Kindle
 Paperwhite. O EPUB é **derivado, nunca escrito à mão**: a fonte única de verdade
-continua sendo o HTML desta especificação. Se o conteúdo mudar, regere o EPUB;
-não edite o `.epub`.
+continua sendo o `.html` / `.md`. Se o conteúdo mudar, regere o EPUB; não edite
+o `.epub`.
+
+**Esta seção é o contrato TÉCNICO.** O contrato de uso — quais comandos, o que é
+automático e o que é sob demanda — está em `Filters/Modalidades/EPUB.md`.
+
+| Fonte | Formato | Modo do validador | Quando é gerado |
+|---|---|---|---|
+| `N5_L{X}.html` (aula) | HTML | `lesson` — furigana universal | **Automático** (Regra 13(b2)) |
+| `N5_P{X}_Reading.html` | HTML | `reading` — furigana **gradual** | Sob demanda |
+| `N5_P{X}.md` (Teste) | Markdown | `markdown` — universal | Sob demanda |
+| `N5_P{X}_Lacunas.md` | Markdown | `markdown` — universal | Sob demanda |
+| `N5_P{X}_Ditado.md` | Markdown | `markdown` — universal | Sob demanda |
 
 ```bash
-node scripts/build_epub.js Practice/N5_P4_Reading.html          # gera o .epub ao lado
-node scripts/build_epub.js /tmp/N5_L4.html --upload             # gera e sobe ao Drive
-node scripts/build_epub.js /tmp/N5_L4.html --tabelas tabela     # mantém as tabelas
+node scripts/build_epub.js /tmp/N5_L4.html --upload              # aula → Drive
+node scripts/build_epub.js Practice/N5_P4_Reading.html           # .epub ao lado
+node scripts/build_epub.js Practice/N5_P3_Lacunas.md --upload    # Markdown também
+node scripts/build_epub.js /tmp/N5_L4.html --tabelas tabela      # mantém as tabelas
 ```
 
 ### Por que EPUB (e não MOBI, AZW3 ou PDF)
@@ -1202,6 +1214,30 @@ A aula HTML foi desenhada para navegador; o e-reader não é um navegador.
    aparelho corta o furigana.
 7. **Adiciona `<rp>`** em volta de cada `<rt>`: leitor sem suporte a ruby
    imprime `私(わたし)` em vez de `私わたし`.
+
+### Fontes em Markdown (Teste, Lacunas, Ditado)
+
+O Markdown é renderizado para HTML e daí em diante segue o **mesmo** pipeline.
+O renderizador é deliberadamente restrito ao dialeto que as modalidades usam —
+não é um Markdown genérico:
+
+- **`_` NUNCA é ênfase.** As lacunas são escritas `[ ___ 1 ___ ]`; tratar
+  sublinhado como itálico transformaria todo exercício em sopa de `<em>`. Só
+  `**` e `*` marcam ênfase.
+- **Conteúdo de crase é texto literal.** `` `<ruby>` `` citado em prosa é
+  escapado, não interpretado como marcação — era exatamente isso que
+  desequilibrava o XML do caderno de Lacunas da Aula 3.
+- **Cada `##` vira um capítulo**; o que vem antes do primeiro `##` (título `#`
+  + bloco de metadados) vira o `header-card`.
+- **`> Resposta N:`** vira uma linha de escrita marcada. **No Kindle não dá para
+  digitar** — a resposta oficial continua sendo digitada no `.md`, no
+  computador, que é o que os comandos `"Corrigir ..."` leem.
+- **`<details>` vira capítulo próprio com quebra de página.** No e-reader não
+  existe o botão que esconde o gabarito; separá-lo em capítulo faz com que se
+  chegue nele de propósito, pelo sumário, e não por descuido ao virar a página.
+- **Marcação desequilibrada falha alto.** Uma tag aberta e nunca fechada é
+  reportada com nome e trecho em volta, mais a sugestão de escrevê-la entre
+  crases — em vez de um erro genérico lá na frente.
 
 ### Contrato de furigana (Regra 11 continua valendo)
 

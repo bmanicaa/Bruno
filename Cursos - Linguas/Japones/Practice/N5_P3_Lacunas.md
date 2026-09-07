@@ -3,7 +3,7 @@
 > **Nível:** JLPT N5
 > **Modalidade:** Lacunas (<ruby>穴埋<rt>あなう</rt></ruby>め - Preenchimento de Frases)
 > **Escopo Avaliado:** Aula 3 (Foco especial no contraste entre は e が, números, contadores e alternativas)
-> **Política de Furigana:** Universal Irrestrito (todos os kanji possuem furigana <ruby>)
+> **Política de Furigana:** Universal Irrestrito (todos os kanji possuem furigana `<ruby>`)
 > **Tempo Estimado:** ~15 a 20 minutos
 > **Status:** ✅ Concluído (Nota: 90/100)
 

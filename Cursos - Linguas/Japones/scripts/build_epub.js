@@ -31,10 +31,19 @@
  * (`scripts/validate_artifact.js`): se a conversão comer um furigana, a
  * geração falha em vez de entregar um livro silenciosamente degradado.
  *
+ * FONTES ACEITAS — todo artefato de estudo do curso:
+ *   Aula          N5_L{n}.html            (Regra 13: gerado AUTOMATICAMENTE)
+ *   Reading       N5_P{n}_Reading.html    (sob demanda)
+ *   Teste/Drill   N5_P{n}.md              (sob demanda)
+ *   Lacunas       N5_P{n}_Lacunas.md      (sob demanda)
+ *   Ditado        N5_P{n}_Ditado.md       (sob demanda)
+ * HTML e Markdown entram pelo mesmo pipeline: o Markdown é renderizado para
+ * HTML primeiro e daí em diante o tratamento é idêntico.
+ *
  * Uso:
- *   node scripts/build_epub.js <arquivo.html> [-o saida.epub]
+ *   node scripts/build_epub.js <arquivo.html|.md> [-o saida.epub]
  *   node scripts/build_epub.js N5_L4.html --upload            # sobe ao Drive
- *   node scripts/build_epub.js N5_L4.html --titulo "..." --autor "..."
+ *   node scripts/build_epub.js Practice/N5_P3_Lacunas.md --upload
  *   node scripts/build_epub.js N5_P3_Reading.html --tabelas tabela
  *
  * Flags:
@@ -43,7 +52,8 @@
  *   --autor <txt>       autor/coleção (padrão: "Curso JLPT N5")
  *   --idioma <tag>      dc:language principal (padrão: pt-BR — ver nota abaixo)
  *   --aula N            nº da aula para o Vocabulary Gate (padrão: do nome)
- *   --mode M            lesson|reading (padrão: inferido do nome)
+ *   --mode M            lesson|reading|markdown (padrão: inferido do nome)
+ *   --formato F         html|markdown (padrão: inferido da extensão)
  *   --tabelas <modo>    blocos (padrão) | tabela
  *   --upload            envia o .epub ao Google Drive após gerar
  *   --nome-drive <n>    nome do arquivo no Drive (padrão: basename do .epub)
@@ -193,6 +203,232 @@ function zipar(entradas) {
     fim.writeUInt32LE(offset, 16);
 
     return Buffer.concat([...locais, dirBuf, fim]);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Markdown → HTML (Teste, Lacunas, Ditado)
+//
+// Renderizador mínimo, deliberadamente limitado aos construtos que as
+// modalidades de `Practice/` realmente usam. Não é um Markdown genérico:
+// é o dialeto deste repositório.
+//
+// DECISÃO IMPORTANTE — `_` NUNCA é ênfase. As lacunas são escritas
+// `[ ___ 1 ___ ]`; tratar sublinhado como itálico transformaria todo exercício
+// em sopa de <em>. Só `**` e `*` marcam ênfase.
+// ─────────────────────────────────────────────────────────────
+
+/** Aviso que substitui o `<summary>` do `<details>`: no e-reader não há clique. */
+const AVISO_GABARITO = '🔒 <strong>Gabarito</strong> — no e-reader não existe o botão que ' +
+    'esconde esta parte. Ela é um capítulo próprio no sumário: só venha até aqui ' +
+    'depois de responder.';
+
+/** Sentinela de código inline. ASCII puro, para não virar caractere de controle. */
+const SENT = '@@CODIGO';
+
+/** Formatação inline. Código entra em sentinela para não sofrer ênfase. */
+function inlineMarkdown(texto) {
+    const codigos = [];
+    let s = texto.replace(/`([^`]+)`/g, (t, c) => {
+        codigos.push(c);
+        return `${SENT}${codigos.length - 1}@@`;
+    });
+    // `<` que não abre tag é texto comum em Markdown — e quebraria o XML adiante.
+    s = s.replace(/<(?![/!]?[a-zA-Z])/g, '&lt;');
+    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2">$1</a>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+    // Conteúdo de código é TEXTO literal: `<ruby>` citado em prosa não pode
+    // voltar como marcação (era o que desequilibrava o XML do caderno de Lacunas).
+    return s.replace(/@@CODIGO(\d+)@@/g, (t, i) =>
+        `<code>${codigos[+i].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>`);
+}
+
+/**
+ * Alternativa de múltipla escolha do Teste: `- [ ] A)` / `- [x] A)`.
+ * No e-reader não dá para marcar nada, então o colchete vira o glifo da caixa —
+ * mais legível que `[ ]` literal, e a marcação continua sendo feita no `.md`.
+ */
+function itemLista(texto) {
+    const m = texto.match(/^\[( |x|X)\]\s*(.*)$/);
+    if (!m) return { html: inlineMarkdown(texto), caixa: false };
+    const marcado = m[1].toLowerCase() === 'x';
+    return { html: `<span class="caixa">${marcado ? '☑' : '☐'}</span> ${inlineMarkdown(m[2])}`, caixa: true };
+}
+
+/** `> Resposta 3: が` é campo de resposta; o resto é citação comum. */
+const EH_CAMPO_RESPOSTA = /^\s*(resposta\s*\d*|r)\s*[:：]/i;
+
+function blocoCitacao(linhas) {
+    const corpo = linhas.map((l) => inlineMarkdown(l)).join('<br />');
+    if (linhas.some((l) => EH_CAMPO_RESPOSTA.test(l))) {
+        // No Kindle não dá para digitar: o campo vira linha de escrita marcada,
+        // e a resposta continua sendo digitada no .md, no computador.
+        return `<div class="campo-resposta">${corpo}</div>`;
+    }
+    return `<blockquote class="citacao">${corpo}</blockquote>`;
+}
+
+function blocoTabela(linhas) {
+    const celulas = (l) => l.replace(/^\s*\|/, '').replace(/\|\s*$/, '').split('|').map((c) => c.trim());
+    const cabecalho = celulas(linhas[0]);
+    const corpo = linhas.slice(2).map(celulas);
+    const th = cabecalho.map((c) => `<th>${inlineMarkdown(c)}</th>`).join('');
+    const tr = corpo
+        .map((cs) => `<tr>${cs.map((c) => `<td>${inlineMarkdown(c)}</td>`).join('')}</tr>`)
+        .join('\n      ');
+    return `<div class="table-wrapper">\n    <table>\n      <thead><tr>${th}</tr></thead>\n      <tbody>\n      ${tr}\n      </tbody>\n    </table>\n  </div>`;
+}
+
+/**
+ * Converte o Markdown numa árvore de `<section>` — um capítulo por `##`.
+ * O que vem antes do primeiro `##` (título `#` + bloco de metadados) vira o
+ * `<header class="header-card">`, reaproveitando o estilo da aula.
+ */
+function markdownParaHtml(md) {
+    const linhas = md.replace(/\r\n?/g, '\n').split('\n');
+    const secoes = [{ partes: [] }];
+    let atual = secoes[0];
+    let titulo = '';
+    const emitir = (html) => atual.partes.push(html);
+    const ABRE_BLOCO = /^(#{1,6}\s|\s*>|\s*\||\s*```|\s*<details|\s*<\/details|\s*<summary)/;
+    const ITEM_LISTA = /^(\s*)([0-9]+[.)]|[-*+])\s+(.*)$/;
+
+    let i = 0;
+    while (i < linhas.length) {
+        const linha = linhas[i];
+
+        // bloco de código cercado
+        if (/^\s*```/.test(linha)) {
+            const buffer = [];
+            i++;
+            while (i < linhas.length && !/^\s*```/.test(linhas[i])) buffer.push(linhas[i++]);
+            i++;
+            emitir(`<pre class="bloco-codigo"><code>${buffer.join('\n')}</code></pre>`);
+            continue;
+        }
+
+        // HTML cru de bloco: <details>/</details> somem, <summary> vira aviso
+        if (/^\s*<details/i.test(linha)) { atual.gabarito = true; i++; continue; }
+        if (/^\s*<\/details>/i.test(linha)) { i++; continue; }
+        if (/^\s*<summary/i.test(linha)) {
+            emitir(`<div class="gabarito-aviso">${AVISO_GABARITO}</div>`);
+            i++;
+            continue;
+        }
+
+        // títulos
+        const mh = linha.match(/^(#{1,6})\s+(.*)$/);
+        if (mh) {
+            const nivel = mh[1].length;
+            const texto = inlineMarkdown(mh[2].trim());
+            if (nivel === 1) {
+                titulo = mh[2].trim();
+                emitir(`<h1>${texto}</h1>`);
+            } else if (nivel === 2) {
+                atual = { partes: [`<h2 class="section-title">${texto}</h2>`] };
+                secoes.push(atual);
+            } else {
+                emitir(`<h${nivel} class="subsection-title">${texto}</h${nivel}>`);
+            }
+            i++;
+            continue;
+        }
+
+        // régua horizontal
+        if (/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(linha)) { emitir('<hr class="sep" />'); i++; continue; }
+
+        // tabela (linha de cabeçalho + linha separadora)
+        if (/^\s*\|/.test(linha) && i + 1 < linhas.length && /^\s*\|[\s:|-]+\|\s*$/.test(linhas[i + 1])) {
+            const buffer = [];
+            while (i < linhas.length && /^\s*\|/.test(linhas[i])) buffer.push(linhas[i++]);
+            emitir(blocoTabela(buffer));
+            continue;
+        }
+
+        // citação / campo de resposta no nível raiz
+        if (/^\s*>/.test(linha)) {
+            const buffer = [];
+            while (i < linhas.length && /^\s*>/.test(linhas[i])) {
+                buffer.push(linhas[i].replace(/^\s*>\s?/, ''));
+                i++;
+            }
+            emitir(blocoCitacao(buffer));
+            continue;
+        }
+
+        // listas (ordenadas e não ordenadas), com continuação indentada
+        const ml = linha.match(ITEM_LISTA);
+        if (ml) {
+            const ordenada = /[0-9]/.test(ml[2]);
+            const itens = [];
+            let comCaixa = false;
+            while (i < linhas.length) {
+                const m = linhas[i].match(ITEM_LISTA);
+                if (m && /[0-9]/.test(m[2]) === ordenada) {
+                    const item = itemLista(m[3]);
+                    if (item.caixa) comCaixa = true;
+                    itens.push([item.html]);
+                    i++;
+                    continue;
+                }
+                // continuação: linha indentada pertencente ao item anterior
+                if (itens.length && /^\s{2,}\S/.test(linhas[i])) {
+                    if (/^\s{2,}>/.test(linhas[i])) {
+                        const buffer = [];
+                        while (i < linhas.length && /^\s{2,}>/.test(linhas[i])) {
+                            buffer.push(linhas[i].replace(/^\s+>\s?/, ''));
+                            i++;
+                        }
+                        itens[itens.length - 1].push(blocoCitacao(buffer));
+                        continue;
+                    }
+                    itens[itens.length - 1].push(`<br />${inlineMarkdown(linhas[i].replace(/^\s+/, ''))}`);
+                    i++;
+                    continue;
+                }
+                // linha em branco só encerra a lista se o próximo bloco não a continuar
+                if (/^\s*$/.test(linhas[i]) && itens.length) {
+                    const proximo = linhas[i + 1] || '';
+                    if (ITEM_LISTA.test(proximo) || /^\s{2,}\S/.test(proximo)) { i++; continue; }
+                }
+                break;
+            }
+            const tag = ordenada ? 'ol' : 'ul';
+            // As alternativas do Teste (`- [ ] A)`) interrompem a lista numerada
+            // das questões. Sem `start`, cada questão reiniciaria em "1.".
+            const inicio = ordenada ? parseInt(ml[2], 10) : 1;
+            const attrInicio = ordenada && inicio > 1 ? ` start="${inicio}"` : '';
+            // Alternativa já traz a caixa: o marcador da lista seria um segundo bullet.
+            const classe = comCaixa ? 'lista alternativas' : 'lista';
+            const li = itens.map((partes) => `    <li>${partes.join('')}</li>`).join('\n');
+            emitir(`<${tag} class="${classe}"${attrInicio}>\n${li}\n  </${tag}>`);
+            continue;
+        }
+
+        // linha em branco
+        if (/^\s*$/.test(linha)) { i++; continue; }
+
+        // parágrafo: linhas consecutivas até um branco ou o início de outro bloco
+        const buffer = [];
+        while (i < linhas.length && !/^\s*$/.test(linhas[i]) && !ABRE_BLOCO.test(linhas[i])
+            && !ITEM_LISTA.test(linhas[i]) && !/^\s*(-{3,}|\*{3,})\s*$/.test(linhas[i])) {
+            buffer.push(linhas[i++]);
+        }
+        if (buffer.length) emitir(`<p>${inlineMarkdown(buffer.join(' ').trim())}</p>`);
+    }
+
+    const html = secoes
+        .filter((s) => s.partes.length)
+        .map((s, idx) => {
+            const corpo = '  ' + s.partes.join('\n  ');
+            // O bloco anterior ao primeiro `##` é o cabeçalho do caderno.
+            if (idx === 0 && !/^<h2/.test(s.partes[0])) return `<header class="header-card">\n${corpo}\n</header>`;
+            const classe = s.gabarito ? ' class="gabarito-section"' : '';
+            return `<section${classe}>\n${corpo}\n</section>`;
+        })
+        .join('\n\n');
+
+    return { titulo, html };
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -353,6 +589,36 @@ function verificarXml(xml, rotulo) {
     if (pilha.length) erros.push(`tags não fechadas: ${pilha.join(', ')}`);
     if (erros.length) {
         throw new Error(`XML malformado em ${rotulo}:\n  - ${erros.slice(0, 8).join('\n  - ')}`);
+    }
+}
+
+/**
+ * Tag aberta e nunca fechada trava a divisão em capítulos e daria o erro
+ * inútil "nenhum elemento de topo". Aqui ela é nomeada, com o trecho em volta.
+ * Causa clássica: prosa citando uma tag sem crase — `possui furigana <ruby>`
+ * em vez de ``possui furigana `<ruby>` ``.
+ */
+function verificarBalanceamento(html) {
+    const re = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)\b((?:"[^"]*"|'[^']*'|[^>"'])*?)(\/?)>/g;
+    const pilha = [];
+    let m;
+    while ((m = re.exec(html)) !== null) {
+        const [, fecha, tag, , auto] = m;
+        if (auto === '/' || VAZIOS.has(tag.toLowerCase())) continue;
+        if (!fecha) { pilha.push({ tag: tag.toLowerCase(), index: m.index }); continue; }
+        const topo = pilha.pop();
+        if (!topo || topo.tag !== tag.toLowerCase()) {
+            const perto = html.slice(Math.max(0, m.index - 60), m.index + 20).replace(/\s+/g, ' ');
+            throw new Error(`</${tag}> fecha <${topo ? topo.tag : 'nada'}> — marcação desequilibrada perto de: …${perto}…`);
+        }
+    }
+    if (pilha.length) {
+        const { tag, index } = pilha[0];
+        const perto = html.slice(Math.max(0, index - 60), index + 60).replace(/\s+/g, ' ');
+        throw new Error(
+            `<${tag}> aberta e nunca fechada — perto de: …${perto}…\n` +
+            `   Se a intenção era CITAR a tag no texto, escreva-a entre crases: \`<${tag}>\`.`
+        );
     }
 }
 
@@ -638,6 +904,63 @@ th { background-color: ${p['bg-card-subtle']}; font-size: 0.85em; }
 .questions-card { margin-bottom: 1em; }
 .questions-list li { margin-bottom: 0.6em; }
 
+/* --- CADERNOS DE EXERCÍCIO (Teste, Lacunas, Ditado) --------------------- */
+.citacao {
+  border-left: 3px solid ${p['border-color']};
+  background-color: ${p['bg-card-subtle']};
+  margin: 0 0 0.8em 0;
+  padding: 0.5em 0.7em;
+  font-size: 0.92em;
+}
+.lista { margin: 0 0 1em 1.2em; padding: 0; }
+.alternativas { list-style: none; margin-left: 0.3em; }
+.alternativas li { margin-bottom: 0.35em; }
+.caixa { font-size: 1.1em; }
+.lista li { margin-bottom: 0.8em; line-height: 2.0; page-break-inside: avoid; }
+
+/* Campo de resposta: no e-reader não dá para digitar. Vira linha de escrita
+   marcada — a resposta continua sendo digitada no .md, no computador. */
+.campo-resposta {
+  border: 1px dashed ${p['border-light']};
+  border-radius: 4px;
+  background-color: ${p['bg-card-subtle']};
+  margin: 0.4em 0 0 0;
+  padding: 0.35em 0.6em;
+  font-size: 0.9em;
+  line-height: 1.9;
+}
+
+/* O gabarito é capítulo próprio: começa em página nova e é alcançado de
+   propósito pelo sumário, nunca por descuido ao virar a página. */
+.gabarito-section { page-break-before: always; }
+.gabarito-aviso {
+  border: 2px solid ${p['accent-red']};
+  border-radius: 5px;
+  padding: 0.6em 0.7em;
+  margin-bottom: 1em;
+  font-size: 0.92em;
+}
+
+code {
+  font-family: monospace;
+  background-color: ${p['bg-card-subtle']};
+  border: 1px solid ${p['border-color']};
+  border-radius: 3px;
+  padding: 0 0.2em;
+}
+.bloco-codigo {
+  background-color: ${p['bg-card-subtle']};
+  border: 1px solid ${p['border-color']};
+  border-radius: 4px;
+  padding: 0.5em 0.6em;
+  margin-bottom: 1em;
+  font-size: 0.85em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.bloco-codigo code { background: none; border: 0; padding: 0; }
+hr.sep { border: 0; border-top: 1px solid ${p['border-color']}; margin: 1em 0; }
+
 /* --- CAPA -------------------------------------------------------------- */
 .capa { text-align: center; margin-top: 22%; }
 .capa-titulo { font-size: 1.8em; line-height: 1.25; margin-bottom: 0.6em; }
@@ -775,13 +1098,26 @@ function construirEpub(htmlOrigem, opcoes = {}) {
     const autor = opcoes.autor || 'Curso JLPT N5';
     const modificado = opcoes.modificado || new Date().toISOString().replace(/\.\d+Z$/, 'Z');
 
-    const tituloHtml = (htmlOrigem.match(/<title>([\s\S]*?)<\/title>/i) || [, ''])[1].trim();
-    const titulo = opcoes.titulo || textoPuro(tituloHtml) || 'Aula JLPT N5';
+    // A fonte pode ser HTML (aula, Reading) ou Markdown (Teste, Lacunas, Ditado).
+    // Depois desta bifurcação o pipeline é o mesmo para os dois.
+    const formato = opcoes.formato
+        || (/<body[^>]*>/i.test(htmlOrigem) ? 'html' : 'markdown');
 
-    const mBody = htmlOrigem.match(/<body[^>]*>([\s\S]*)<\/body>/i);
-    if (!mBody) throw new Error('HTML de origem sem <body> — não é uma aula/reading gerada pelo curso.');
+    let tituloFonte = '';
+    let bruto;
+    if (formato === 'markdown') {
+        const md = markdownParaHtml(htmlOrigem);
+        tituloFonte = md.titulo;
+        bruto = md.html;
+    } else {
+        const mBody = htmlOrigem.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+        if (!mBody) throw new Error('HTML de origem sem <body> — não é uma aula/reading gerada pelo curso.');
+        tituloFonte = (htmlOrigem.match(/<title>([\s\S]*?)<\/title>/i) || [, ''])[1].trim();
+        bruto = mBody[1];
+    }
+    const titulo = opcoes.titulo || textoPuro(tituloFonte) || 'Aula JLPT N5';
 
-    let corpo = removerInterativos(mBody[1]);
+    let corpo = removerInterativos(bruto);
     corpo = achatarVariaveis(corpo);
     if (opcoes.tabelas !== 'tabela') corpo = tabelasParaBlocos(corpo);
     corpo = marcarIdiomaJapones(corpo);
@@ -793,6 +1129,7 @@ function construirEpub(htmlOrigem, opcoes = {}) {
     // causa real, que é o furigana perdido.
     if (errors.length) return { buffer: null, titulo, capitulos: [], errors, warnings, modo, aula };
 
+    verificarBalanceamento(corpo);
     const partes = dividirCapitulos(corpo);
     if (!partes.length) throw new Error('Nenhum elemento de topo encontrado no <body>.');
 
@@ -866,8 +1203,8 @@ async function main(argv) {
 
     const entrada = posicionais[0];
     if (!entrada) {
-        console.error('uso: node scripts/build_epub.js <arquivo.html> [-o saida.epub] [--titulo T] ' +
-            '[--autor A] [--idioma pt-BR|ja] [--aula N] [--mode lesson|reading] ' +
+        console.error('uso: node scripts/build_epub.js <arquivo.html|.md> [-o saida.epub] [--titulo T] ' +
+            '[--autor A] [--idioma pt-BR|ja] [--aula N] [--mode lesson|reading|markdown] ' +
             '[--tabelas blocos|tabela] [--upload] [--nome-drive N]');
         process.exit(2);
     }
@@ -876,7 +1213,8 @@ async function main(argv) {
         process.exit(2);
     }
 
-    const saida = flag('saida', '-o') || entrada.replace(/\.html?$/i, '') + '.epub';
+    const saida = flag('saida', '-o') || entrada.replace(/\.(html?|md|markdown)$/i, '') + '.epub';
+    const formato = /\.(md|markdown)$/i.test(entrada) ? 'markdown' : 'html';
     const modo = flag('mode') || detectMode(entrada);
     const aula = flag('aula') ? parseInt(flag('aula'), 10) : detectLesson(entrada);
     const tabelas = flag('tabelas') || 'blocos';
@@ -893,6 +1231,7 @@ async function main(argv) {
         resultado = construirEpub(html, {
             mode: modo,
             lesson: aula,
+            formato,
             titulo: flag('titulo'),
             autor: flag('autor'),
             idioma: flag('idioma'),
@@ -941,5 +1280,6 @@ if (require.main === module) {
 module.exports = {
     construirEpub, zipar, paraXhtml, tabelasParaBlocos, dividirCapitulos,
     verificarXml, textoPuro, decodificarEntidades, removerInterativos,
-    achatarVariaveis, marcarIdiomaJapones,
+    achatarVariaveis, marcarIdiomaJapones, markdownParaHtml, inlineMarkdown,
+    verificarBalanceamento,
 };

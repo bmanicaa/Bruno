@@ -5,3 +5,7 @@ desktop.ini
 **/desktop.ini
 .tmp.driveupload/
 **/.tmp.driveupload/
+
+# Artefatos derivados: o EPUB é sempre regerável a partir do HTML da aula
+# (Japones/scripts/build_epub.js) e é entregue pelo Google Drive, não pelo git.
+*.epub

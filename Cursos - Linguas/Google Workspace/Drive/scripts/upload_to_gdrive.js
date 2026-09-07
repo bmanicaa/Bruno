@@ -42,12 +42,29 @@ async function findOrCreateFolder(token, folderName, parentId = 'root') {
     return createData.id;
 }
 
+// Artefatos binários não passam pelo validador de texto: o EPUB é um ZIP, e o
+// furigana dele já foi validado por Japones/scripts/build_epub.js na geração
+// (mesmo validador, mesma Regra 11). Mapeia extensão → tipo MIME de upload.
+const TIPOS_BINARIOS = {
+    '.epub': 'application/epub+zip',
+};
+
+function tipoBinario(fileName) {
+    const ext = path.extname(fileName).toLowerCase();
+    return TIPOS_BINARIOS[ext] || null;
+}
+
 async function uploadLesson(fileName, fileContent, convertToDoc = null) {
+    const mimeBinario = tipoBinario(fileName);
+
     // VALIDAÇÃO AUTOMÁTICA (Regra 11) — bloqueia upload de artefato reprovado.
     // O modo é inferido do nome do arquivo: N5_L{n}.html = aula (furigana universal),
     // N5_P{n}_Reading.html = reading (furigana gradual). Nunca mais silenciosamente
     // pulada: se o modo/aula não puder ser inferido, isso é dito em voz alta.
-    {
+    if (mimeBinario) {
+        console.log(`▶ "${fileName}" é binário (${mimeBinario}) — validado na geração ` +
+            'por build_epub.js, que roda o mesmo validate_artifact.js e falha antes de escrever o arquivo.');
+    } else {
         const mode = detectMode(fileName);
         const lesson = detectLesson(fileName);
         if (!lesson) {
@@ -69,7 +86,8 @@ async function uploadLesson(fileName, fileContent, convertToDoc = null) {
     const isHtml = fileName.toLowerCase().endsWith('.html');
 
     if (convertToDoc === null) {
-        convertToDoc = !isHtml;
+        // Binário nunca vira Google Doc: um EPUB convertido deixa de ser um EPUB.
+        convertToDoc = !isHtml && !mimeBinario;
     }
 
     // 1. Get or create 'Aulas' folder in root
@@ -93,14 +111,19 @@ async function uploadLesson(fileName, fileContent, convertToDoc = null) {
     };
     if (convertToDoc) {
         metadata.mimeType = 'application/vnd.google-apps.document';
+    } else if (mimeBinario) {
+        // Sem isso o Drive adivinha o tipo e o EPUB abre como "arquivo binário".
+        metadata.mimeType = mimeBinario;
     }
 
     const boundary = '-------314159265358979323846';
     const delimiter = "\r\n--" + boundary + "\r\n";
     const close_delim = "\r\n--" + boundary + "--";
 
-    const fileBuffer = Buffer.from(fileContent, 'utf8');
-    const uploadContentType = isHtml ? 'text/html; charset=UTF-8' : 'text/markdown; charset=UTF-8';
+    const fileBuffer = Buffer.isBuffer(fileContent) ? fileContent : Buffer.from(fileContent, 'utf8');
+    const uploadContentType = mimeBinario
+        ? mimeBinario
+        : (isHtml ? 'text/html; charset=UTF-8' : 'text/markdown; charset=UTF-8');
 
     const bodyHeader = 
         delimiter +
@@ -149,10 +172,13 @@ if (require.main === module) {
         process.exit(1);
     }
     
-    const content = fs.readFileSync(filePath, 'utf8');
+    // Binário é lido como Buffer: `readFileSync(..., 'utf8')` num ZIP o corrompe.
+    const content = tipoBinario(fileName) || tipoBinario(filePath)
+        ? fs.readFileSync(filePath)
+        : fs.readFileSync(filePath, 'utf8');
     uploadLesson(fileName, content)
         .then(() => console.log('Upload concluído!'))
         .catch(err => console.error('Erro no upload:', err));
 }
 
-module.exports = { uploadLesson, validateArtifact, detectMode, detectLesson };
+module.exports = { uploadLesson, validateArtifact, detectMode, detectLesson, tipoBinario };

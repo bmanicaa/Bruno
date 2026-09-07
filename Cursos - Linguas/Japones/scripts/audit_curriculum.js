@@ -157,6 +157,14 @@ function checarCaminhos() {
     if (!fs.existsSync(up)) warn('upload_to_gdrive.js', 'não encontrado no caminho relativo esperado');
     else if (!R(path.relative(ROOT, up)).includes('validate_artifact')) fail('upload_to_gdrive.js', 'não importa o validador compartilhado');
     else ok('upload_to_gdrive.js', 'importa scripts/validate_artifact.js');
+
+    // o gerador de EPUB é a única barreira de furigana da versão e-reader:
+    // se ele parar de reusar o validador compartilhado, o livro degrada calado
+    if (!fs.existsSync(path.join(ROOT, 'scripts/build_epub.js')))
+        warn('build_epub.js', 'ausente — as aulas não terão versão para e-reader');
+    else if (!R('scripts/build_epub.js').includes('validate_artifact'))
+        fail('build_epub.js', 'não importa o validador compartilhado');
+    else ok('build_epub.js', 'importa scripts/validate_artifact.js');
 }
 
 function checarComandos() {

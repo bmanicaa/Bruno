@@ -1111,8 +1111,12 @@ Em conformidade com a Regra 13 de `JLPTN5.md`:
    ```bash
    node "../Google Workspace/Drive/scripts/upload_to_gdrive.js" "<caminho_do_arquivo_html_temp>" "N5_LX.html"
    ```
-3. Retornar no chat apenas uma mensagem sucinta de confirmação do salvamento e upload.
-4. Gerar o arquivo `.tsv` do Anki em `Anki/N5_LX_Anki.tsv` com os cabeçalhos `#separator:tab`, `#html:true` e `#notetype:Básico` no topo e furigana `<ruby>` na frente dos cards.
+3. Gerar e enviar a versão e-reader **a partir do mesmo HTML** (§4.7):
+   ```bash
+   node scripts/build_epub.js "<caminho_do_arquivo_html_temp>" -o "<caminho_do_epub_temp>" --upload --nome-drive "N5_LX.epub"
+   ```
+4. Retornar no chat apenas uma mensagem sucinta de confirmação do salvamento e upload.
+5. Gerar o arquivo `.tsv` do Anki em `Anki/N5_LX_Anki.tsv` com os cabeçalhos `#separator:tab`, `#html:true` e `#notetype:Básico` no topo e furigana `<ruby>` na frente dos cards.
 
 ### 4.5 Arquitetura de Tabelas Inteligentes (3 Colunas) & Otimização para Impressão
 - Como toda palavra com Kanji já carrega o Furigana `<ruby>` sobreposto, a coluna isolada de "Leitura (Kana)" é redundante.
@@ -1152,3 +1156,71 @@ O **modo** é inferido do nome do arquivo e determina a política de furigana ap
    - `4b` — kanji solto colado imediatamente antes ou depois de um `<ruby>`.
    - `4c` — honorífico partido: `お<ruby>兄</ruby>さん` em vez de `<ruby>お兄さん<rt>おにいさん</rt></ruby>`.
 5. **CHECK5 — Vocabulary Gate** (aviso, exige `--aula`): sinaliza palavras com kanji fora do inventário cumulativo das Aulas 1..N. É **aviso**, não erro, porque numerais e contadores compostos (`五人`, `三人`) são legitimamente composicionais e dariam falso positivo. Todo aviso deve ser **lido e julgado** — foi assim que se detectou `日本人` num Reading da Aula 3, uma violação real da Regra 3.1.
+
+---
+
+## 📱 4.7 VERSÃO E-READER (EPUB) — `scripts/build_epub.js`
+
+O mesmo HTML que você abre no navegador vira um **EPUB 3** para ler no Kindle
+Paperwhite. O EPUB é **derivado, nunca escrito à mão**: a fonte única de verdade
+continua sendo o HTML desta especificação. Se o conteúdo mudar, regere o EPUB;
+não edite o `.epub`.
+
+```bash
+node scripts/build_epub.js Practice/N5_P4_Reading.html          # gera o .epub ao lado
+node scripts/build_epub.js /tmp/N5_L4.html --upload             # gera e sobe ao Drive
+node scripts/build_epub.js /tmp/N5_L4.html --tabelas tabela     # mantém as tabelas
+```
+
+### Por que EPUB (e não MOBI, AZW3 ou PDF)
+
+| Formato | Veredito |
+|---|---|
+| **EPUB 3** | ✅ **Escolhido.** É o formato que o Send to Kindle aceita hoje (e-mail `@kindle.com`, app desktop ou web) e converte no servidor para KFX. É XHTML: `<ruby>`/`<rt>` são nativos e o furigana sobrevive à conversão. Gerável com `zlib` do próprio Node — zero dependências, como todo o resto de `scripts/`. |
+| MOBI | ❌ Aposentado pela Amazon como formato de envio. |
+| AZW3 | ❌ Só entra por USB e não é gerável sem ferramenta proprietária. |
+| PDF | ❌ Página fixa: numa tela de 6" exige zoom e pan. Inutilizável para estudo. |
+
+### O que a conversão adapta (e por quê)
+
+A aula HTML foi desenhada para navegador; o e-reader não é um navegador.
+
+1. **Remove `<script>` e os botões de tema/furigana** — o Kindle não roda JS. Os
+   botões viram elementos mortos e são apagados.
+2. **Achata as variáveis CSS** (`var(--accent-blue)` → `#00407a`). O
+   renderizador do Kindle não implementa custom properties, e um `var()` não
+   resolvido **apaga a declaração inteira** — o documento sairia sem cor nenhuma.
+3. **Troca a paleta AMOLED por uma paleta de tinta eletrônica**: fundo branco,
+   texto preto e acentos escuros o bastante para virarem cinzas distinguíveis.
+4. **Quebra o documento em capítulos** — um XHTML por `<section>`. Isso dá
+   sumário navegável (`nav.xhtml` + `toc.ncx`) e virada de página sã.
+5. **Converte as tabelas de 3 colunas em blocos empilhados**: numa tela de 6"
+   uma tabela de 3 colunas vira colunas de dois caracteres. Cada linha vira um
+   bloco com o cabeçalho como rótulo. `--tabelas tabela` desativa.
+6. **Marca o japonês com `lang="ja"`** e dá entrelinha folgada (`line-height:
+   2.2`) a todo bloco com ruby — sem isso o `<rt>` encosta na linha de cima e o
+   aparelho corta o furigana.
+7. **Adiciona `<rp>`** em volta de cada `<rt>`: leitor sem suporte a ruby
+   imprime `私(わたし)` em vez de `私わたし`.
+
+### Contrato de furigana (Regra 11 continua valendo)
+
+`build_epub.js` roda o **mesmo `scripts/validate_artifact.js`** dos demais
+artefatos, no modo inferido do nome do arquivo (`lesson` = universal,
+`reading` = gradual), **antes** de escrever o `.epub`. Erro bloqueante ⇒ nenhum
+arquivo é escrito e o script sai com código 1. O EPUB não pode degradar
+silenciosamente o que o HTML garante.
+
+Além disso o script verifica a boa-formação XML de cada arquivo do pacote — um
+XHTML quebrado só falharia no aparelho, depois do upload.
+
+### Como levar para o Kindle
+
+Baixe o `.epub` do Drive e envie por **Send to Kindle** (e-mail `@kindle.com`,
+app desktop ou `read.amazon.com`). A Amazon converte para KFX preservando o
+ruby. Cópia direta por USB não funciona: o Paperwhite não lê EPUB sem conversão.
+
+> **Se o furigana não aparecer no seu aparelho:** regere com `--idioma ja`. O
+> padrão é `pt-BR` (a aula é escrita em português, e o japonês é marcado item a
+> item com `lang="ja"`), mas há firmware que só liga o motor de ruby em livro
+> declarado como japonês.

@@ -5,7 +5,7 @@
 > qualquer correção, **DEVE** atualizá-lo. Sem ele o sistema é um gerador de
 > material que esquece tudo; com ele, consegue re-testar o que você errou.
 
-**Última atualização:** 2026-09-06 (reatribuição ótima dos 80 kanji + 円 acrescentado ao vocabulário)
+**Última atualização:** 2026-09-07 (pipeline de EPUB para Kindle — `scripts/build_epub.js`)
 **Aula atual:** 4 (próxima a ser gerada)
 **Ritmo:** 1 aula/semana (pode esticar para 2 em plantão pesado)
 
@@ -24,6 +24,11 @@ Legenda: ✅ concluído · 🟡 gerado, não feito · ⬜ não gerado · `—` n
 | 5 | 🔄 | Consolidação — Aulas 1-4 | ⬜ | — | ⬜ | ⬜ | ⬜ | ⬜ |
 
 *(as Aulas 6-32 seguem não iniciadas; acrescente a linha quando gerar)*
+
+**Versão Kindle (EPUB):** derivada do HTML pela Regra 13(b2), não é estado próprio — cada
+aula gerada a partir de agora sai com `.epub` junto. As **Aulas 1-3 e os Readings 2-3 são
+anteriores ao pipeline**: para lê-los no Paperwhite, baixe o HTML do Drive e rode
+`node scripts/build_epub.js <arquivo.html> --upload`.
 
 **Cards de gramática no Anki:** Aulas 1-3 → 19 cards (`Anki/N5_G{1,2,3}_Gramatica.tsv`)
 **Cards de vocabulário:** 82, todos com leitura (TTS) e frase de exemplo

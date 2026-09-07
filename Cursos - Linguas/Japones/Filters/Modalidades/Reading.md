@@ -14,7 +14,7 @@ Esta especificação define o padrão determinístico universal para a geração
    - *Kana puro:* Palavras compostas exclusivamente de hiragana/katakana nunca recebem `<ruby>`.
 3. **Zero Romaji e Obrigação Absoluta do Katakana:** Todo texto em japonês utiliza exclusivamente Kana + Kanji com furigana HTML na 1ª ocorrência. Nomes estrangeiros, nomes próprios do usuário (como o seu nome), palavras ocidentais ou termos sem tradução nativa **DEVEM ser escritos obrigatoriamente em Katakana** (ex: "Bruno" -> ブルーノ). O uso de Romaji (letras latinas ou alfabeto ocidental) em qualquer texto japonês gerado é **ESTRITAMENTE PROIBIDO**.
 4. **Registro Linguístico:** Respeitar o nível de polidez (`です/ます` vs. casual) autorizado pelo escopo acumulado da aula.
-5. **Salvamento Paramétrico em HTML e Google Drive:** A modalidade Reading gera um arquivo HTML baseado em `Filters/HTML/HTML_reading.md`. O arquivo é salvo localmente em `Practice/{NIVEL}_P{X}_Reading.html` (ex: `N5_P1_Reading.html`, `N4_P10_Reading.html`) e a IA **DEVE** executar o script de upload para o Google Drive (`upload_to_gdrive.js`).
+5. **Salvamento Paramétrico em HTML, EPUB e Google Drive:** A modalidade Reading gera um arquivo HTML baseado em `Filters/HTML/HTML_reading.md`. O arquivo é salvo localmente em `Practice/{NIVEL}_P{X}_Reading.html` (ex: `N5_P1_Reading.html`, `N4_P10_Reading.html`) e a IA **DEVE** executar o script de upload para o Google Drive (`upload_to_gdrive.js`) e, do mesmo HTML, gerar a versão e-reader com `scripts/build_epub.js` (ver `Filters/HTML/HTML_Lesson.md` §4.7). No EPUB o validador roda em modo `reading`, então o **furigana gradual** é preservado — o texto no Kindle testa o resgate ativo exatamente como no navegador.
 6. **PROIBIDO SPOILERS NAS PERGUNTAS (ANTI-SPOILER RULE):** Ao gerar as perguntas de interpretação, NUNCA inclua dicas mastigadas, parênteses ou traduções que entreguem a resposta da questão diretamente. O estudante deve interpretar.
 
 ---
@@ -36,6 +36,7 @@ Ao receber o comando de leitura no chat (ex: `"Reading Aula X"`, `"Reading N4 Au
 3. **Redação Orgânica (Narrativa Mista) & Furigana Gradual:** Escrever o texto de forma fluida, intercalando descrições, narrativas e diálogos de maneira natural (como em um livro/conto). Aplicar furigana apenas na 1ª ocorrência das palavras com kanji.
 4. **Compor Exercício:** Gerar de 4 a 6 perguntas de interpretação profunda em português.
 5. **Gerar HTML, Salvar e Upload:** Formatando conforme `Filters/HTML/HTML_reading.md`, salvando em `Practice/{NIVEL}_P{X}_Reading.html` e executando o upload para o Google Drive via `upload_to_gdrive.js`. A discussão ocorrerá interativamente via chat.
+6. **Gerar o EPUB:** `node scripts/build_epub.js Practice/{NIVEL}_P{X}_Reading.html --upload` — versão para Kindle Paperwhite, derivada do mesmo HTML.
 
 ---
 
@@ -76,6 +77,7 @@ Executar obrigatoriamente, corrigindo todo erro bloqueante:
 
 ```bash
 node scripts/validate_artifact.js Practice/{NIVEL}_P{X}_Reading.html
+node scripts/build_epub.js Practice/{NIVEL}_P{X}_Reading.html   # revalida e gera o .epub
 ```
 
 No modo `reading` o validador confere a política **gradual**: a 1ª ocorrência de cada palavra com kanji deve ter `<ruby>`, e as seguintes **não** podem ter. Confere também ruby sobre palavra inteira (nunca kanji a kanji), ausência de ruby em kana puro, e emite avisos do Vocabulary Gate para palavras fora do inventário cumulativo — que devem ser **lidos e julgados**, não ignorados.

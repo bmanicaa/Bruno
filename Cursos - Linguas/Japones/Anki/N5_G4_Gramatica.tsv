@@ -1,0 +1,16 @@
+#separator:tab
+#html:true
+#notetype:N5 Gramática
+#deck:Japonês::N5::Gramática
+#tags column:5
+#columns:Frase	Resposta	Estrutura	Explicacao	Tags
+<ruby>手<rt>て</rt></ruby> ___ <ruby>足<rt>あし</rt></ruby>です。(ligar dois itens numa lista COMPLETA)	と	N + と + N	と fecha a lista: são exatamente esses itens, e nada mais. Com pessoa, também significa "com".	aula::04 fase::1 tipo::gramatica gramatica::to-lista
+<ruby>目<rt>め</rt></ruby> ___ <ruby>耳<rt>みみ</rt></ruby> ___ <ruby>口<rt>くち</rt></ruby>です。(três itens, lista fechada)	と	N + と + N + と + N	と se repete a cada item da lista. O ouvinte entende que a enumeração terminou.	aula::04 fase::1 tipo::gramatica gramatica::to-lista
+<ruby>頭<rt>あたま</rt></ruby> ___ <ruby>目<rt>め</rt></ruby>です。(citar EXEMPLOS; a lista continua)	や	N + や + N	や deixa a lista aberta: "coisas como X e Y". Usar と aqui afirmaria que só existem esses dois.	aula::04 fase::1 tipo::gramatica gramatica::ya-amostragem
+<ruby>父<rt>ちち</rt></ruby> ___ <ruby>母<rt>はは</rt></ruby>は<ruby>有名<rt>ゆうめい</rt></ruby>です。(entre outros)	や	N + や + N	Na dúvida sobre estar listando tudo, use や — errar para と soa como uma afirmação forte não pretendida.	aula::04 fase::1 tipo::gramatica gramatica::ya-amostragem
+<ruby>鼻<rt>はな</rt></ruby>は<ruby>一つ<rt>ひとつ</rt></ruby> ___ です。(limitar: "só um")	だけ	N + だけ	だけ vem DEPOIS do que limita — o contrário do "só" do português, que vem antes.	aula::04 fase::1 tipo::gramatica gramatica::dake-limite
+<ruby>少し<rt>すこし</rt></ruby> ___ です。("só um pouquinho")	だけ	N + だけ	だけ é neutro: delimita a quantidade sem reclamar dela.	aula::04 fase::1 tipo::gramatica gramatica::dake-limite
+ ___ <ruby>本<rt>ほん</rt></ruby>ですか。(perguntar o TIPO, não a identidade)	どんな	どんな + N	どんな nunca fica sozinho: gruda num substantivo e pergunta pela qualidade dele.	aula::04 fase::1 tipo::gramatica gramatica::donna-tipo
+ ___ <ruby>人<rt>ひと</rt></ruby>ですか。(que tipo de pessoa)	どんな	どんな + N	Compare com <ruby>何<rt>なん</rt></ruby>ですか, que pergunta a identidade; どんな já sabe o que é e quer saber como é.	aula::04 fase::1 tipo::gramatica gramatica::donna-tipo
+<ruby>父<rt>ちち</rt></ruby>は ___ <ruby>有名<rt>ゆうめい</rt></ruby>です。(intensificar o adjetivo)	とても	とても + Adjetivo	とても vem ANTES do que intensifica, como o "muito" do português.	aula::04 fase::1 tipo::gramatica gramatica::totemo-intensidade
+<ruby>歯<rt>は</rt></ruby>は ___ <ruby>沢山<rt>たくさん</rt></ruby>です。(intensificar a quantidade)	とても	とても + Adjetivo	とても modifica qualidades, nunca coisas: とても<ruby>本<rt>ほん</rt></ruby> é agramatical.	aula::04 fase::1 tipo::gramatica gramatica::totemo-intensidade

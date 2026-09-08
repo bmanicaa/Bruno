@@ -5,8 +5,8 @@
 > qualquer correção, **DEVE** atualizá-lo. Sem ele o sistema é um gerador de
 > material que esquece tudo; com ele, consegue re-testar o que você errou.
 
-**Última atualização:** 2026-09-06 (reatribuição ótima dos 80 kanji + 円 acrescentado ao vocabulário)
-**Aula atual:** 4 (próxima a ser gerada)
+**Última atualização:** 2026-09-07 (Aula 4 gerada: HTML + EPUB + 2 TSVs)
+**Aula atual:** 5 (próxima a ser gerada — 🔄 Consolidação das Aulas 1-4)
 **Ritmo:** 1 aula/semana (pode esticar para 2 em plantão pesado)
 
 ---
@@ -20,14 +20,24 @@ Legenda: ✅ concluído · 🟡 gerado, não feito · ⬜ não gerado · `—` n
 | 1 | 📘 | Eu Sou — Copula & Perguntas | ✅ | ✅ 25 | ⬜ | ⬜ | ⬜ | ⬜ |
 | 2 | 📘 | Não Sou — Negação & Posse | ✅ | ✅ 27 | ✅ | ⬜ | ⬜ | ⬜ |
 | 3 | 📘 | Minha Família & Números | ✅ | ✅ 30 | ✅ | ⬜ | ✅ **90/100** | ⬜ |
-| 4 | 📘 | Meu Mundo — Conexões, Contexto & Intensidade | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 4 | 📘 | Meu Mundo — Conexões, Contexto & Intensidade | 🟡 | ✅ 25 | ⬜ | ⬜ | ⬜ | ⬜ |
 | 5 | 🔄 | Consolidação — Aulas 1-4 | ⬜ | — | ⬜ | ⬜ | ⬜ | ⬜ |
 
 *(as Aulas 6-32 seguem não iniciadas; acrescente a linha quando gerar)*
 
-**Cards de gramática no Anki:** Aulas 1-3 → 19 cards (`Anki/N5_G{1,2,3}_Gramatica.tsv`)
-**Cards de vocabulário:** 82, todos com leitura (TTS) e frase de exemplo
+**Versão Kindle (EPUB):** derivada, não é estado próprio — todo artefato pedido a partir
+de agora sai com `.epub` junto (aula pela Regra 13(b2); exercícios pela Regra 14.1). As
+**Aulas 1-3, os Readings 2-3 e o Lacunas 3 são anteriores ao pipeline**: para lê-los no
+Paperwhite, rode `node scripts/build_epub.js <arquivo> -o "<temp>.epub" --upload` (o HTML
+das aulas precisa ser baixado do Drive antes — a Regra 13(g) apaga o temporário local).
+
+**Cards de gramática no Anki:** Aulas 1-4 → 29 cards (`Anki/N5_G{1,2,3,4}_Gramatica.tsv`)
+**Cards de vocabulário:** 107, todos com leitura (TTS) e frase de exemplo
 **Gabarito do Lacunas 3:** ✅ presente (adicionado retroativamente; a spec o exigia e ele faltava)
+**Aula 4 — pendência de entrega:** HTML e EPUB foram gerados e validados, mas **não subiram ao
+Drive** (a sessão que os gerou não tinha as chaves de `Keys/`). Rode na sua máquina:
+`node "../Google Workspace/Drive/scripts/upload_to_gdrive.js" <N5_L4.html> "N5_L4.html"` e
+`node scripts/build_epub.js <N5_L4.html> -o /tmp/N5_L4.epub --upload --nome-drive "N5_L4.epub"`.
 
 ---
 

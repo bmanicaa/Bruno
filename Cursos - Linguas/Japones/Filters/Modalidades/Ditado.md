@@ -53,7 +53,7 @@ compreensão é o modo de falha clássico do treino de escuta.
 
 ## ⚙️ 2. GERAÇÃO (`"Ditado Aula X"`)
 
-A IA gera `Practice/N5_P{X}_Ditado.md`: uma folha de transcrição em branco.
+A IA gera `Practice/N5_P{X}_Ditado.md`: uma folha de transcrição em branco. Na mesma resposta sai também a versão Kindle (Regra 14.1 de `JLPTN5.md`): `node scripts/build_epub.js Practice/N5_P{X}_Ditado.md -o "<temp>.epub" --upload --nome-drive "N5_P{X}_Ditado.epub"` — só a folha, porque o áudio é externo (§0).
 Ela **não** contém japonês gerado pela IA — apenas a estrutura.
 
 1. **Não perguntar qual é o material externo.** Ele é privado por decisão do

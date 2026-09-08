@@ -28,8 +28,9 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
    - Cada questão deve ter obrigatoriamente um enunciado e **4 opções (A, B, C, D)**, listadas com checkboxes Markdown (ex: `- [ ] A)`, `- [ ] B)`).
    - O aluno responderá marcando um "x" na opção correta (ex: `- [x] A)`).
 
-6. **Local de Salvamento:**
-   - O caderno de teste é gerado em Markdown no caminho `Practice/N5_P{X}.md`.
+6. **Local de Salvamento (DOIS artefatos — Regra 14.1 de `JLPTN5.md`):**
+   - O caderno de teste é gerado em Markdown no caminho `Practice/N5_P{X}.md` — é nele, no computador, que as respostas são digitadas.
+   - A versão Kindle sai na mesma resposta, do mesmo arquivo: `node scripts/build_epub.js Practice/N5_P{X}.md -o "<temp>.epub" --upload --nome-drive "N5_P{X}.epub"`. As alternativas viram ☐/☑ e o gabarito vira capítulo separado (`Filters/Modalidades/EPUB.md`).
 
 7. **PROIBIDO DAR A RESPOSTA NA DICA OU ENUNCIADO (ANTI-SPOILER RULE):**
    - As perguntas, dicas ou placeholders (ex: `___`) NUNCA podem entregar a resposta gramatical ou a intenção da questão mastigada.

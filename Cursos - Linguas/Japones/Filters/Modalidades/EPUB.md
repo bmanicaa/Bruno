@@ -1,0 +1,125 @@
+# 📱 MODALIDADE TRANSVERSAL: VERSÃO E-READER (`Filters/Modalidades/EPUB.md`)
+
+## 🎯 MISSÃO
+
+Converter **qualquer artefato de estudo do curso** — aula, Reading, Teste, Lacunas
+ou Ditado — num **EPUB 3** legível no Kindle Paperwhite, com o **furigana
+preservado**.
+
+Esta modalidade é **transversal**: ela não gera conteúdo novo, não define
+pedagogia e não tem escopo cumulativo próprio. Ela **converte de formato** um
+artefato que já existe. Toda a decisão didática já foi tomada pela modalidade que
+produziu o arquivo-fonte.
+
+**Ferramenta:** `scripts/build_epub.js` · **Contrato técnico:** `Filters/HTML/HTML_Lesson.md` §4.7
+
+---
+
+## ⚡ QUANDO RODA: SEMPRE JUNTO COM O ARTEFATO PEDIDO
+
+**O EPUB nunca é um pedido separado.** Ele acompanha, na mesma resposta, o que
+o estudante pediu:
+
+| O estudante pede | O que sai |
+|---|---|
+| `"Aula 4"` | HTML **+ EPUB**, os dois no Drive · Regra **13(b2)** de `JLPTN5.md` |
+| `"Lacunas Aula 4"` · `"Teste Aula 4"` · `"Reading Aula 4"` · `"Ditado Aula 4"` | arquivo de trabalho em `Practice/` **+ EPUB** no Drive · Regra **14.1** |
+| `"Corrigir Lacunas Aula 4"` | `.md` atualizado com o gabarito **+ EPUB regerado** · Regra **14.2** |
+
+O princípio é simples: **nada é gerado sem pedido, e nada que foi pedido chega
+pela metade.** Não existe artefato de estudo que exista só no computador — se o
+estudante pediu, ele tem a versão de tela e a versão de papel eletrônico.
+
+---
+
+## 💬 COMANDO AVULSO — PARA **REGERAR**
+
+Os comandos abaixo não são o caminho normal (o EPUB já veio junto). Eles servem
+para **refazer** a versão Kindle quando a fonte mudou e o `.epub` do Drive ficou
+velho — o caso típico é depois de uma correção, para o gabarito chegar ao
+aparelho, ou depois de editar o artefato à mão.
+
+| Comando | Alvo |
+|---|---|
+| `"EPUB Aula X"` / `"Kindle Aula X"` | a **aula** `N5_L{X}.html` |
+| `"EPUB Reading Aula X"` / `"Kindle Reading Aula X"` | `Practice/N5_P{X}_Reading.html` |
+| `"EPUB Teste Aula X"` / `"Kindle Teste Aula X"` | `Practice/N5_P{X}.md` |
+| `"EPUB Lacunas Aula X"` / `"Kindle Lacunas Aula X"` | `Practice/N5_P{X}_Lacunas.md` |
+| `"EPUB Ditado Aula X"` / `"Kindle Ditado Aula X"` | `Practice/N5_P{X}_Ditado.md` |
+
+Sem modalidade explícita (`"EPUB Aula 4"`), o alvo é a **aula**.
+
+```bash
+node scripts/build_epub.js <arquivo.html|.md> -o "<temp>.epub" --upload --nome-drive "<nome>.epub"
+```
+
+Gere em caminho temporário, suba ao Drive e apague o local: o EPUB é derivado e
+o Drive é o canal de entrega (Regra 1 de `JLPTN5.md`). Se a fonte não estiver
+mais em disco — a Regra 13(g) apaga o HTML temporário da aula —, baixe-a do
+Drive antes de converter.
+
+---
+
+## 🔀 FONTE → MODO DO VALIDADOR
+
+O modo é inferido do nome do arquivo e determina a política de furigana aplicada
+no EPUB — a **mesma** do artefato de origem, nunca uma política própria:
+
+| Fonte | Formato | Modo | Política de furigana |
+|---|---|---|---|
+| `N5_L{X}.html` | HTML | `lesson` | Universal |
+| `N5_P{X}_Reading.html` | HTML | `reading` | **Gradual** (só a 1ª ocorrência) |
+| `N5_P{X}.md` (Teste) | Markdown | `markdown` | Universal |
+| `N5_P{X}_Lacunas.md` | Markdown | `markdown` | Universal |
+| `N5_P{X}_Ditado.md` | Markdown | `markdown` | Universal |
+
+Markdown e HTML entram pelo **mesmo pipeline**: o Markdown é renderizado para
+HTML primeiro e daí em diante o tratamento é idêntico.
+
+---
+
+## ⛔ HARD RULES
+
+1. **O EPUB é DERIVADO, nunca escrito à mão.** A fonte da verdade continua sendo
+   o `.html` / `.md`. Mudou o conteúdo? Regere o EPUB. **Nunca** edite o `.epub`.
+2. **Regra 11 continua valendo.** `build_epub.js` roda o mesmo
+   `scripts/validate_artifact.js` dos demais artefatos **antes** de escrever o
+   arquivo. Erro bloqueante ⇒ nenhum `.epub` é escrito e o script sai com código
+   1. Corrija a **fonte** e regere as duas versões — nunca "conserte" só o EPUB.
+3. **Esta modalidade NÃO lê nem escreve `Progress.md`.** Ela não avalia nada e
+   não produz nota. O estado de cada artefato pertence à modalidade que o gerou.
+4. **Nada de conteúdo novo.** Se a conversão exigir inventar, reescrever ou
+   resumir qualquer trecho japonês, isso é um defeito da fonte, não uma licença
+   para editar no caminho.
+
+---
+
+## ⚠️ LIMITES HONESTOS DO E-READER
+
+Estes limites são do aparelho, não do conversor. Estão documentados aqui para
+que ninguém prometa ao estudante o que o Kindle não faz:
+
+- **O Kindle é só de leitura.** Não dá para digitar nada nele: os campos
+  `> Resposta N:` viram linhas de escrita marcadas, para responder mentalmente.
+  A resposta **é digitada no `.md`, no computador** — é ele que os comandos
+  `"Corrigir ..."` leem. Isso é por design, não uma limitação a contornar: o
+  aparelho serve para **ler o conteúdo**; o computador, para responder.
+- **Não há botão de esconder o gabarito.** O `<details>` do Markdown vira um
+  **capítulo próprio**, com quebra de página e aviso no topo: chega-se a ele de
+  propósito pelo sumário, não por descuido ao virar a página.
+- **O Ditado não leva áudio.** O EPUB é só a folha de transcrição; o áudio
+  continua externo (`Ditado.md` §0).
+- **Não existe o botão de ocultar furigana** da aula HTML: sem JavaScript, o
+  ruby fica sempre visível. Para autoteste de leitura, use o **Reading**, cuja
+  política gradual já anota só a 1ª ocorrência.
+
+---
+
+## 📲 COMO LEVAR PARA O KINDLE
+
+Baixe o `.epub` do Drive e envie por **Send to Kindle** (e-mail `@kindle.com`,
+app desktop ou `read.amazon.com`). A Amazon converte para KFX preservando o ruby.
+Cópia direta por USB **não** funciona: o Paperwhite não lê EPUB sem conversão.
+
+> Se o furigana não aparecer no aparelho, regere com `--idioma ja` — ver a nota
+> em `Filters/HTML/HTML_Lesson.md` §4.7.

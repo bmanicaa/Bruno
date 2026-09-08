@@ -34,8 +34,9 @@ Esta especificação define o padrão determinístico e livre de ambiguidades pa
 6. **Campos de Resposta Digitáveis (`> `):**
    - Todas as questões contêm obrigatoriamente uma linha antecedida pelo caractere de citação `> ` para digitação limpa em qualquer editor Markdown.
 
-7. **Local de Salvamento:**
-   - O caderno de exercícios é gerado em Markdown no caminho `Practice/N5_P{X}_Lacunas.md`.
+7. **Local de Salvamento (DOIS artefatos — Regra 14.1 de `JLPTN5.md`):**
+   - O caderno de exercícios é gerado em Markdown no caminho `Practice/N5_P{X}_Lacunas.md` — é nele, no computador, que as respostas são digitadas.
+   - A versão Kindle sai na mesma resposta, do mesmo arquivo: `node scripts/build_epub.js Practice/N5_P{X}_Lacunas.md -o "<temp>.epub" --upload --nome-drive "N5_P{X}_Lacunas.epub"`. Ver `Filters/Modalidades/EPUB.md`.
 
 8. **PROIBIDO DAR A RESPOSTA NA DICA (ANTI-SPOILER RULE):**
    - As dicas in-line entre parênteses NUNCA podem entregar a resposta gramatical ou a intenção da questão mastigada.
